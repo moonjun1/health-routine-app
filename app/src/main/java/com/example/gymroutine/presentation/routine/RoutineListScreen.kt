@@ -26,6 +26,7 @@ fun RoutineListScreen(
     viewModel: RoutineListViewModel = hiltViewModel(),
     onNavigateBack: () -> Unit,
     onNavigateToCreate: () -> Unit,
+    onNavigateToAIRoutine: () -> Unit = {},
     onRoutineSelected: (Routine) -> Unit
 ) {
     val routinesState by viewModel.routinesState.collectAsState()
@@ -95,10 +96,15 @@ fun RoutineListScreen(
                                     "아직 생성된 루틴이 없습니다",
                                     style = MaterialTheme.typography.bodyLarge
                                 )
-                                Button(onClick = onNavigateToCreate) {
+                                Button(onClick = onNavigateToAIRoutine) {
+                                    Icon(Icons.Default.Star, null, modifier = Modifier.size(20.dp))
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text("AI로 루틴 생성")
+                                }
+                                OutlinedButton(onClick = onNavigateToCreate) {
                                     Icon(Icons.Default.Add, null, modifier = Modifier.size(20.dp))
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Text("첫 루틴 만들기")
+                                    Text("직접 루틴 만들기")
                                 }
                             }
                         }
@@ -108,6 +114,47 @@ fun RoutineListScreen(
                             contentPadding = PaddingValues(16.dp),
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
+                            item {
+                                Card(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = MaterialTheme.colorScheme.primaryContainer
+                                    )
+                                ) {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clickable { onNavigateToAIRoutine() }
+                                            .padding(16.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Icon(
+                                                Icons.Default.Star,
+                                                "AI",
+                                                tint = MaterialTheme.colorScheme.primary
+                                            )
+                                            Spacer(modifier = Modifier.width(12.dp))
+                                            Column {
+                                                Text(
+                                                    "AI로 맞춤 루틴 생성",
+                                                    style = MaterialTheme.typography.titleMedium,
+                                                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                                                )
+                                                Text(
+                                                    "당신의 목표에 맞는 최적의 루틴을 AI가 만들어드립니다",
+                                                    style = MaterialTheme.typography.bodySmall,
+                                                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
                             items(state.data) { routine ->
                                 RoutineListItem(
                                     routine = routine,
