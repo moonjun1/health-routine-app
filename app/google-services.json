@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1074597567126",
+    "project_id": "gymroutine-8695c",
+    "storage_bucket": "gymroutine-8695c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1074597567126:android:809fa4debe8ec6778e80b7",
+        "android_client_info": {
+          "package_name": "com.example.gymroutine"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdc2B522OqYYjlhkv01-1mBZXNeA1s9TQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
