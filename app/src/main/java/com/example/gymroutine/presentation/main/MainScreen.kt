@@ -82,7 +82,7 @@ enum class BottomNavItem(
     EXERCISE(
         route = Screen.ExerciseList.route,
         title = "운동",
-        icon = Icons.Default.FitnessCenter
+        icon = Icons.Default.List
     ),
     ROUTINE(
         route = Screen.RoutineList.route,

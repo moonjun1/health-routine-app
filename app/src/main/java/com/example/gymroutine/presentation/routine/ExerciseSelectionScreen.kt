@@ -162,23 +162,11 @@ fun ExerciseSelectionItem(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    AssistChip(
-                        onClick = { },
-                        label = { Text(exercise.category) },
-                        enabled = false
-                    )
-
-                    if (exercise.targetMuscle.isNotEmpty()) {
-                        AssistChip(
-                            onClick = { },
-                            label = { Text(exercise.targetMuscle) },
-                            enabled = false
-                        )
-                    }
-                }
+                AssistChip(
+                    onClick = { },
+                    label = { Text(exercise.category) },
+                    enabled = false
+                )
 
                 if (exercise.description.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(4.dp))
