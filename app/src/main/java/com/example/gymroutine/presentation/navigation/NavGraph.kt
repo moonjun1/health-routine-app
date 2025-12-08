@@ -20,6 +20,7 @@ import com.example.gymroutine.presentation.exercise.ExerciseListScreen
 import com.example.gymroutine.presentation.gym.GymRegisterScreen
 import com.example.gymroutine.presentation.gym.GymSearchScreen
 import com.example.gymroutine.presentation.home.HomeScreen
+import com.example.gymroutine.presentation.routine.AIRoutineScreen
 import com.example.gymroutine.presentation.routine.ExerciseSelectionScreen
 import com.example.gymroutine.presentation.routine.RoutineCreateScreen
 import com.example.gymroutine.presentation.routine.RoutineCreateViewModel
@@ -160,6 +161,9 @@ fun NavGraph(
                 onNavigateToCreate = {
                     navController.navigate(Screen.RoutineCreate.route)
                 },
+                onNavigateToAIRoutine = {
+                    navController.navigate(Screen.AIRoutine.route)
+                },
                 onRoutineSelected = { routine ->
                     val routineJson = Gson().toJson(routine)
                     navController.navigate("routine_detail/$routineJson")
@@ -204,6 +208,17 @@ fun NavGraph(
                     viewModel.addExercise(exercise)
                 },
                 onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(Screen.AIRoutine.route) {
+            AIRoutineScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                },
+                onRoutineCreated = {
                     navController.popBackStack()
                 }
             )
