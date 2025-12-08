@@ -18,6 +18,7 @@ sealed class Screen(val route: String) {
     }
     object RoutineList : Screen("routine_list")
     object RoutineCreate : Screen("routine_create")
+    object ExerciseSelection : Screen("exercise_selection")
     object RoutineDetail : Screen("routine_detail/{routineId}") {
         fun createRoute(routineId: String) = "routine_detail/$routineId"
     }
