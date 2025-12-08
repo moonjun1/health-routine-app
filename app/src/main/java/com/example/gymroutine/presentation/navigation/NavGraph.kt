@@ -1,6 +1,10 @@
 package com.example.gymroutine.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -16,7 +20,9 @@ import com.example.gymroutine.presentation.exercise.ExerciseListScreen
 import com.example.gymroutine.presentation.gym.GymRegisterScreen
 import com.example.gymroutine.presentation.gym.GymSearchScreen
 import com.example.gymroutine.presentation.home.HomeScreen
+import com.example.gymroutine.presentation.routine.ExerciseSelectionScreen
 import com.example.gymroutine.presentation.routine.RoutineCreateScreen
+import com.example.gymroutine.presentation.routine.RoutineCreateViewModel
 import com.example.gymroutine.presentation.routine.RoutineDetailScreen
 import com.example.gymroutine.presentation.routine.RoutineListScreen
 import com.google.gson.Gson
@@ -162,11 +168,42 @@ fun NavGraph(
         }
 
         composable(Screen.RoutineCreate.route) {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(Screen.RoutineCreate.route)
+            }
+            val viewModel: RoutineCreateViewModel = hiltViewModel(parentEntry)
+
             RoutineCreateScreen(
+                viewModel = viewModel,
                 onNavigateBack = {
                     navController.popBackStack()
                 },
+                onNavigateToExerciseSelection = {
+                    navController.navigate(Screen.ExerciseSelection.route)
+                },
                 onRoutineCreated = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(Screen.ExerciseSelection.route) {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(Screen.RoutineCreate.route)
+            }
+            val viewModel: RoutineCreateViewModel = hiltViewModel(parentEntry)
+
+            val allExercises by viewModel.allExercises.collectAsState()
+            val selectedExercises by viewModel.selectedExercises.collectAsState()
+            val selectedIds = selectedExercises.map { it.exercise.id }
+
+            ExerciseSelectionScreen(
+                allExercises = allExercises,
+                selectedExerciseIds = selectedIds,
+                onExerciseSelected = { exercise ->
+                    viewModel.addExercise(exercise)
+                },
+                onNavigateBack = {
                     navController.popBackStack()
                 }
             )
