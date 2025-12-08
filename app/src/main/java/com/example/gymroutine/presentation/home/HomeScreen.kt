@@ -201,7 +201,7 @@ fun HomeScreen(
                 ) {
                     QuickMenuCard(
                         modifier = Modifier.weight(1f),
-                        icon = Icons.Default.FitnessCenter,
+                        icon = Icons.Default.List,
                         title = "운동 목록",
                         onClick = onNavigateToExerciseList
                     )

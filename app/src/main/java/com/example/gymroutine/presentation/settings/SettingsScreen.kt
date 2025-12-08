@@ -134,7 +134,7 @@ fun SettingsScreen(
                         onClick = onNavigateToLogin,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Icon(Icons.Default.Login, null)
+                        Icon(Icons.Default.AccountCircle, null)
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("로그인")
                     }
@@ -209,7 +209,7 @@ fun SettingsScreen(
                         )
                         Divider(modifier = Modifier.padding(vertical = 8.dp))
                         SettingsItem(
-                            icon = Icons.Default.FitnessCenter,
+                            icon = Icons.Default.Place,
                             title = "앱 이름",
                             subtitle = "헬스 루틴 앱"
                         )

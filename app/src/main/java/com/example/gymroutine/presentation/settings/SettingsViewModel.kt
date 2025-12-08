@@ -41,13 +41,13 @@ class SettingsViewModel @Inject constructor(
 
     private fun loadUserInfo() {
         viewModelScope.launch {
-            val currentUser = authRepository.getCurrentUser()
-            _isLoggedIn.value = currentUser != null
-            _userEmail.value = currentUser?.email ?: ""
+            val userId = authRepository.getCurrentUserId()
+            _isLoggedIn.value = userId != null
 
-            if (currentUser != null) {
-                val user = userRepository.getUser(currentUser.uid)
-                if (user != null && user.gymId.isNotEmpty()) {
+            if (userId != null) {
+                val user = userRepository.getUser(userId)
+                _userEmail.value = user?.email ?: ""
+                if (user != null && !user.gymId.isNullOrEmpty()) {
                     val gym = gymRepository.getGymById(user.gymId)
                     _gymName.value = gym?.name ?: ""
                 }

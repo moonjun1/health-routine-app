@@ -64,9 +64,10 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideRoutineRepository(
-        firestoreDataSource: FirestoreDataSource
+        firestoreDataSource: FirestoreDataSource,
+        localRoutineDataSource: com.example.gymroutine.data.local.LocalRoutineDataSource
     ): RoutineRepository {
-        return RoutineRepositoryImpl(firestoreDataSource)
+        return RoutineRepositoryImpl(firestoreDataSource, localRoutineDataSource)
     }
 
     @Provides

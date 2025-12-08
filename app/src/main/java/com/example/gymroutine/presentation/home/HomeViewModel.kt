@@ -59,7 +59,7 @@ class HomeViewModel @Inject constructor(
 
     fun loadUserData() {
         viewModelScope.launch {
-            val userId = authRepository.getCurrentUser()?.uid ?: return@launch
+            val userId = authRepository.getCurrentUserId() ?: return@launch
 
             _userState.value = Resource.Loading
             try {
@@ -68,7 +68,7 @@ class HomeViewModel @Inject constructor(
                     _userState.value = Resource.Success(user)
 
                     // Load gym info if user has a gym
-                    if (user.gymId.isNotEmpty()) {
+                    if (!user.gymId.isNullOrEmpty()) {
                         loadGymData(user.gymId)
                     }
                 } else {
@@ -98,16 +98,16 @@ class HomeViewModel @Inject constructor(
 
     fun loadRecentRoutines() {
         viewModelScope.launch {
-            val userId = authRepository.getCurrentUser()?.uid
+            val userId = authRepository.getCurrentUserId()
 
             _recentRoutinesState.value = Resource.Loading
             try {
                 val routines = if (userId != null) {
                     // Logged in: Load from Firebase
-                    routineRepository.getRoutines(userId)
+                    routineRepository.getUserRoutines(userId)
                 } else {
                     // Not logged in: Load from local storage
-                    routineRepository.getLocalRoutines()
+                    routineRepository.getUserRoutines("")
                 }
 
                 // Get top 3 most recent routines

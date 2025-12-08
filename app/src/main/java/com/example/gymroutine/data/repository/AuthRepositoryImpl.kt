@@ -39,6 +39,10 @@ class AuthRepositoryImpl @Inject constructor(
         authDataSource.signOut()
     }
 
+    override fun logout() {
+        authDataSource.signOut()
+    }
+
     override fun getCurrentUserId(): String? {
         return authDataSource.getCurrentUserId()
     }
