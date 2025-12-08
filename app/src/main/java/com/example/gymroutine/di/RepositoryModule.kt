@@ -3,11 +3,14 @@ package com.example.gymroutine.di
 import com.example.gymroutine.data.remote.FirebaseAuthDataSource
 import com.example.gymroutine.data.remote.FirestoreDataSource
 import com.example.gymroutine.data.remote.KakaoLocalDataSource
+import com.example.gymroutine.data.remote.OpenAIDataSource
+import com.example.gymroutine.data.repository.AIRoutineRepositoryImpl
 import com.example.gymroutine.data.repository.AuthRepositoryImpl
 import com.example.gymroutine.data.repository.ExerciseRepositoryImpl
 import com.example.gymroutine.data.repository.GymRepositoryImpl
 import com.example.gymroutine.data.repository.RoutineRepositoryImpl
 import com.example.gymroutine.data.repository.UserRepositoryImpl
+import com.example.gymroutine.domain.repository.AIRoutineRepository
 import com.example.gymroutine.domain.repository.AuthRepository
 import com.example.gymroutine.domain.repository.ExerciseRepository
 import com.example.gymroutine.domain.repository.GymRepository
@@ -64,5 +67,13 @@ object RepositoryModule {
         firestoreDataSource: FirestoreDataSource
     ): RoutineRepository {
         return RoutineRepositoryImpl(firestoreDataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAIRoutineRepository(
+        openAIDataSource: OpenAIDataSource
+    ): AIRoutineRepository {
+        return AIRoutineRepositoryImpl(openAIDataSource)
     }
 }

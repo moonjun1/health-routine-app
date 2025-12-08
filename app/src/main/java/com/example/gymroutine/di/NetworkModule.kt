@@ -1,6 +1,7 @@
 package com.example.gymroutine.di
 
 import com.example.gymroutine.data.remote.KakaoLocalApi
+import com.example.gymroutine.data.remote.OpenAIApiService
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -12,6 +13,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 /**
@@ -22,8 +24,17 @@ import javax.inject.Singleton
 object NetworkModule {
 
     private const val KAKAO_BASE_URL = "https://dapi.kakao.com/"
+    private const val OPENAI_BASE_URL = "https://api.openai.com/"
     private const val CONNECT_TIMEOUT = 30L
     private const val READ_TIMEOUT = 30L
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class KakaoRetrofit
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class OpenAIRetrofit
 
     @Provides
     @Singleton
@@ -55,7 +66,8 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(
+    @KakaoRetrofit
+    fun provideKakaoRetrofit(
         okHttpClient: OkHttpClient,
         gson: Gson
     ): Retrofit {
@@ -68,7 +80,27 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideKakaoLocalApi(retrofit: Retrofit): KakaoLocalApi {
+    @OpenAIRetrofit
+    fun provideOpenAIRetrofit(
+        okHttpClient: OkHttpClient,
+        gson: Gson
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(OPENAI_BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideKakaoLocalApi(@KakaoRetrofit retrofit: Retrofit): KakaoLocalApi {
         return retrofit.create(KakaoLocalApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOpenAIApiService(@OpenAIRetrofit retrofit: Retrofit): OpenAIApiService {
+        return retrofit.create(OpenAIApiService::class.java)
     }
 }
