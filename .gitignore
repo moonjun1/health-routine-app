@@ -17,3 +17,7 @@ gen/
 out/
 *.log
 *.hprof
+
+# API Keys (보안)
+local.properties
+secrets.properties
