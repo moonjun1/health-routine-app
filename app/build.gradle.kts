@@ -7,11 +7,16 @@ plugins {
     alias(libs.plugins.google.services)
 }
 
+// Load API keys from local.properties
+val localProperties = java.util.Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use { localProperties.load(it) }
+}
+
 android {
     namespace = "com.example.gymroutine"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.gymroutine"
@@ -24,6 +29,10 @@ android {
 
         // Kakao API Key
         buildConfigField("String", "KAKAO_REST_API_KEY", "\"7cddf57a1cf2d8f5906c594a8d44f1d2\"")
+
+        // OpenAI API Key (from local.properties)
+        val openaiApiKey = localProperties.getProperty("OPENAI_API_KEY") ?: ""
+        buildConfigField("String", "OPENAI_API_KEY", "\"$openaiApiKey\"")
     }
 
     buildTypes {
