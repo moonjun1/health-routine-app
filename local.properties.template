@@ -1,0 +1,10 @@
+## This file contains machine specific properties for the build.
+## To use this file, copy it to 'local.properties' and fill in your actual API keys.
+## DO NOT commit local.properties to version control!
+
+# Android SDK location
+sdk.dir=C\:\\Users\\YourUsername\\AppData\\Local\\Android\\Sdk
+
+# OpenAI API Key
+# Get your API key from: https://platform.openai.com/api-keys
+OPENAI_API_KEY=your_openai_api_key_here
