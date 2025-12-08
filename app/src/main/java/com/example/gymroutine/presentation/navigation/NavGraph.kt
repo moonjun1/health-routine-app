@@ -26,6 +26,7 @@ import com.example.gymroutine.presentation.routine.RoutineCreateScreen
 import com.example.gymroutine.presentation.routine.RoutineCreateViewModel
 import com.example.gymroutine.presentation.routine.RoutineDetailScreen
 import com.example.gymroutine.presentation.routine.RoutineListScreen
+import com.example.gymroutine.presentation.settings.SettingsScreen
 import com.google.gson.Gson
 
 /**
@@ -83,6 +84,10 @@ fun NavGraph(
                 },
                 onNavigateToRoutineList = {
                     navController.navigate(Screen.RoutineList.route)
+                },
+                onRoutineSelected = { routine ->
+                    val routineJson = Gson().toJson(routine)
+                    navController.navigate("routine_detail/$routineJson")
                 }
             )
         }
@@ -237,6 +242,20 @@ fun NavGraph(
                 routine = routine,
                 onNavigateBack = {
                     navController.popBackStack()
+                }
+            )
+        }
+
+        // Settings screen
+        composable(Screen.Settings.route) {
+            SettingsScreen(
+                onNavigateToGymSearch = {
+                    navController.navigate(Screen.GymSearch.route)
+                },
+                onNavigateToLogin = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Home.route) { inclusive = true }
+                    }
                 }
             )
         }
