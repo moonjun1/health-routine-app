@@ -1,0 +1,192 @@
+package com.example.gymroutine.presentation.navigation
+
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.example.gymroutine.data.model.Exercise
+import com.example.gymroutine.data.model.Gym
+import com.example.gymroutine.data.model.Routine
+import com.example.gymroutine.presentation.auth.LoginScreen
+import com.example.gymroutine.presentation.auth.SignupScreen
+import com.example.gymroutine.presentation.exercise.ExerciseDetailScreen
+import com.example.gymroutine.presentation.exercise.ExerciseListScreen
+import com.example.gymroutine.presentation.gym.GymRegisterScreen
+import com.example.gymroutine.presentation.gym.GymSearchScreen
+import com.example.gymroutine.presentation.home.HomeScreen
+import com.example.gymroutine.presentation.routine.RoutineCreateScreen
+import com.example.gymroutine.presentation.routine.RoutineDetailScreen
+import com.example.gymroutine.presentation.routine.RoutineListScreen
+import com.google.gson.Gson
+
+/**
+ * Main navigation graph for the app
+ */
+@Composable
+fun NavGraph(
+    navController: NavHostController,
+    startDestination: String = Screen.Login.route
+) {
+    NavHost(
+        navController = navController,
+        startDestination = startDestination
+    ) {
+        // Auth screens
+        composable(Screen.Login.route) {
+            LoginScreen(
+                onLoginSuccess = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
+                },
+                onNavigateToSignup = {
+                    navController.navigate(Screen.Signup.route)
+                },
+                onSkipLogin = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable(Screen.Signup.route) {
+            SignupScreen(
+                onSignupSuccess = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
+                },
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        // Main screens
+        composable(Screen.Home.route) {
+            HomeScreen(
+                onNavigateToGymSearch = {
+                    navController.navigate(Screen.GymSearch.route)
+                },
+                onNavigateToExerciseList = {
+                    navController.navigate(Screen.ExerciseList.route)
+                },
+                onNavigateToRoutineList = {
+                    navController.navigate(Screen.RoutineList.route)
+                }
+            )
+        }
+
+        // Gym screens
+        composable(Screen.GymSearch.route) {
+            GymSearchScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                },
+                onGymSelected = { gym ->
+                    val gymJson = Gson().toJson(gym)
+                    navController.navigate("gym_register/$gymJson")
+                }
+            )
+        }
+
+        composable(
+            route = "gym_register/{gymJson}",
+            arguments = listOf(
+                navArgument("gymJson") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val gymJson = backStackEntry.arguments?.getString("gymJson")
+            val gym = Gson().fromJson(gymJson, Gym::class.java)
+
+            GymRegisterScreen(
+                gym = gym,
+                onNavigateBack = {
+                    navController.popBackStack()
+                },
+                onRegistrationSuccess = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.GymSearch.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        // Exercise screens
+        composable(Screen.ExerciseList.route) {
+            ExerciseListScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                },
+                onExerciseSelected = { exercise ->
+                    val exerciseJson = Gson().toJson(exercise)
+                    navController.navigate("exercise_detail/$exerciseJson")
+                }
+            )
+        }
+
+        composable(
+            route = "exercise_detail/{exerciseJson}",
+            arguments = listOf(
+                navArgument("exerciseJson") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val exerciseJson = backStackEntry.arguments?.getString("exerciseJson")
+            val exercise = Gson().fromJson(exerciseJson, Exercise::class.java)
+
+            ExerciseDetailScreen(
+                exercise = exercise,
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        // Routine screens
+        composable(Screen.RoutineList.route) {
+            RoutineListScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                },
+                onNavigateToCreate = {
+                    navController.navigate(Screen.RoutineCreate.route)
+                },
+                onRoutineSelected = { routine ->
+                    val routineJson = Gson().toJson(routine)
+                    navController.navigate("routine_detail/$routineJson")
+                }
+            )
+        }
+
+        composable(Screen.RoutineCreate.route) {
+            RoutineCreateScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                },
+                onRoutineCreated = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(
+            route = "routine_detail/{routineJson}",
+            arguments = listOf(
+                navArgument("routineJson") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val routineJson = backStackEntry.arguments?.getString("routineJson")
+            val routine = Gson().fromJson(routineJson, Routine::class.java)
+
+            RoutineDetailScreen(
+                routine = routine,
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+    }
+}
