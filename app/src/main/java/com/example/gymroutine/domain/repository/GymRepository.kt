@@ -51,7 +51,17 @@ interface GymRepository {
     suspend fun getAllGyms(): List<Gym>
 
     /**
-     * Get user's registered gym
+     * Get user's registered gym (첫 번째 헬스장)
      */
     suspend fun getUserGym(userId: String): Gym?
+
+    /**
+     * Get all user's registered gyms
+     */
+    suspend fun getUserGyms(userId: String): List<Gym>
+
+    /**
+     * Set user's my gym
+     */
+    suspend fun setMyGym(userId: String, gymId: String)
 }

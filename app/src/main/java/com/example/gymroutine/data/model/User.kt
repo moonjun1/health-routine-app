@@ -7,17 +7,19 @@ package com.example.gymroutine.data.model
 data class User(
     val id: String = "",
     val email: String = "",
-    val gymId: String? = null,
+    val gymId: String? = null, // Deprecated: 하위 호환성을 위해 유지
+    val myGymId: String? = null, // 내 헬스장 (주로 사용하는 헬스장)
     val createdAt: Long = System.currentTimeMillis()
 ) {
     // No-arg constructor for Firestore
-    constructor() : this("", "", null, 0L)
+    constructor() : this("", "", null, null, 0L)
 
     fun toMap(): Map<String, Any?> {
         return mapOf(
             "id" to id,
             "email" to email,
             "gymId" to gymId,
+            "myGymId" to myGymId,
             "createdAt" to createdAt
         )
     }
@@ -28,6 +30,7 @@ data class User(
                 id = map["id"] as? String ?: "",
                 email = map["email"] as? String ?: "",
                 gymId = map["gymId"] as? String,
+                myGymId = map["myGymId"] as? String,
                 createdAt = map["createdAt"] as? Long ?: 0L
             )
         }

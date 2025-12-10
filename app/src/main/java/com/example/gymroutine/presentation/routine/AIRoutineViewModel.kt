@@ -6,6 +6,7 @@ import com.example.gymroutine.data.model.AIRoutineRequest
 import com.example.gymroutine.data.model.AIRoutineResponse
 import com.example.gymroutine.data.model.Routine
 import com.example.gymroutine.data.model.ExerciseSet
+import com.example.gymroutine.data.model.Gym
 import com.example.gymroutine.domain.repository.RoutineRepository
 import com.example.gymroutine.domain.repository.AIRoutineRepository
 import com.example.gymroutine.domain.repository.AuthRepository
@@ -49,12 +50,38 @@ class AIRoutineViewModel @Inject constructor(
     private val _additionalInfo = MutableStateFlow("")
     val additionalInfo: StateFlow<String> = _additionalInfo.asStateFlow()
 
+    // User's gyms
+    private val _userGyms = MutableStateFlow<List<Gym>>(emptyList())
+    val userGyms: StateFlow<List<Gym>> = _userGyms.asStateFlow()
+
+    private val _selectedGym = MutableStateFlow<Gym?>(null)
+    val selectedGym: StateFlow<Gym?> = _selectedGym.asStateFlow()
+
     // Generation states
     private val _generationState = MutableStateFlow<Resource<AIRoutineResponse>>(Resource.Idle)
     val generationState: StateFlow<Resource<AIRoutineResponse>> = _generationState.asStateFlow()
 
     private val _saveState = MutableStateFlow<Resource<Routine>>(Resource.Idle)
     val saveState: StateFlow<Resource<Routine>> = _saveState.asStateFlow()
+
+    init {
+        loadUserGyms()
+    }
+
+    private fun loadUserGyms() {
+        viewModelScope.launch {
+            val userId = authRepository.getCurrentUserId() ?: return@launch
+            val gyms = gymRepository.getUserGyms(userId)
+            _userGyms.value = gyms
+            if (gyms.isNotEmpty() && _selectedGym.value == null) {
+                _selectedGym.value = gyms.first()
+            }
+        }
+    }
+
+    fun selectGym(gym: Gym) {
+        _selectedGym.value = gym
+    }
 
     /**
      * Update user inputs
@@ -97,24 +124,18 @@ class AIRoutineViewModel @Inject constructor(
             _generationState.value = Resource.Loading
 
             try {
-                // Check if user has registered gym
-                val userId = authRepository.getCurrentUserId()
-                if (userId.isNullOrEmpty()) {
-                    _generationState.value = Resource.Error("로그인이 필요합니다")
-                    return@launch
-                }
-
-                val userGym = gymRepository.getUserGym(userId)
-                if (userGym == null) {
+                // Check selected gym
+                val selectedGym = _selectedGym.value
+                if (selectedGym == null) {
                     _generationState.value = Resource.Error(
-                        "등록된 헬스장이 없습니다. 먼저 헬스장을 등록해주세요."
+                        "헬스장을 선택해주세요"
                     )
                     return@launch
                 }
 
-                if (userGym.equipments.isEmpty()) {
+                if (selectedGym.equipments.isEmpty()) {
                     _generationState.value = Resource.Error(
-                        "헬스장에 등록된 기구가 없습니다. 헬스장 정보를 수정하여 보유 기구를 등록해주세요."
+                        "선택한 헬스장에 등록된 기구가 없습니다. 헬스장 정보를 수정하여 보유 기구를 등록해주세요."
                     )
                     return@launch
                 }
@@ -125,7 +146,7 @@ class AIRoutineViewModel @Inject constructor(
                     workoutsPerWeek = _workoutsPerWeek.value,
                     workoutDuration = _workoutDuration.value,
                     preferredCategories = _selectedCategories.value,
-                    equipment = userGym.equipments, // Use gym's equipment
+                    equipment = selectedGym.equipments, // Use selected gym's equipment
                     additionalInfo = _additionalInfo.value
                 )
 
@@ -198,6 +219,7 @@ class AIRoutineViewModel @Inject constructor(
      */
     fun canGenerateRoutine(): Boolean {
         return _goal.value.isNotEmpty() &&
-               _selectedCategories.value.isNotEmpty()
+               _selectedCategories.value.isNotEmpty() &&
+               _selectedGym.value != null
     }
 }
