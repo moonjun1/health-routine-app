@@ -26,8 +26,23 @@ class GymRegisterViewModel @Inject constructor(
     private val _selectedGym = MutableStateFlow<Gym?>(null)
     val selectedGym: StateFlow<Gym?> = _selectedGym.asStateFlow()
 
+    private val _selectedEquipments = MutableStateFlow<List<String>>(emptyList())
+    val selectedEquipments: StateFlow<List<String>> = _selectedEquipments.asStateFlow()
+
     fun setSelectedGym(gym: Gym) {
         _selectedGym.value = gym
+        // Pre-fill equipments if already registered
+        _selectedEquipments.value = gym.equipments
+    }
+
+    fun toggleEquipment(equipment: String) {
+        val current = _selectedEquipments.value.toMutableList()
+        if (current.contains(equipment)) {
+            current.remove(equipment)
+        } else {
+            current.add(equipment)
+        }
+        _selectedEquipments.value = current
     }
 
     fun registerGym() {
@@ -38,9 +53,17 @@ class GymRegisterViewModel @Inject constructor(
                 return@launch
             }
 
+            if (_selectedEquipments.value.isEmpty()) {
+                _registerState.value = Resource.Error("보유 기구를 1개 이상 선택해주세요")
+                return@launch
+            }
+
             _registerState.value = Resource.Loading
 
-            val result = registerGymUseCase(gym)
+            // Add selected equipments to gym
+            val gymWithEquipments = gym.copy(equipments = _selectedEquipments.value)
+
+            val result = registerGymUseCase(gymWithEquipments)
 
             _registerState.value = if (result.isSuccess) {
                 Resource.Success(result.getOrThrow())
