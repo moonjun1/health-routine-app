@@ -30,4 +30,9 @@ interface RoutineRepository {
      * Delete routine
      */
     suspend fun deleteRoutine(routineId: String)
+
+    /**
+     * Delete routine with userId
+     */
+    suspend fun deleteRoutine(userId: String, routineId: String)
 }

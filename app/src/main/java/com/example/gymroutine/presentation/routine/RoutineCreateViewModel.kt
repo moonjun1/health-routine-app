@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.gymroutine.data.model.Exercise
 import com.example.gymroutine.data.model.ExerciseSet
 import com.example.gymroutine.data.model.Routine
-import com.example.gymroutine.data.repository.RoutineRepositoryImpl
+import com.example.gymroutine.domain.repository.RoutineRepository
 import com.example.gymroutine.domain.repository.AuthRepository
 import com.example.gymroutine.domain.repository.ExerciseRepository
 import com.example.gymroutine.util.Resource
@@ -22,7 +22,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class RoutineCreateViewModel @Inject constructor(
-    private val routineRepository: RoutineRepositoryImpl,
+    private val routineRepository: RoutineRepository,
     private val exerciseRepository: ExerciseRepository,
     private val authRepository: AuthRepository
 ) : ViewModel() {

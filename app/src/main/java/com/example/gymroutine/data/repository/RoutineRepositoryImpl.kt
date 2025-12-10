@@ -58,7 +58,7 @@ class RoutineRepositoryImpl @Inject constructor(
     /**
      * Delete routine with userId
      */
-    suspend fun deleteRoutine(userId: String, routineId: String) {
+    override suspend fun deleteRoutine(userId: String, routineId: String) {
         if (userId.isEmpty()) {
             // Not logged in - delete from local
             localRoutineDataSource.deleteRoutine(routineId)

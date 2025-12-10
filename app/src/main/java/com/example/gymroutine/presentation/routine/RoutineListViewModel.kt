@@ -3,7 +3,7 @@ package com.example.gymroutine.presentation.routine
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gymroutine.data.model.Routine
-import com.example.gymroutine.data.repository.RoutineRepositoryImpl
+import com.example.gymroutine.domain.repository.RoutineRepository
 import com.example.gymroutine.domain.repository.AuthRepository
 import com.example.gymroutine.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +18,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class RoutineListViewModel @Inject constructor(
-    private val routineRepository: RoutineRepositoryImpl,
+    private val routineRepository: RoutineRepository,
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
