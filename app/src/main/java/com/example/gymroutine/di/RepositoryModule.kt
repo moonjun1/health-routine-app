@@ -50,9 +50,11 @@ object RepositoryModule {
     @Singleton
     fun provideGymRepository(
         kakaoLocalDataSource: KakaoLocalDataSource,
-        firestoreDataSource: FirestoreDataSource
+        firestoreDataSource: FirestoreDataSource,
+        gymLocalDataSource: com.example.gymroutine.data.local.GymLocalDataSource,
+        authRepository: AuthRepository
     ): GymRepository {
-        return GymRepositoryImpl(kakaoLocalDataSource, firestoreDataSource)
+        return GymRepositoryImpl(kakaoLocalDataSource, firestoreDataSource, gymLocalDataSource, authRepository)
     }
 
     @Provides

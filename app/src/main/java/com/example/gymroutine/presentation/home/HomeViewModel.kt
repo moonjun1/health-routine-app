@@ -63,11 +63,13 @@ class HomeViewModel @Inject constructor(
 
     private fun loadUserGyms() {
         viewModelScope.launch {
-            val userId = authRepository.getCurrentUserId() ?: return@launch
+            val userId = authRepository.getCurrentUserId()
 
             _userGymsState.value = Resource.Loading
             try {
-                val gyms = gymRepository.getUserGyms(userId)
+                // Load gyms regardless of login status
+                // Repository will handle local/Firebase automatically
+                val gyms = gymRepository.getUserGyms(userId ?: "")
                 _userGymsState.value = if (gyms.isNotEmpty()) {
                     Resource.Success(gyms)
                 } else {

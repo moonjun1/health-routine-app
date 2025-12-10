@@ -67,23 +67,23 @@ class GymRegisterViewModel @Inject constructor(
                 return@launch
             }
 
-            // Get current user ID
+            // Get current user ID (nullable for non-logged in users)
             val userId = authRepository.getCurrentUserId()
-            if (userId.isNullOrEmpty()) {
-                _registerState.value = Resource.Error("로그인이 필요합니다")
-                Log.e(TAG, "registerGym: user not logged in")
-                return@launch
-            }
+            val isLoggedIn = !userId.isNullOrEmpty()
 
             _registerState.value = Resource.Loading
 
             // Add selected equipments and registeredBy to gym
             val gymWithEquipments = gym.copy(
                 equipments = _selectedEquipments.value,
-                registeredBy = userId
+                registeredBy = userId ?: "local" // Use "local" if not logged in
             )
 
-            Log.d(TAG, "registerGym: Registering gym ${gymWithEquipments.name} for user $userId")
+            if (isLoggedIn) {
+                Log.d(TAG, "registerGym: Registering gym ${gymWithEquipments.name} for user $userId (Firebase)")
+            } else {
+                Log.d(TAG, "registerGym: Registering gym ${gymWithEquipments.name} locally (no login)")
+            }
             Log.d(TAG, "registerGym: Equipments count: ${gymWithEquipments.equipments.size}")
 
             val result = registerGymUseCase(gymWithEquipments)
