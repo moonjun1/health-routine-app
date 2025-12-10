@@ -2,6 +2,8 @@ package com.example.gymroutine.presentation.common
 
 import android.webkit.WebSettings
 import android.webkit.WebView
+import android.webkit.WebViewClient
+import android.webkit.WebChromeClient
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
@@ -26,12 +28,20 @@ fun YouTubePlayer(
                 .height(220.dp),
             factory = { context ->
                 WebView(context).apply {
+                    webViewClient = WebViewClient()
+                    webChromeClient = WebChromeClient()
+
                     settings.apply {
                         javaScriptEnabled = true
                         loadWithOverviewMode = true
                         useWideViewPort = true
                         mediaPlaybackRequiresUserGesture = false
                         mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+                        domStorageEnabled = true
+                        databaseEnabled = true
+                        setSupportZoom(false)
+                        builtInZoomControls = false
+                        displayZoomControls = false
                     }
 
                     val html = """
