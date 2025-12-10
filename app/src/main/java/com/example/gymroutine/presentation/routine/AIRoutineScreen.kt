@@ -5,7 +5,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -32,6 +34,9 @@ fun AIRoutineScreen(
     val workoutDuration by viewModel.workoutDuration.collectAsState()
     val selectedCategories by viewModel.selectedCategories.collectAsState()
     val additionalInfo by viewModel.additionalInfo.collectAsState()
+
+    val userGyms by viewModel.userGyms.collectAsState()
+    val selectedGym by viewModel.selectedGym.collectAsState()
 
     val generationState by viewModel.generationState.collectAsState()
     val saveState by viewModel.saveState.collectAsState()
@@ -90,6 +95,15 @@ fun AIRoutineScreen(
                     text = "AI가 당신에게 맞는 완벽한 루틴을 만들어드립니다",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
+                )
+            }
+
+            // Gym selection
+            item {
+                GymSelectionSection(
+                    userGyms = userGyms,
+                    selectedGym = selectedGym,
+                    onGymSelected = { viewModel.selectGym(it) }
                 )
             }
 
@@ -228,6 +242,153 @@ fun AIRoutineScreen(
             },
             isSaving = saveState is Resource.Loading
         )
+    }
+}
+
+/**
+ * Gym selection section
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun GymSelectionSection(
+    userGyms: List<com.example.gymroutine.data.model.Gym>,
+    selectedGym: com.example.gymroutine.data.model.Gym?,
+    onGymSelected: (com.example.gymroutine.data.model.Gym) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = "헬스장 선택",
+            style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.Bold
+        )
+
+        if (userGyms.isEmpty()) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.errorContainer
+                )
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Default.LocationOn,
+                        null,
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                    Text(
+                        text = "등록된 헬스장이 없습니다. 먼저 헬스장을 등록해주세요.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                }
+            }
+        } else {
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = { expanded = !expanded }
+            ) {
+                OutlinedCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .menuAnchor()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Icon(
+                                Icons.Default.LocationOn,
+                                null,
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Column {
+                                Text(
+                                    text = selectedGym?.name ?: "헬스장을 선택하세요",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    fontWeight = FontWeight.Medium
+                                )
+                                selectedGym?.let { gym ->
+                                    Text(
+                                        text = "보유 기구: ${gym.equipments.size}개",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+                        }
+                        Icon(
+                            Icons.Default.ArrowDropDown,
+                            null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    userGyms.forEach { gym ->
+                        DropdownMenuItem(
+                            text = {
+                                Column {
+                                    Text(
+                                        text = gym.name,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                    Text(
+                                        text = "보유 기구: ${gym.equipments.size}개",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            },
+                            onClick = {
+                                onGymSelected(gym)
+                                expanded = false
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Default.LocationOn,
+                                    null,
+                                    tint = if (selectedGym?.placeId == gym.placeId)
+                                        MaterialTheme.colorScheme.primary
+                                    else
+                                        MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            },
+                            trailingIcon = if (selectedGym?.placeId == gym.placeId) {
+                                {
+                                    Icon(
+                                        Icons.Default.Check,
+                                        null,
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                            } else null
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 
