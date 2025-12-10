@@ -9,6 +9,7 @@ import com.example.gymroutine.data.model.ExerciseSet
 import com.example.gymroutine.domain.repository.RoutineRepository
 import com.example.gymroutine.domain.repository.AIRoutineRepository
 import com.example.gymroutine.domain.repository.AuthRepository
+import com.example.gymroutine.domain.repository.GymRepository
 import com.example.gymroutine.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +26,8 @@ import javax.inject.Inject
 class AIRoutineViewModel @Inject constructor(
     private val aiRoutineRepository: AIRoutineRepository,
     private val routineRepository: RoutineRepository,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val gymRepository: GymRepository
 ) : ViewModel() {
 
     // User inputs
@@ -95,12 +97,35 @@ class AIRoutineViewModel @Inject constructor(
             _generationState.value = Resource.Loading
 
             try {
+                // Check if user has registered gym
+                val userId = authRepository.getCurrentUserId()
+                if (userId.isNullOrEmpty()) {
+                    _generationState.value = Resource.Error("로그인이 필요합니다")
+                    return@launch
+                }
+
+                val userGym = gymRepository.getUserGym(userId)
+                if (userGym == null) {
+                    _generationState.value = Resource.Error(
+                        "등록된 헬스장이 없습니다. 먼저 헬스장을 등록해주세요."
+                    )
+                    return@launch
+                }
+
+                if (userGym.equipments.isEmpty()) {
+                    _generationState.value = Resource.Error(
+                        "헬스장에 등록된 기구가 없습니다. 헬스장 정보를 수정하여 보유 기구를 등록해주세요."
+                    )
+                    return@launch
+                }
+
                 val request = AIRoutineRequest(
                     goal = _goal.value,
                     experienceLevel = _experienceLevel.value,
                     workoutsPerWeek = _workoutsPerWeek.value,
                     workoutDuration = _workoutDuration.value,
                     preferredCategories = _selectedCategories.value,
+                    equipment = userGym.equipments, // Use gym's equipment
                     additionalInfo = _additionalInfo.value
                 )
 
