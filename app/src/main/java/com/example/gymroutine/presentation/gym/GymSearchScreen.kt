@@ -172,7 +172,7 @@ fun GymSearchScreen(
                     } else {
                         if (showMap) {
                             // Map view
-                            KakaoMapView(
+                            GoogleMapView(
                                 modifier = Modifier.fillMaxSize(),
                                 currentLocation = currentLocation,
                                 gyms = gyms,

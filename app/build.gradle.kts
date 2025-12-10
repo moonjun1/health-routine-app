@@ -35,6 +35,10 @@ android {
         // OpenAI API Key (from local.properties)
         val openaiApiKey = localProperties.getProperty("OPENAI_API_KEY") ?: ""
         buildConfigField("String", "OPENAI_API_KEY", "\"$openaiApiKey\"")
+
+        // Google Maps API Key (from local.properties)
+        val googleMapsApiKey = localProperties.getProperty("GOOGLE_MAPS_API_KEY") ?: ""
+        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = googleMapsApiKey
     }
 
     buildTypes {
@@ -113,6 +117,9 @@ dependencies {
 
     // Google Play Services
     implementation(libs.play.services.location)
+
+    // Google Maps Compose
+    implementation(libs.maps.compose)
 
     // Testing
     testImplementation(libs.junit)
