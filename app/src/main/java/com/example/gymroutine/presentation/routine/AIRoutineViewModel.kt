@@ -1,5 +1,6 @@
 package com.example.gymroutine.presentation.routine
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gymroutine.data.model.AIRoutineRequest
@@ -30,6 +31,10 @@ class AIRoutineViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val gymRepository: GymRepository
 ) : ViewModel() {
+
+    companion object {
+        private const val TAG = "AIRoutineViewModel"
+    }
 
     // User inputs
     private val _goal = MutableStateFlow("")
@@ -70,11 +75,26 @@ class AIRoutineViewModel @Inject constructor(
 
     private fun loadUserGyms() {
         viewModelScope.launch {
-            val userId = authRepository.getCurrentUserId() ?: return@launch
+            val userId = authRepository.getCurrentUserId()
+            if (userId == null) {
+                Log.w(TAG, "loadUserGyms: User not logged in")
+                return@launch
+            }
+
+            Log.d(TAG, "loadUserGyms: Loading gyms for user $userId")
             val gyms = gymRepository.getUserGyms(userId)
+            Log.d(TAG, "loadUserGyms: Found ${gyms.size} gyms")
+
+            gyms.forEachIndexed { index, gym ->
+                Log.d(TAG, "  Gym $index: ${gym.name} (${gym.equipments.size} equipments)")
+            }
+
             _userGyms.value = gyms
             if (gyms.isNotEmpty() && _selectedGym.value == null) {
                 _selectedGym.value = gyms.first()
+                Log.d(TAG, "loadUserGyms: Auto-selected first gym: ${gyms.first().name}")
+            } else if (gyms.isEmpty()) {
+                Log.w(TAG, "loadUserGyms: No gyms found for user")
             }
         }
     }

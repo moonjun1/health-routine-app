@@ -37,6 +37,9 @@ class HomeViewModel @Inject constructor(
     private val _gymState = MutableStateFlow<Resource<Gym>>(Resource.Idle)
     val gymState: StateFlow<Resource<Gym>> = _gymState.asStateFlow()
 
+    private val _userGymsState = MutableStateFlow<Resource<List<Gym>>>(Resource.Idle)
+    val userGymsState: StateFlow<Resource<List<Gym>>> = _userGymsState.asStateFlow()
+
     private val _recentRoutinesState = MutableStateFlow<Resource<List<Routine>>>(Resource.Idle)
     val recentRoutinesState: StateFlow<Resource<List<Routine>>> = _recentRoutinesState.asStateFlow()
 
@@ -53,7 +56,26 @@ class HomeViewModel @Inject constructor(
 
         if (currentUser != null) {
             loadUserData()
+            loadUserGyms()
             loadRecentRoutines()
+        }
+    }
+
+    private fun loadUserGyms() {
+        viewModelScope.launch {
+            val userId = authRepository.getCurrentUserId() ?: return@launch
+
+            _userGymsState.value = Resource.Loading
+            try {
+                val gyms = gymRepository.getUserGyms(userId)
+                _userGymsState.value = if (gyms.isNotEmpty()) {
+                    Resource.Success(gyms)
+                } else {
+                    Resource.Error("등록된 헬스장이 없습니다")
+                }
+            } catch (e: Exception) {
+                _userGymsState.value = Resource.Error(e.message ?: "헬스장 목록 로드 실패")
+            }
         }
     }
 
