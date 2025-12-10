@@ -52,4 +52,8 @@ class GymRepositoryImpl @Inject constructor(
     override suspend fun getAllGyms(): List<Gym> {
         return firestoreDataSource.getGyms()
     }
+
+    override suspend fun getUserGym(userId: String): Gym? {
+        return firestoreDataSource.getUserGym(userId)
+    }
 }

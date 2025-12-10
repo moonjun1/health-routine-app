@@ -124,6 +124,27 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
+    /**
+     * Get user's gym by userId
+     */
+    suspend fun getUserGym(userId: String): Gym? {
+        return try {
+            val snapshot = firestore.collection(Constants.COLLECTION_GYMS)
+                .whereEqualTo("registeredBy", userId)
+                .limit(1)
+                .get()
+                .await()
+
+            if (snapshot.documents.isNotEmpty()) {
+                Gym.fromMap(snapshot.documents[0].data ?: emptyMap())
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     // ==================== Equipment Operations ====================
 
     /**

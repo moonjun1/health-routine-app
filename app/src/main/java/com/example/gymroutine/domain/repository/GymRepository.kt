@@ -49,4 +49,9 @@ interface GymRepository {
      * Get all gyms from Firestore
      */
     suspend fun getAllGyms(): List<Gym>
+
+    /**
+     * Get user's registered gym
+     */
+    suspend fun getUserGym(userId: String): Gym?
 }
