@@ -24,6 +24,11 @@
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="e53b63befbd0dd12155dc89f7a1f2ad6" />
+
+        <!-- Google Maps API Key -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${GOOGLE_MAPS_API_KEY}" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

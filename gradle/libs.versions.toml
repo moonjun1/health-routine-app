@@ -38,6 +38,9 @@ lifecycleViewmodelCompose = "2.6.2"
 # Google Play Services
 playServicesLocation = "21.0.1"
 
+# Google Maps
+mapsCompose = "4.3.3"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -89,6 +92,9 @@ androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "l
 
 # Google Play Services
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
+
+# Google Maps
+maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "mapsCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
