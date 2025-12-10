@@ -241,8 +241,14 @@ class AIRoutineViewModel @Inject constructor(
      * Validate if can generate routine
      */
     fun canGenerateRoutine(): Boolean {
-        return _goal.value.isNotEmpty() &&
-               _selectedCategories.value.isNotEmpty() &&
-               _selectedGym.value != null
+        val goalValid = _goal.value.isNotEmpty()
+        val categoriesValid = _selectedCategories.value.isNotEmpty()
+        val gymValid = _selectedGym.value != null
+
+        Log.d(TAG, "canGenerateRoutine: goal=$goalValid (${_goal.value}), " +
+                   "categories=$categoriesValid (${_selectedCategories.value.size}), " +
+                   "gym=$gymValid (${_selectedGym.value?.name})")
+
+        return goalValid && categoriesValid && gymValid
     }
 }
