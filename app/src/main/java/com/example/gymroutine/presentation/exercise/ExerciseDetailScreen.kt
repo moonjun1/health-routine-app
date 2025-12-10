@@ -15,7 +15,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gymroutine.data.model.Exercise
-import com.example.gymroutine.presentation.common.YouTubePlayer
 
 /**
  * Exercise detail screen showing detailed information
@@ -153,7 +152,7 @@ fun ExerciseDetailScreen(
                 }
             }
 
-            // YouTube video player
+            // YouTube video link
             if (exercise.youtubeUrl != null) {
                 Card(
                     modifier = Modifier.fillMaxWidth()
@@ -167,12 +166,14 @@ fun ExerciseDetailScreen(
                             style = MaterialTheme.typography.titleMedium
                         )
                         Divider()
-                        YouTubePlayer(
-                            videoUrl = exercise.youtubeUrl
+
+                        Text(
+                            text = "YouTube에서 이 운동의 시연 영상을 확인하세요",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
 
-                        // 외부 앱으로 열기 버튼 (선택사항)
-                        OutlinedButton(
+                        Button(
                             onClick = {
                                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(exercise.youtubeUrl))
                                 context.startActivity(intent)
@@ -185,7 +186,7 @@ fun ExerciseDetailScreen(
                                 modifier = Modifier.size(20.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("YouTube 앱에서 보기")
+                            Text("YouTube에서 영상 보기")
                         }
                     }
                 }
