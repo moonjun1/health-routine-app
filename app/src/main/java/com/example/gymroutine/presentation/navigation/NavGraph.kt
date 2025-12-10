@@ -28,6 +28,9 @@ import com.example.gymroutine.presentation.routine.RoutineDetailScreen
 import com.example.gymroutine.presentation.routine.RoutineListScreen
 import com.example.gymroutine.presentation.settings.SettingsScreen
 import com.google.gson.Gson
+import java.net.URLEncoder
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 /**
  * Main navigation graph for the app
@@ -86,7 +89,7 @@ fun NavGraph(
                     navController.navigate(Screen.RoutineList.route)
                 },
                 onRoutineSelected = { routine ->
-                    val routineJson = Gson().toJson(routine)
+                    val routineJson = URLEncoder.encode(Gson().toJson(routine), StandardCharsets.UTF_8.toString())
                     navController.navigate("routine_detail/$routineJson")
                 }
             )
@@ -99,7 +102,7 @@ fun NavGraph(
                     navController.popBackStack()
                 },
                 onGymSelected = { gym ->
-                    val gymJson = Gson().toJson(gym)
+                    val gymJson = URLEncoder.encode(Gson().toJson(gym), StandardCharsets.UTF_8.toString())
                     navController.navigate("gym_register/$gymJson")
                 }
             )
@@ -113,7 +116,10 @@ fun NavGraph(
         ) { backStackEntry ->
             val gymJson = backStackEntry.arguments?.getString("gymJson")
             val gym = try {
-                gymJson?.let { Gson().fromJson(it, Gym::class.java) }
+                gymJson?.let {
+                    val decoded = URLDecoder.decode(it, StandardCharsets.UTF_8.toString())
+                    Gson().fromJson(decoded, Gym::class.java)
+                }
             } catch (e: Exception) {
                 null
             }
@@ -143,7 +149,7 @@ fun NavGraph(
                     navController.popBackStack()
                 },
                 onExerciseSelected = { exercise ->
-                    val exerciseJson = Gson().toJson(exercise)
+                    val exerciseJson = URLEncoder.encode(Gson().toJson(exercise), StandardCharsets.UTF_8.toString())
                     navController.navigate("exercise_detail/$exerciseJson")
                 }
             )
@@ -157,7 +163,10 @@ fun NavGraph(
         ) { backStackEntry ->
             val exerciseJson = backStackEntry.arguments?.getString("exerciseJson")
             val exercise = try {
-                exerciseJson?.let { Gson().fromJson(it, Exercise::class.java) }
+                exerciseJson?.let {
+                    val decoded = URLDecoder.decode(it, StandardCharsets.UTF_8.toString())
+                    Gson().fromJson(decoded, Exercise::class.java)
+                }
             } catch (e: Exception) {
                 null
             }
@@ -188,7 +197,7 @@ fun NavGraph(
                     navController.navigate(Screen.AIRoutine.route)
                 },
                 onRoutineSelected = { routine ->
-                    val routineJson = Gson().toJson(routine)
+                    val routineJson = URLEncoder.encode(Gson().toJson(routine), StandardCharsets.UTF_8.toString())
                     navController.navigate("routine_detail/$routineJson")
                 }
             )
@@ -255,7 +264,10 @@ fun NavGraph(
         ) { backStackEntry ->
             val routineJson = backStackEntry.arguments?.getString("routineJson")
             val routine = try {
-                routineJson?.let { Gson().fromJson(it, Routine::class.java) }
+                routineJson?.let {
+                    val decoded = URLDecoder.decode(it, StandardCharsets.UTF_8.toString())
+                    Gson().fromJson(decoded, Routine::class.java)
+                }
             } catch (e: Exception) {
                 null
             }
