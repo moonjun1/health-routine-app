@@ -35,6 +35,11 @@ android {
         // OpenAI API Key (from local.properties)
         val openaiApiKey = localProperties.getProperty("OPENAI_API_KEY") ?: ""
         buildConfigField("String", "OPENAI_API_KEY", "\"$openaiApiKey\"")
+
+        // Native library extraction for Kakao Map SDK
+        ndk {
+            abiFilters.addAll(listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64"))
+        }
     }
 
     buildTypes {
@@ -56,6 +61,12 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
     }
 }
 
