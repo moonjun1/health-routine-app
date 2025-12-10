@@ -38,7 +38,7 @@ android {
 
         // Native library extraction for Kakao Map SDK
         ndk {
-            abiFilters.addAll(listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64"))
+            abiFilters += listOf("armeabi-v7a", "arm64-v8a")
         }
     }
 
@@ -49,6 +49,15 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+    }
+
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("armeabi-v7a", "arm64-v8a")
+            isUniversalApk = true
         }
     }
     compileOptions {

@@ -30,7 +30,7 @@ coil = "2.5.0"
 
 # Kakao SDK
 kakaoSdk = "2.19.0"
-kakaoMapSdk = "2.11.8"
+kakaoMapSdk = "2.12.11"
 
 # ViewModel Compose
 lifecycleViewmodelCompose = "2.6.2"
