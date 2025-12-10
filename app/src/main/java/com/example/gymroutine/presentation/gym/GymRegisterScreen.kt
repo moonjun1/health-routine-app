@@ -1,6 +1,8 @@
 package com.example.gymroutine.presentation.gym
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -10,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gymroutine.data.model.Gym
+import com.example.gymroutine.data.model.GymEquipment
 import com.example.gymroutine.util.Resource
 
 /**
@@ -24,9 +27,12 @@ fun GymRegisterScreen(
     onRegistrationSuccess: () -> Unit
 ) {
     val registerState by viewModel.registerState.collectAsState()
+    val selectedEquipments by viewModel.selectedEquipments.collectAsState()
 
     var showError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
+
+    val availableEquipments = remember { GymEquipment.getStandardEquipmentList() }
 
     // Set selected gym on init
     LaunchedEffect(gym) {
@@ -107,32 +113,67 @@ fun GymRegisterScreen(
                     }
                 }
 
-                // Info message
+                // Equipment selection card
                 Card(
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer
-                    ),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = "안내",
-                            style = MaterialTheme.typography.titleSmall,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                            text = "보유 기구 선택 (필수)",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.primary
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "이 헬스장을 등록하시면 내 헬스장으로 설정됩니다.\n" +
-                                    "헬스장 정보(기구, 운영시간 등)는 나중에 수정할 수 있습니다.",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                            text = "이 헬스장에 있는 기구를 선택해주세요. AI 루틴 생성 시 선택한 기구만 사용됩니다.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        // Equipment selection list
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(300.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            items(availableEquipments) { equipment ->
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Checkbox(
+                                        checked = selectedEquipments.contains(equipment),
+                                        onCheckedChange = { checked ->
+                                            viewModel.toggleEquipment(equipment)
+                                        }
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = equipment,
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "선택된 기구: ${selectedEquipments.size}개",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = if (selectedEquipments.isEmpty()) {
+                                MaterialTheme.colorScheme.error
+                            } else {
+                                MaterialTheme.colorScheme.primary
+                            }
                         )
                     }
                 }
 
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 // Error message
                 if (showError) {
@@ -147,7 +188,7 @@ fun GymRegisterScreen(
                 Button(
                     onClick = viewModel::registerGym,
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = registerState !is Resource.Loading
+                    enabled = registerState !is Resource.Loading && selectedEquipments.isNotEmpty()
                 ) {
                     if (registerState is Resource.Loading) {
                         CircularProgressIndicator(
@@ -155,7 +196,13 @@ fun GymRegisterScreen(
                             color = MaterialTheme.colorScheme.onPrimary
                         )
                     } else {
-                        Text("이 헬스장으로 등록하기")
+                        Text(
+                            if (selectedEquipments.isEmpty()) {
+                                "기구를 선택해주세요"
+                            } else {
+                                "이 헬스장으로 등록하기"
+                            }
+                        )
                     }
                 }
 
