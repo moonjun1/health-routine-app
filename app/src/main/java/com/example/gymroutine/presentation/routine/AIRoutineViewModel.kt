@@ -76,13 +76,16 @@ class AIRoutineViewModel @Inject constructor(
     private fun loadUserGyms() {
         viewModelScope.launch {
             val userId = authRepository.getCurrentUserId()
-            if (userId == null) {
-                Log.w(TAG, "loadUserGyms: User not logged in")
-                return@launch
+
+            // Load gyms regardless of login status
+            // Repository will handle local/Firebase automatically
+            if (userId != null) {
+                Log.d(TAG, "loadUserGyms: Loading gyms for user $userId (Firebase)")
+            } else {
+                Log.d(TAG, "loadUserGyms: Loading gyms from local storage (not logged in)")
             }
 
-            Log.d(TAG, "loadUserGyms: Loading gyms for user $userId")
-            val gyms = gymRepository.getUserGyms(userId)
+            val gyms = gymRepository.getUserGyms(userId ?: "")
             Log.d(TAG, "loadUserGyms: Found ${gyms.size} gyms")
 
             gyms.forEachIndexed { index, gym ->
@@ -94,7 +97,7 @@ class AIRoutineViewModel @Inject constructor(
                 _selectedGym.value = gyms.first()
                 Log.d(TAG, "loadUserGyms: Auto-selected first gym: ${gyms.first().name}")
             } else if (gyms.isEmpty()) {
-                Log.w(TAG, "loadUserGyms: No gyms found for user")
+                Log.w(TAG, "loadUserGyms: No gyms found")
             }
         }
     }
