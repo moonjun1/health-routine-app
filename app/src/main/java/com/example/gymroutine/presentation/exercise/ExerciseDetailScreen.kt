@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gymroutine.data.model.Exercise
+import com.example.gymroutine.presentation.common.YouTubePlayer
 
 /**
  * Exercise detail screen showing detailed information
@@ -152,22 +153,41 @@ fun ExerciseDetailScreen(
                 }
             }
 
-            // YouTube video button
+            // YouTube video player
             if (exercise.youtubeUrl != null) {
-                Button(
-                    onClick = {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(exercise.youtubeUrl))
-                        context.startActivity(intent)
-                    },
+                Card(
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Icon(
-                        Icons.Default.PlayArrow,
-                        contentDescription = "재생",
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("YouTube 영상 보기")
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = "운동 영상",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Divider()
+                        YouTubePlayer(
+                            videoUrl = exercise.youtubeUrl
+                        )
+
+                        // 외부 앱으로 열기 버튼 (선택사항)
+                        OutlinedButton(
+                            onClick = {
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(exercise.youtubeUrl))
+                                context.startActivity(intent)
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Icon(
+                                Icons.Default.PlayArrow,
+                                contentDescription = "재생",
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("YouTube 앱에서 보기")
+                        }
+                    }
                 }
             }
         }
