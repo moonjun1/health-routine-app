@@ -9,7 +9,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -37,6 +39,7 @@ fun GymSearchScreen(
 
     var showError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
+    var showMap by remember { mutableStateOf(true) }
 
     // Location permission launcher
     val locationPermissionLauncher = rememberLauncherForActivityResult(
@@ -83,6 +86,14 @@ fun GymSearchScreen(
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.Default.ArrowBack, "뒤로가기")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { showMap = !showMap }) {
+                        Icon(
+                            imageVector = if (showMap) Icons.Default.List else Icons.Default.Place,
+                            contentDescription = if (showMap) "리스트 보기" else "지도 보기"
+                        )
                     }
                 }
             )
@@ -139,7 +150,7 @@ fun GymSearchScreen(
                 )
             }
 
-            // Search results
+            // Search results (Map or List)
             when (searchState) {
                 is Resource.Loading -> {
                     Box(
@@ -159,15 +170,28 @@ fun GymSearchScreen(
                             Text("검색 결과가 없습니다")
                         }
                     } else {
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            items(gyms) { gym ->
-                                GymListItem(
-                                    gym = gym,
-                                    onClick = { onGymSelected(gym) }
-                                )
+                        if (showMap) {
+                            // Map view
+                            KakaoMapView(
+                                modifier = Modifier.fillMaxSize(),
+                                currentLocation = currentLocation,
+                                gyms = gyms,
+                                onGymMarkerClick = { gym ->
+                                    onGymSelected(gym)
+                                }
+                            )
+                        } else {
+                            // List view
+                            LazyColumn(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                items(gyms) { gym ->
+                                    GymListItem(
+                                        gym = gym,
+                                        onClick = { onGymSelected(gym) }
+                                    )
+                                }
                             }
                         }
                     }
