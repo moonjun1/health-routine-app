@@ -298,5 +298,22 @@ fun NavGraph(
                 }
             )
         }
+
+        // MyPage screen
+        composable(Screen.MyPage.route) {
+            com.example.gymroutine.presentation.mypage.MyPageScreen(
+                onNavigateToLogin = {
+                    navController.navigate(Screen.Login.route)
+                },
+                onNavigateToEditProfile = {
+                    navController.navigate(Screen.EditProfile.route)
+                },
+                onLogoutSuccess = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Home.route) { inclusive = true }
+                    }
+                }
+            )
+        }
     }
 }

@@ -110,10 +110,12 @@ class AIRoutineViewModel @Inject constructor(
      * Update user inputs
      */
     fun updateGoal(value: String) {
+        Log.d(TAG, "updateGoal: $value")
         _goal.value = value
     }
 
     fun updateExperienceLevel(value: String) {
+        Log.d(TAG, "updateExperienceLevel: $value")
         _experienceLevel.value = value
     }
 
@@ -129,8 +131,10 @@ class AIRoutineViewModel @Inject constructor(
         val current = _selectedCategories.value.toMutableList()
         if (current.contains(category)) {
             current.remove(category)
+            Log.d(TAG, "toggleCategory: Removed $category, current: $current")
         } else {
             current.add(category)
+            Log.d(TAG, "toggleCategory: Added $category, current: $current")
         }
         _selectedCategories.value = current
     }

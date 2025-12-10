@@ -19,7 +19,8 @@ fun MainScreen(
     onNavigateToGymSearch: () -> Unit,
     onNavigateToExerciseList: () -> Unit,
     onNavigateToRoutineList: () -> Unit,
-    onNavigateToSettings: () -> Unit
+    onNavigateToSettings: () -> Unit,
+    onNavigateToMyPage: () -> Unit
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -52,7 +53,7 @@ fun MainScreen(
                                 }
                                 BottomNavItem.EXERCISE -> onNavigateToExerciseList()
                                 BottomNavItem.ROUTINE -> onNavigateToRoutineList()
-                                BottomNavItem.SETTINGS -> onNavigateToSettings()
+                                BottomNavItem.MYPAGE -> onNavigateToMyPage()
                             }
                         }
                     )
@@ -89,9 +90,9 @@ enum class BottomNavItem(
         title = "루틴",
         icon = Icons.Default.List
     ),
-    SETTINGS(
-        route = "settings",
-        title = "설정",
-        icon = Icons.Default.Settings
+    MYPAGE(
+        route = Screen.MyPage.route,
+        title = "마이",
+        icon = Icons.Default.Person
     )
 }
