@@ -58,60 +58,58 @@ fun HomeScreen(
                 WelcomeCard(isLoggedIn = isLoggedIn)
             }
 
-            // Gym info card
-            if (isLoggedIn) {
-                item {
-                    when (val state = gymState) {
-                        is Resource.Success -> {
-                            GymInfoCard(
-                                gym = state.data,
-                                isOpen = viewModel.isGymOpen(state.data),
-                                hours = viewModel.getTodayHours(state.data),
-                                onChangeGym = onNavigateToGymSearch
-                            )
-                        }
-                        is Resource.Loading -> {
-                            Card(modifier = Modifier.fillMaxWidth()) {
-                                Box(
-                                    modifier = Modifier
+            // Gym info card (로그인 없이도 보임)
+            item {
+                when (val state = gymState) {
+                    is Resource.Success -> {
+                        GymInfoCard(
+                            gym = state.data,
+                            isOpen = viewModel.isGymOpen(state.data),
+                            hours = viewModel.getTodayHours(state.data),
+                            onChangeGym = onNavigateToGymSearch
+                        )
+                    }
+                    is Resource.Loading -> {
+                        Card(modifier = Modifier.fillMaxWidth()) {
+                            Box(
+                                modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(32.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    CircularProgressIndicator()
-                                }
-                            }
-                        }
-                        is Resource.Error -> {
-                            Card(
-                                modifier = Modifier.fillMaxWidth(),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.errorContainer
-                                )
+                                contentAlignment = Alignment.Center
                             ) {
-                                Column(
-                                    modifier = Modifier.padding(16.dp),
-                                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                                ) {
-                                    Text(
-                                        "헬스장 미등록",
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                    Text(
-                                        "헬스장을 등록하면 맞춤 운동을 추천받을 수 있습니다",
-                                        style = MaterialTheme.typography.bodyMedium
-                                    )
-                                    Button(onClick = onNavigateToGymSearch) {
-                                        Icon(Icons.Default.LocationOn, null)
-                                        Spacer(modifier = Modifier.width(8.dp))
-                                        Text("헬스장 검색")
-                                    }
+                                CircularProgressIndicator()
+                            }
+                        }
+                    }
+                    is Resource.Error -> {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.errorContainer
+                            )
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(16.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Text(
+                                    "헬스장 미등록",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    "헬스장을 등록하면 맞춤 운동을 추천받을 수 있습니다",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Button(onClick = onNavigateToGymSearch) {
+                                    Icon(Icons.Default.LocationOn, null)
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text("헬스장 검색")
                                 }
                             }
                         }
-                        else -> {}
                     }
+                    else -> {}
                 }
             }
 
@@ -336,6 +334,74 @@ fun GymInfoCard(
                     text = hours,
                     style = MaterialTheme.typography.bodyMedium
                 )
+            }
+
+            // Equipment info
+            if (gym.equipments.isNotEmpty()) {
+                Divider()
+
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Default.Build,
+                            null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Text(
+                            text = "보유 기구 (${gym.equipments.size}개)",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    // Show first 5 equipment items
+                    val displayEquipments = gym.equipments.take(5)
+                    Column(
+                        modifier = Modifier.padding(start = 28.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        displayEquipments.forEach { equipment ->
+                            Text(
+                                text = "• $equipment",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        if (gym.equipments.size > 5) {
+                            Text(
+                                text = "외 ${gym.equipments.size - 5}개",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+            } else {
+                Divider()
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Default.Warning,
+                        null,
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Text(
+                        text = "등록된 기구가 없습니다",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
             }
         }
     }

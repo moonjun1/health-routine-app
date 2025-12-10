@@ -125,7 +125,7 @@ class FirestoreDataSource @Inject constructor(
     }
 
     /**
-     * Get user's gym by userId
+     * Get user's gym by userId (첫 번째 헬스장)
      */
     suspend fun getUserGym(userId: String): Gym? {
         return try {
@@ -143,6 +143,34 @@ class FirestoreDataSource @Inject constructor(
         } catch (e: Exception) {
             null
         }
+    }
+
+    /**
+     * Get all user's registered gyms
+     */
+    suspend fun getUserGyms(userId: String): List<Gym> {
+        return try {
+            val snapshot = firestore.collection(Constants.COLLECTION_GYMS)
+                .whereEqualTo("registeredBy", userId)
+                .get()
+                .await()
+
+            snapshot.documents.mapNotNull { doc ->
+                Gym.fromMap(doc.data ?: emptyMap())
+            }
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    /**
+     * Set user's my gym
+     */
+    suspend fun setMyGym(userId: String, gymId: String) {
+        firestore.collection(Constants.COLLECTION_USERS)
+            .document(userId)
+            .update("myGymId", gymId)
+            .await()
     }
 
     // ==================== Equipment Operations ====================
