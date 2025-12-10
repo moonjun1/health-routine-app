@@ -29,6 +29,7 @@ data class AIRoutineResponse(
 data class AIExerciseRecommendation(
     val exerciseId: String,
     val exerciseName: String,
+    val equipment: String = "", // 사용 기구 (헬스장 보유 기구 목록에서)
     val sets: Int,
     val reps: Int,
     val weight: Double = 0.0, // 0 means bodyweight or needs to be set by user
