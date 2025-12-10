@@ -112,7 +112,16 @@ fun NavGraph(
             )
         ) { backStackEntry ->
             val gymJson = backStackEntry.arguments?.getString("gymJson")
-            val gym = Gson().fromJson(gymJson, Gym::class.java)
+            val gym = try {
+                gymJson?.let { Gson().fromJson(it, Gym::class.java) }
+            } catch (e: Exception) {
+                null
+            }
+
+            if (gym == null) {
+                navController.popBackStack()
+                return@composable
+            }
 
             GymRegisterScreen(
                 gym = gym,
@@ -147,7 +156,16 @@ fun NavGraph(
             )
         ) { backStackEntry ->
             val exerciseJson = backStackEntry.arguments?.getString("exerciseJson")
-            val exercise = Gson().fromJson(exerciseJson, Exercise::class.java)
+            val exercise = try {
+                exerciseJson?.let { Gson().fromJson(it, Exercise::class.java) }
+            } catch (e: Exception) {
+                null
+            }
+
+            if (exercise == null) {
+                navController.popBackStack()
+                return@composable
+            }
 
             ExerciseDetailScreen(
                 exercise = exercise,
@@ -236,7 +254,16 @@ fun NavGraph(
             )
         ) { backStackEntry ->
             val routineJson = backStackEntry.arguments?.getString("routineJson")
-            val routine = Gson().fromJson(routineJson, Routine::class.java)
+            val routine = try {
+                routineJson?.let { Gson().fromJson(it, Routine::class.java) }
+            } catch (e: Exception) {
+                null
+            }
+
+            if (routine == null) {
+                navController.popBackStack()
+                return@composable
+            }
 
             RoutineDetailScreen(
                 routine = routine,

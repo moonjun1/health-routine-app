@@ -6,7 +6,7 @@ import com.example.gymroutine.data.model.AIRoutineRequest
 import com.example.gymroutine.data.model.AIRoutineResponse
 import com.example.gymroutine.data.model.Routine
 import com.example.gymroutine.data.model.ExerciseSet
-import com.example.gymroutine.data.repository.RoutineRepositoryImpl
+import com.example.gymroutine.domain.repository.RoutineRepository
 import com.example.gymroutine.domain.repository.AIRoutineRepository
 import com.example.gymroutine.domain.repository.AuthRepository
 import com.example.gymroutine.util.Resource
@@ -24,7 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AIRoutineViewModel @Inject constructor(
     private val aiRoutineRepository: AIRoutineRepository,
-    private val routineRepository: RoutineRepositoryImpl,
+    private val routineRepository: RoutineRepository,
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
