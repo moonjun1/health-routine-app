@@ -7,6 +7,7 @@ object Constants {
     const val COLLECTION_EQUIPMENTS = "equipments"
     const val COLLECTION_EXERCISES = "exercises"
     const val COLLECTION_ROUTINES = "routines"
+    const val COLLECTION_WORKOUT_RECORDS = "workout_records"
 
     // Equipment Categories
     const val CATEGORY_FREE_WEIGHT = "프리웨이트"

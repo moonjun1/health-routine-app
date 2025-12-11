@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gymroutine.data.model.WorkoutRecord
+import com.example.gymroutine.util.Resource
 import java.util.Calendar
 
 /**
@@ -33,8 +34,11 @@ fun CalendarScreen(
     val currentYear by viewModel.currentYear.collectAsState()
     val currentMonth by viewModel.currentMonth.collectAsState()
     val selectedDateRecords by viewModel.selectedDateRecords.collectAsState()
+    val routinesState by viewModel.routinesState.collectAsState()
 
     var selectedDay by remember { mutableStateOf<Int?>(null) }
+    var showAddDialog by remember { mutableStateOf(false) }
+    var recordToDelete by remember { mutableStateOf<String?>(null) }
 
     Scaffold(
         topBar = {
@@ -51,6 +55,17 @@ fun CalendarScreen(
                     }
                 }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    if (selectedDay != null) {
+                        showAddDialog = true
+                    }
+                }
+            ) {
+                Icon(Icons.Default.Add, "운동 기록 추가")
+            }
         }
     ) { paddingValues ->
         Column(
@@ -65,6 +80,9 @@ fun CalendarScreen(
                 onPreviousMonth = { viewModel.previousMonth() },
                 onNextMonth = { viewModel.nextMonth() }
             )
+
+            // Statistics card
+            WorkoutStatisticsCard(viewModel = viewModel)
 
             // Calendar grid
             CalendarGrid(
@@ -110,7 +128,10 @@ fun CalendarScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(selectedDateRecords) { record ->
-                            WorkoutRecordCard(record = record)
+                            WorkoutRecordCard(
+                                record = record,
+                                onDeleteClick = { recordToDelete = record.id }
+                            )
                         }
                     }
                 }
@@ -130,6 +151,57 @@ fun CalendarScreen(
                 }
             }
         }
+    }
+
+    // Add workout record dialog
+    if (showAddDialog && selectedDay != null) {
+        val calendar = Calendar.getInstance()
+        calendar.set(currentYear, currentMonth - 1, selectedDay!!, 0, 0, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+
+        val routines = (routinesState as? Resource.Success)?.data ?: emptyList()
+
+        AddWorkoutRecordDialog(
+            selectedDate = calendar.timeInMillis,
+            routines = routines,
+            onDismiss = { showAddDialog = false },
+            onConfirm = { routineId, routineName, duration, notes, color ->
+                viewModel.addWorkoutRecord(
+                    date = calendar.timeInMillis,
+                    routineId = routineId,
+                    routineName = routineName,
+                    duration = duration,
+                    notes = notes
+                )
+                showAddDialog = false
+                // Refresh selected date records
+                viewModel.selectDate(currentYear, currentMonth, selectedDay!!)
+            }
+        )
+    }
+
+    // Delete confirmation dialog
+    if (recordToDelete != null) {
+        AlertDialog(
+            onDismissRequest = { recordToDelete = null },
+            title = { Text("운동 기록 삭제") },
+            text = { Text("이 운동 기록을 삭제하시겠습니까?") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.deleteWorkoutRecord(recordToDelete!!)
+                        recordToDelete = null
+                    }
+                ) {
+                    Text("삭제", color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { recordToDelete = null }) {
+                    Text("취소")
+                }
+            }
+        )
     }
 }
 
@@ -240,6 +312,7 @@ fun CalendarGrid(
                         isSelected = day == selectedDay,
                         hasWorkout = day?.let { viewModel.hasWorkoutOnDate(year, month, it) } ?: false,
                         workoutCount = day?.let { viewModel.getWorkoutCountOnDate(year, month, it) } ?: 0,
+                        routineColors = day?.let { viewModel.getRoutineColorsForDate(year, month, it) } ?: emptyList(),
                         isSunday = index == 0,
                         isSaturday = index == 6,
                         onDayClick = { day?.let { onDayClick(it) } }
@@ -258,6 +331,7 @@ fun RowScope.DayCell(
     isSelected: Boolean,
     hasWorkout: Boolean,
     workoutCount: Int,
+    routineColors: List<String>,
     isSunday: Boolean,
     isSaturday: Boolean,
     onDayClick: () -> Unit
@@ -300,21 +374,42 @@ fun RowScope.DayCell(
                     }
                 )
 
-                if (hasWorkout) {
-                    Box(
-                        modifier = Modifier
-                            .size(6.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primary)
-                    )
+                if (routineColors.isNotEmpty()) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(2.dp),
+                        modifier = Modifier.padding(top = 2.dp)
+                    ) {
+                        routineColors.forEach { colorHex ->
+                            Box(
+                                modifier = Modifier
+                                    .size(5.dp)
+                                    .clip(CircleShape)
+                                    .background(parseColor(colorHex))
+                            )
+                        }
+                    }
                 }
             }
         }
     }
 }
 
+/**
+ * Parse hex color string to Color
+ */
+private fun parseColor(colorHex: String): Color {
+    return try {
+        Color(android.graphics.Color.parseColor(colorHex))
+    } catch (e: Exception) {
+        Color(0xFF2196F3) // Default blue color
+    }
+}
+
 @Composable
-fun WorkoutRecordCard(record: WorkoutRecord) {
+fun WorkoutRecordCard(
+    record: WorkoutRecord,
+    onDeleteClick: () -> Unit = {}
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -330,21 +425,36 @@ fun WorkoutRecordCard(record: WorkoutRecord) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = record.routineName,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = record.routineName,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
 
-                if (record.duration > 0) {
-                    Surface(
-                        shape = MaterialTheme.shapes.small,
-                        color = MaterialTheme.colorScheme.tertiaryContainer
-                    ) {
-                        Text(
-                            text = "${record.duration}분",
-                            style = MaterialTheme.typography.labelMedium,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (record.duration > 0) {
+                        Surface(
+                            shape = MaterialTheme.shapes.small,
+                            color = MaterialTheme.colorScheme.tertiaryContainer
+                        ) {
+                            Text(
+                                text = "${record.duration}분",
+                                style = MaterialTheme.typography.labelMedium,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            )
+                        }
+                    }
+
+                    IconButton(onClick = onDeleteClick) {
+                        Icon(
+                            Icons.Default.Delete,
+                            contentDescription = "삭제",
+                            tint = MaterialTheme.colorScheme.error
                         )
                     }
                 }
@@ -384,4 +494,98 @@ fun WorkoutRecordCard(record: WorkoutRecord) {
             }
         }
     }
+}
+
+@Composable
+fun WorkoutStatisticsCard(viewModel: CalendarViewModel) {
+    val weeklyCount = viewModel.getWeeklyWorkoutCount()
+    val monthlyCount = viewModel.getMonthlyWorkoutCount()
+    val streak = viewModel.getConsecutiveWorkoutDays()
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            StatisticItem(
+                label = "이번 주",
+                value = weeklyCount.toString(),
+                icon = Icons.Default.DateRange
+            )
+
+            VerticalDivider(
+                modifier = Modifier
+                    .height(48.dp)
+                    .padding(horizontal = 8.dp)
+            )
+
+            StatisticItem(
+                label = "이번 달",
+                value = monthlyCount.toString(),
+                icon = Icons.Default.Star
+            )
+
+            VerticalDivider(
+                modifier = Modifier
+                    .height(48.dp)
+                    .padding(horizontal = 8.dp)
+            )
+
+            StatisticItem(
+                label = "연속",
+                value = "${streak}일",
+                icon = Icons.Default.Favorite
+            )
+        }
+    }
+}
+
+@Composable
+fun StatisticItem(
+    label: String,
+    value: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = label,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(24.dp)
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSecondaryContainer
+        )
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSecondaryContainer
+        )
+    }
+}
+
+/**
+ * Add Dialogs to CalendarScreen
+ * These should be added inside CalendarScreen composable, after the Scaffold
+ */
+private fun getSelectedDate(year: Int, month: Int, day: Int): Long {
+    val calendar = Calendar.getInstance()
+    calendar.set(year, month - 1, day, 0, 0, 0)
+    calendar.set(Calendar.MILLISECOND, 0)
+    return calendar.timeInMillis
 }

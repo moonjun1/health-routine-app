@@ -361,4 +361,83 @@ class FirestoreDataSource @Inject constructor(
             .delete()
             .await()
     }
+
+    // ==================== Workout Record Operations ====================
+
+    /**
+     * Create workout record
+     */
+    suspend fun createWorkoutRecord(userId: String, record: WorkoutRecord) {
+        firestore.collection(Constants.COLLECTION_WORKOUT_RECORDS)
+            .document(userId)
+            .collection("records")
+            .document(record.id)
+            .set(record.toMap())
+            .await()
+    }
+
+    /**
+     * Get user's workout records
+     */
+    suspend fun getUserWorkoutRecords(userId: String): List<WorkoutRecord> {
+        return try {
+            val snapshot = firestore.collection(Constants.COLLECTION_WORKOUT_RECORDS)
+                .document(userId)
+                .collection("records")
+                .get()
+                .await()
+
+            snapshot.documents.mapNotNull { doc ->
+                WorkoutRecord.fromMap(doc.data ?: emptyMap())
+            }
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    /**
+     * Get workout record by ID
+     */
+    suspend fun getWorkoutRecord(userId: String, recordId: String): WorkoutRecord? {
+        return try {
+            val document = firestore.collection(Constants.COLLECTION_WORKOUT_RECORDS)
+                .document(userId)
+                .collection("records")
+                .document(recordId)
+                .get()
+                .await()
+
+            if (document.exists()) {
+                WorkoutRecord.fromMap(document.data ?: emptyMap())
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    /**
+     * Update workout record
+     */
+    suspend fun updateWorkoutRecord(userId: String, record: WorkoutRecord) {
+        firestore.collection(Constants.COLLECTION_WORKOUT_RECORDS)
+            .document(userId)
+            .collection("records")
+            .document(record.id)
+            .set(record.toMap())
+            .await()
+    }
+
+    /**
+     * Delete workout record
+     */
+    suspend fun deleteWorkoutRecord(userId: String, recordId: String) {
+        firestore.collection(Constants.COLLECTION_WORKOUT_RECORDS)
+            .document(userId)
+            .collection("records")
+            .document(recordId)
+            .delete()
+            .await()
+    }
 }

@@ -84,7 +84,9 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideWorkoutRecordRepository(): WorkoutRecordRepository {
-        return WorkoutRecordRepositoryImpl()
+    fun provideWorkoutRecordRepository(
+        firestoreDataSource: FirestoreDataSource
+    ): WorkoutRecordRepository {
+        return WorkoutRecordRepositoryImpl(firestoreDataSource)
     }
 }

@@ -11,10 +11,11 @@ data class Routine(
     val description: String = "",
     val category: String = "",
     val exercises: List<ExerciseSet> = emptyList(),
+    val color: String = "#2196F3", // Default blue color
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis()
 ) {
-    constructor() : this("", "", "", "", "", emptyList(), 0L, 0L)
+    constructor() : this("", "", "", "", "", emptyList(), "#2196F3", 0L, 0L)
 
     fun toMap(): Map<String, Any> {
         return mapOf(
@@ -24,6 +25,7 @@ data class Routine(
             "description" to description,
             "category" to category,
             "exercises" to exercises.map { it.toMap() },
+            "color" to color,
             "createdAt" to createdAt,
             "updatedAt" to updatedAt
         )
@@ -45,6 +47,7 @@ data class Routine(
                 description = map["description"] as? String ?: "",
                 category = map["category"] as? String ?: "",
                 exercises = exercisesList,
+                color = map["color"] as? String ?: "#2196F3",
                 createdAt = (map["createdAt"] as? Number)?.toLong() ?: 0L,
                 updatedAt = (map["updatedAt"] as? Number)?.toLong() ?: 0L
             )
