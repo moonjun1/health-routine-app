@@ -19,7 +19,6 @@ import com.example.gymroutine.R
 import com.example.gymroutine.data.model.Gym
 import com.example.gymroutine.data.model.Routine
 import com.example.gymroutine.util.Resource
-import kotlinx.coroutines.delay
 
 /**
  * Home screen with gym info and quick access
@@ -248,20 +247,6 @@ fun HomeScreen(
 
 @Composable
 fun RunningAnimation() {
-    var currentFrame by remember { mutableStateOf(0) }
-    val runningImages = listOf(
-        R.drawable.running_1,
-        R.drawable.running_2,
-        R.drawable.running_3
-    )
-
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(300) // 0.3초마다 프레임 변경
-            currentFrame = (currentFrame + 1) % runningImages.size
-        }
-    }
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -269,8 +254,8 @@ fun RunningAnimation() {
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(id = runningImages[currentFrame]),
-            contentDescription = "달리기 애니메이션",
+            painter = painterResource(id = R.drawable.running_character),
+            contentDescription = "달리기 캐릭터",
             modifier = Modifier.size(100.dp)
         )
     }
