@@ -10,12 +10,14 @@ import com.example.gymroutine.data.repository.ExerciseRepositoryImpl
 import com.example.gymroutine.data.repository.GymRepositoryImpl
 import com.example.gymroutine.data.repository.RoutineRepositoryImpl
 import com.example.gymroutine.data.repository.UserRepositoryImpl
+import com.example.gymroutine.data.repository.WorkoutRecordRepositoryImpl
 import com.example.gymroutine.domain.repository.AIRoutineRepository
 import com.example.gymroutine.domain.repository.AuthRepository
 import com.example.gymroutine.domain.repository.ExerciseRepository
 import com.example.gymroutine.domain.repository.GymRepository
 import com.example.gymroutine.domain.repository.RoutineRepository
 import com.example.gymroutine.domain.repository.UserRepository
+import com.example.gymroutine.domain.repository.WorkoutRecordRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -78,5 +80,11 @@ object RepositoryModule {
         openAIDataSource: OpenAIDataSource
     ): AIRoutineRepository {
         return AIRoutineRepositoryImpl(openAIDataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideWorkoutRecordRepository(): WorkoutRecordRepository {
+        return WorkoutRecordRepositoryImpl()
     }
 }
