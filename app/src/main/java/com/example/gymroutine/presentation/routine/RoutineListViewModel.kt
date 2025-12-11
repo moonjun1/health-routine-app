@@ -3,14 +3,17 @@ package com.example.gymroutine.presentation.routine
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gymroutine.data.model.Routine
+import com.example.gymroutine.data.model.WorkoutRecord
 import com.example.gymroutine.domain.repository.RoutineRepository
 import com.example.gymroutine.domain.repository.AuthRepository
+import com.example.gymroutine.domain.repository.WorkoutRecordRepository
 import com.example.gymroutine.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 /**
@@ -19,7 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RoutineListViewModel @Inject constructor(
     private val routineRepository: RoutineRepository,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val workoutRecordRepository: WorkoutRecordRepository
 ) : ViewModel() {
 
     private val _routinesState = MutableStateFlow<Resource<List<Routine>>>(Resource.Idle)
@@ -73,5 +77,37 @@ class RoutineListViewModel @Inject constructor(
      */
     fun resetDeleteState() {
         _deleteState.value = Resource.Idle
+    }
+
+    /**
+     * Add a new workout record for a routine
+     */
+    fun addWorkoutRecord(
+        routineId: String,
+        routineName: String,
+        date: Long,
+        duration: Int,
+        notes: String
+    ) {
+        viewModelScope.launch {
+            try {
+                val userId = authRepository.getCurrentUserId() ?: ""
+                val record = WorkoutRecord(
+                    id = UUID.randomUUID().toString(),
+                    userId = userId,
+                    routineId = routineId,
+                    routineName = routineName,
+                    date = date,
+                    exercises = emptyList(),
+                    duration = duration,
+                    notes = notes,
+                    createdAt = System.currentTimeMillis()
+                )
+
+                workoutRecordRepository.createWorkoutRecord(record)
+            } catch (e: Exception) {
+                // Handle error silently for now
+            }
+        }
     }
 }

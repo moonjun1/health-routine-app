@@ -34,6 +34,8 @@ fun RoutineListScreen(
 
     var showDeleteDialog by remember { mutableStateOf(false) }
     var routineToDelete by remember { mutableStateOf<Routine?>(null) }
+    var showQuickRecordDialog by remember { mutableStateOf(false) }
+    var routineToRecord by remember { mutableStateOf<Routine?>(null) }
 
     // Handle delete state
     LaunchedEffect(deleteState) {
@@ -162,6 +164,10 @@ fun RoutineListScreen(
                                     onDelete = {
                                         routineToDelete = routine
                                         showDeleteDialog = true
+                                    },
+                                    onQuickRecord = {
+                                        routineToRecord = routine
+                                        showQuickRecordDialog = true
                                     }
                                 )
                             }
@@ -225,13 +231,36 @@ fun RoutineListScreen(
             }
         )
     }
+
+    // Quick record dialog
+    if (showQuickRecordDialog && routineToRecord != null) {
+        QuickRecordDialog(
+            routineName = routineToRecord!!.name,
+            onDismiss = {
+                showQuickRecordDialog = false
+                routineToRecord = null
+            },
+            onConfirm = { date, duration, notes ->
+                viewModel.addWorkoutRecord(
+                    routineId = routineToRecord!!.id,
+                    routineName = routineToRecord!!.name,
+                    date = date,
+                    duration = duration,
+                    notes = notes
+                )
+                showQuickRecordDialog = false
+                routineToRecord = null
+            }
+        )
+    }
 }
 
 @Composable
 fun RoutineListItem(
     routine: Routine,
     onClick: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onQuickRecord: () -> Unit = {}
 ) {
     val dateFormat = remember { SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()) }
 
@@ -300,12 +329,24 @@ fun RoutineListItem(
                 )
             }
 
-            IconButton(onClick = onDelete) {
-                Icon(
-                    Icons.Default.Delete,
-                    contentDescription = "삭제",
-                    tint = MaterialTheme.colorScheme.error
-                )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                IconButton(onClick = onQuickRecord) {
+                    Icon(
+                        Icons.Default.Add,
+                        contentDescription = "기록하기",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+
+                IconButton(onClick = onDelete) {
+                    Icon(
+                        Icons.Default.Delete,
+                        contentDescription = "삭제",
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                }
             }
         }
     }
