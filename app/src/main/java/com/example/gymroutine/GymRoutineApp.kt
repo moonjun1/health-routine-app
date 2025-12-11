@@ -16,3 +16,4 @@ class GymRoutineApp : Application() {
         // KakaoMapSdk.init(this, BuildConfig.KAKAO_REST_API_KEY)
     }
 }
+
