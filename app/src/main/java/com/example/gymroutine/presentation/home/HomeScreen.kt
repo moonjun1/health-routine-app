@@ -1,13 +1,9 @@
 package com.example.gymroutine.presentation.home
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -63,41 +59,24 @@ fun HomeScreen(
                 WelcomeCard(isLoggedIn = isLoggedIn)
             }
 
-            // User's gyms carousel (로그인했을 때만)
-            if (isLoggedIn) {
-                item {
-                    when (val state = userGymsState) {
-                        is Resource.Success -> {
-                            if (state.data.size > 1) {
-                                UserGymsCarousel(
-                                    gyms = state.data,
-                                    onGymClick = { /* TODO: Navigate to gym detail */ },
-                                    onChangeGym = onNavigateToGymSearch
-                                )
-                            }
-                        }
-                        else -> { /* No carousel for loading/error/single gym */ }
-                    }
-                }
-            }
-
-            // Gym info card (로그인 없이도 보임)
+            // User's gyms list (로그인 여부 무관, 등록한 헬스장이 있으면 표시)
             item {
-                when (val state = gymState) {
+                when (val state = userGymsState) {
                     is Resource.Success -> {
-                        GymInfoCard(
-                            gym = state.data,
-                            isOpen = viewModel.isGymOpen(state.data),
-                            hours = viewModel.getTodayHours(state.data),
-                            onChangeGym = onNavigateToGymSearch
-                        )
+                        if (state.data.isNotEmpty()) {
+                            UserGymsList(
+                                gyms = state.data,
+                                onGymClick = { /* TODO: Navigate to gym detail */ },
+                                onChangeGym = onNavigateToGymSearch
+                            )
+                        }
                     }
                     is Resource.Loading -> {
                         Card(modifier = Modifier.fillMaxWidth()) {
                             Box(
                                 modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(32.dp),
+                                    .fillMaxWidth()
+                                    .padding(32.dp),
                                 contentAlignment = Alignment.Center
                             ) {
                                 CircularProgressIndicator()
@@ -258,9 +237,8 @@ fun HomeScreen(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun UserGymsCarousel(
+fun UserGymsList(
     gyms: List<Gym>,
     onGymClick: (Gym) -> Unit,
     onChangeGym: () -> Unit
@@ -275,7 +253,7 @@ fun UserGymsCarousel(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "내 헬스장 목록 (${gyms.size}개)",
+                text = "내 헬스장 (${gyms.size}개)",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -284,14 +262,8 @@ fun UserGymsCarousel(
             }
         }
 
-        val pagerState = rememberPagerState(pageCount = { gyms.size })
-
-        HorizontalPager(
-            state = pagerState,
-            modifier = Modifier.fillMaxWidth(),
-            pageSpacing = 8.dp
-        ) { page ->
-            val gym = gyms[page]
+        // 헬스장 목록
+        gyms.forEach { gym ->
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -326,7 +298,7 @@ fun UserGymsCarousel(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
-                    Divider()
+                    HorizontalDivider()
 
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -343,31 +315,6 @@ fun UserGymsCarousel(
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
-                }
-            }
-        }
-
-        // Page indicator
-        if (gyms.size > 1) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                repeat(gyms.size) { index ->
-                    val isSelected = pagerState.currentPage == index
-                    Box(
-                        modifier = Modifier
-                            .padding(4.dp)
-                            .size(if (isSelected) 8.dp else 6.dp)
-                            .background(
-                                color = if (isSelected)
-                                    MaterialTheme.colorScheme.primary
-                                else
-                                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
-                                shape = MaterialTheme.shapes.small
-                            )
-                    )
                 }
             }
         }
