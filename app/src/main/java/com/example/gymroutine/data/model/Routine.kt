@@ -1,7 +1,7 @@
 package com.example.gymroutine.data.model
 
-// Routine data model
-// Firestore collection: routines/{routineId}
+// 루틴 데이터 모델
+// Firestore 컬렉션: routines/{routineId}
 data class Routine(
     val id: String = "",
     val userId: String = "",
@@ -53,7 +53,7 @@ data class Routine(
     }
 }
 
-// Exercise set information within a routine
+// 루틴 내 운동 세트 정보
 data class ExerciseSet(
     val exerciseId: String = "",
     val exerciseName: String = "",

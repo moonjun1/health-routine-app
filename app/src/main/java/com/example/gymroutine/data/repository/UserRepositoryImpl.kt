@@ -5,7 +5,7 @@ import com.example.gymroutine.data.remote.FirestoreDataSource
 import com.example.gymroutine.domain.repository.UserRepository
 import javax.inject.Inject
 
-// User repository implementation
+// 사용자 레포지토리 구현
 class UserRepositoryImpl @Inject constructor(
     private val firestoreDataSource: FirestoreDataSource
 ) : UserRepository {

@@ -1,7 +1,7 @@
 package com.example.gymroutine.data.model
 
-// Equipment data model
-// Firestore collection: equipments/{equipmentId}
+// 운동 기구 데이터 모델
+// Firestore 컬렉션: equipments/{equipmentId}
 data class Equipment(
     val id: String = "",
     val name: String = "",

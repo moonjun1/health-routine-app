@@ -14,9 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gymroutine.util.Resource
 
-/**
- * Routine create screen with exercise selection (Phase 6)
- */
+// 운동 선택 기능이 있는 루틴 생성 화면 (Phase 6)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RoutineCreateScreen(
@@ -32,7 +30,7 @@ fun RoutineCreateScreen(
 
     var showExerciseSettingsDialog by remember { mutableStateOf<SelectedExercise?>(null) }
 
-    // Handle create state
+    // 생성 상태 처리
     LaunchedEffect(createState) {
         when (createState) {
             is Resource.Success -> {
@@ -40,7 +38,7 @@ fun RoutineCreateScreen(
                 viewModel.resetCreateState()
             }
             is Resource.Error -> {
-                // Error is shown in Snackbar below
+                // 오류는 아래 Snackbar에 표시됨
             }
             else -> {}
         }
@@ -77,7 +75,7 @@ fun RoutineCreateScreen(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Routine name
+                // 루틴 이름
                 item {
                     OutlinedTextField(
                         value = routineName,
@@ -87,7 +85,7 @@ fun RoutineCreateScreen(
                     )
                 }
 
-                // Description
+                // 설명
                 item {
                     OutlinedTextField(
                         value = description,
@@ -98,7 +96,7 @@ fun RoutineCreateScreen(
                     )
                 }
 
-                // Exercise list header
+                // 운동 목록 헤더
                 item {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -121,7 +119,7 @@ fun RoutineCreateScreen(
                     }
                 }
 
-                // Selected exercises
+                // 선택된 운동
                 if (selectedExercises.isEmpty()) {
                     item {
                         Card(
@@ -159,7 +157,7 @@ fun RoutineCreateScreen(
                 }
             }
 
-            // Create button
+            // 생성 버튼
             Button(
                 onClick = { viewModel.createRoutine() },
                 modifier = Modifier
@@ -179,7 +177,7 @@ fun RoutineCreateScreen(
         }
     }
 
-    // Exercise settings dialog
+    // 운동 설정 다이얼로그
     showExerciseSettingsDialog?.let { selectedExercise ->
         ExerciseSettingsDialog(
             selectedExercise = selectedExercise,
@@ -198,9 +196,7 @@ fun RoutineCreateScreen(
     }
 }
 
-/**
- * Selected exercise item component
- */
+// 선택된 운동 항목 컴포넌트
 @Composable
 fun SelectedExerciseItem(
     selectedExercise: SelectedExercise,

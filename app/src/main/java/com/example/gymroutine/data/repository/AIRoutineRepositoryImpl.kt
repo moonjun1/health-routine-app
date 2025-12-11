@@ -6,7 +6,7 @@ import com.example.gymroutine.data.remote.OpenAIDataSource
 import com.example.gymroutine.domain.repository.AIRoutineRepository
 import javax.inject.Inject
 
-// Implementation of AIRoutineRepository
+// AIRoutineRepository 구현
 class AIRoutineRepositoryImpl @Inject constructor(
     private val openAIDataSource: OpenAIDataSource
 ) : AIRoutineRepository {

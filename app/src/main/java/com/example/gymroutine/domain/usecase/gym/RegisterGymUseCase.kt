@@ -4,13 +4,13 @@ import com.example.gymroutine.data.model.Gym
 import com.example.gymroutine.domain.repository.GymRepository
 import javax.inject.Inject
 
-// Use case for registering new gym
+// 새 헬스장 등록 유스케이스
 class RegisterGymUseCase @Inject constructor(
     private val gymRepository: GymRepository
 ) {
     suspend operator fun invoke(gym: Gym): Result<Gym> {
         return try {
-            // Validate gym data
+            // 헬스장 데이터 유효성 검증
             if (gym.name.isBlank()) {
                 return Result.failure(Exception("헬스장 이름을 입력해주세요"))
             }

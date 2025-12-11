@@ -2,44 +2,44 @@ package com.example.gymroutine.domain.repository
 
 import com.example.gymroutine.data.model.Gym
 
-// Repository interface for gym operations
+// 헬스장 작업용 레포지토리 인터페이스
 interface GymRepository {
 
-// Search gyms near current location using Kakao Local API
+// Kakao Local API를 사용하여 현재 위치 근처 헬스장 검색
     suspend fun searchNearbyGyms(
         latitude: Double,
         longitude: Double,
         radius: Int = 5000
     ): List<Gym>
 
-// Search gyms by keyword using Kakao Local API
+// Kakao Local API를 사용하여 키워드로 헬스장 검색
     suspend fun searchGymsByKeyword(
         keyword: String,
         latitude: Double? = null,
         longitude: Double? = null
     ): List<Gym>
 
-// Get gym by ID from Firestore
+// Firestore에서 ID로 헬스장 조회
     suspend fun getGymById(gymId: String): Gym?
 
-// Register new gym to Firestore
+// Firestore에 새 헬스장 등록
     suspend fun registerGym(gym: Gym): Gym
 
-// Update existing gym in Firestore
+// Firestore에서 기존 헬스장 업데이트
     suspend fun updateGym(gym: Gym): Gym
 
-// Delete gym from Firestore
+// Firestore에서 헬스장 삭제
     suspend fun deleteGym(gymId: String)
 
-// Get all gyms from Firestore
+// Firestore에서 모든 헬스장 조회
     suspend fun getAllGyms(): List<Gym>
 
-// Get user's registered gym (첫 번째 헬스장)
+// 사용자가 등록한 헬스장 조회 (첫 번째 헬스장)
     suspend fun getUserGym(userId: String): Gym?
 
-// Get all user's registered gyms
+// 사용자가 등록한 모든 헬스장 조회
     suspend fun getUserGyms(userId: String): List<Gym>
 
-// Set user's my gym
+// 사용자의 내 헬스장 설정
     suspend fun setMyGym(userId: String, gymId: String)
 }

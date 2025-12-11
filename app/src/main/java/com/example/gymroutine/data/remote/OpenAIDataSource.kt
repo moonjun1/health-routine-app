@@ -11,7 +11,7 @@ import com.google.gson.Gson
 import javax.inject.Inject
 import javax.inject.Singleton
 
-// OpenAI API data source for AI routine generation
+// AI 루틴 생성을 위한 OpenAI API 데이터 소스
 @Singleton
 class OpenAIDataSource @Inject constructor(
     private val openAIApiService: OpenAIApiService
@@ -22,7 +22,7 @@ class OpenAIDataSource @Inject constructor(
 
     private val gson = Gson()
 
-// Generate workout routine using GPT
+// GPT를 사용하여 운동 루틴 생성
     suspend fun generateRoutine(request: AIRoutineRequest): AIRoutineResponse {
         // 확인: API key is configured
         val apiKey = BuildConfig.OPENAI_API_KEY

@@ -20,10 +20,7 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 
-/**
- * Google Map Composable
- * Displays Google Map with gym markers
- */
+// 구글맵 컴포저블 - 헬스장 마커가 표시된 구글맵
 @Composable
 fun GoogleMapView(
     modifier: Modifier = Modifier,
@@ -33,10 +30,10 @@ fun GoogleMapView(
 ) {
     var isError by remember { mutableStateOf(false) }
 
-    // Camera position state
+    // 카메라 위치 상태
     val cameraPositionState = rememberCameraPositionState()
 
-    // Set initial camera position
+    // 초기 카메라 위치 설정
     LaunchedEffect(currentLocation, gyms) {
         try {
             val centerLocation = when {
@@ -72,7 +69,7 @@ fun GoogleMapView(
         modifier = modifier.fillMaxSize(),
         cameraPositionState = cameraPositionState
     ) {
-        // Current location marker (Blue marker)
+        // 현재 위치 마커 (파란색 마커)
         currentLocation?.let { location ->
             Marker(
                 state = MarkerState(position = LatLng(location.first, location.second)),
@@ -82,7 +79,7 @@ fun GoogleMapView(
             )
         }
 
-        // Gym markers (Red markers)
+        // 헬스장 마커 (빨간색 마커)
         gyms.forEach { gym ->
             if (gym.latitude != 0.0 && gym.longitude != 0.0) {
                 Marker(

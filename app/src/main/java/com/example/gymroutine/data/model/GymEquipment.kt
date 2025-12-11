@@ -1,9 +1,9 @@
 package com.example.gymroutine.data.model
 
-// Gym equipment categories and items
+// 헬스장 기구 카테고리 및 항목
 object GymEquipment {
 
-// Get standard gym equipment list
+// 표준 헬스장 기구 목록 조회
     fun getStandardEquipmentList(): List<String> {
         return listOf(
             // 프리 웨이트
@@ -51,7 +51,7 @@ object GymEquipment {
         )
     }
 
-// Get equipment description for AI prompt
+// AI 프롬프트용 기구 설명 조회
     fun getEquipmentDescription(): String {
         return """
             헬스장 보유 기구 목록:
@@ -82,7 +82,7 @@ object GymEquipment {
         """.trimIndent()
     }
 
-// Get experience level guidelines
+// 경험 수준별 가이드라인 조회
     fun getExperienceLevelGuidelines(): String {
         return """
             경험 수준별 가이드라인:

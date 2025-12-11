@@ -5,17 +5,17 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
 
-// Kakao Local API service interface
+// Kakao Local API 서비스 인터페이스
 interface KakaoLocalApi {
 
-// Search places by keyword
+// 키워드로 장소 검색
 // @param authorization KakaoAK {REST_API_KEY}
-// @param query Search keyword (e.g., "헬스장", "피트니스")
-// @param x Longitude (optional)
-// @param y Latitude (optional)
-// @param radius Search radius in meters (0-20000, default: 5000)
-// @param page Page number (1-45, default: 1)
-// @param size Results per page (1-15, default: 15)
+// @param query 검색 키워드 (예: "헬스장", "피트니스")
+// @param x 경도 (선택사항)
+// @param y 위도 (선택사항)
+// @param radius 검색 반경(미터) (0-20000, 기본값: 5000)
+// @param page 페이지 번호 (1-45, 기본값: 1)
+// @param size 페이지당 결과 수 (1-15, 기본값: 15)
     @GET("v2/local/search/keyword.json")
     suspend fun searchPlaces(
         @Header("Authorization") authorization: String,
@@ -27,14 +27,14 @@ interface KakaoLocalApi {
         @Query("size") size: Int = 15
     ): KakaoLocalSearchResponse
 
-// Search places by category
+// 카테고리로 장소 검색
 // @param authorization KakaoAK {REST_API_KEY}
-// @param categoryGroupCode Category code (e.g., "FD6" for restaurant, "CE7" for cafe)
-// @param x Longitude
-// @param y Latitude
-// @param radius Search radius in meters (0-20000)
-// @param page Page number (1-45, default: 1)
-// @param size Results per page (1-15, default: 15)
+// @param categoryGroupCode 카테고리 코드 (예: "FD6"은 음식점, "CE7"은 카페)
+// @param x 경도
+// @param y 위도
+// @param radius 검색 반경(미터) (0-20000)
+// @param page 페이지 번호 (1-45, 기본값: 1)
+// @param size 페이지당 결과 수 (1-15, 기본값: 15)
     @GET("v2/local/search/category.json")
     suspend fun searchByCategory(
         @Header("Authorization") authorization: String,

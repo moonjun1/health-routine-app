@@ -2,7 +2,7 @@ package com.example.gymroutine.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
 
-// Kakao Local API response DTOs
+// Kakao Local API 응답 DTO
 
 data class KakaoLocalSearchResponse(
     @SerializedName("documents")

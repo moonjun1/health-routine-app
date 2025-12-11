@@ -9,9 +9,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 
-/**
- * Dialog for editing exercise settings (sets, reps, weight, rest time)
- */
+// 운동 설정 편집 다이얼로그 (세트, 횟수, 무게, 휴식 시간)
 @Composable
 fun ExerciseSettingsDialog(
     selectedExercise: SelectedExercise,
@@ -44,7 +42,7 @@ fun ExerciseSettingsDialog(
             Column(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                // Sets
+                // 세트
                 OutlinedTextField(
                     value = sets,
                     onValueChange = { sets = it },
@@ -55,7 +53,7 @@ fun ExerciseSettingsDialog(
                     suffix = { Text("세트") }
                 )
 
-                // Reps
+                // 반복
                 OutlinedTextField(
                     value = reps,
                     onValueChange = { reps = it },
@@ -66,7 +64,7 @@ fun ExerciseSettingsDialog(
                     suffix = { Text("회") }
                 )
 
-                // Weight
+                // 무게
                 OutlinedTextField(
                     value = weight,
                     onValueChange = { weight = it },
@@ -78,7 +76,7 @@ fun ExerciseSettingsDialog(
                     placeholder = { Text("0") }
                 )
 
-                // Rest time
+                // 휴식 시간
                 OutlinedTextField(
                     value = restTime,
                     onValueChange = { restTime = it },
@@ -89,7 +87,7 @@ fun ExerciseSettingsDialog(
                     suffix = { Text("초") }
                 )
 
-                // Quick rest time buttons
+                // 빠른 휴식 시간 버튼
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -123,9 +121,7 @@ fun ExerciseSettingsDialog(
     )
 }
 
-/**
- * Quick rest time button
- */
+// 빠른 휴식 시간 버튼
 @Composable
 fun RowScope.QuickRestButton(
     label: String,

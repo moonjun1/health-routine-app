@@ -2,31 +2,31 @@ package com.example.gymroutine.domain.repository
 
 import com.example.gymroutine.data.model.WorkoutRecord
 
-// Workout record repository interface
+// 운동 기록 레포지토리 인터페이스
 interface WorkoutRecordRepository {
-// Get workout records for a specific month
-// @param userId User ID
-// @param year Year (e.g., 2024)
-// @param month Month (1-12)
+// 특정 월의 운동 기록 조회
+// @param userId 사용자 ID
+// @param year 연도 (예: 2024)
+// @param month 월 (1-12)
     suspend fun getWorkoutRecordsByMonth(userId: String, year: Int, month: Int): List<WorkoutRecord>
 
-// Get workout records for a specific date
-// @param userId User ID
-// @param date Date in milliseconds
+// 특정 날짜의 운동 기록 조회
+// @param userId 사용자 ID
+// @param date 밀리초 단위 날짜
     suspend fun getWorkoutRecordsByDate(userId: String, date: Long): List<WorkoutRecord>
 
-// Get all workout records for user
+// 사용자의 모든 운동 기록 조회
     suspend fun getUserWorkoutRecords(userId: String): List<WorkoutRecord>
 
-// Get workout record by id
+// id로 운동 기록 조회
     suspend fun getWorkoutRecordById(recordId: String): WorkoutRecord?
 
-// Create new workout record
+// 새 운동 기록 생성
     suspend fun createWorkoutRecord(record: WorkoutRecord): WorkoutRecord
 
-// Update existing workout record
+// 기존 운동 기록 업데이트
     suspend fun updateWorkoutRecord(record: WorkoutRecord): WorkoutRecord
 
-// Delete workout record
+// 운동 기록 삭제
     suspend fun deleteWorkoutRecord(userId: String, recordId: String)
 }

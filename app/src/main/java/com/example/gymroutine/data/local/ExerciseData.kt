@@ -3,10 +3,10 @@ package com.example.gymroutine.data.local
 import com.example.gymroutine.data.model.Equipment
 import com.example.gymroutine.data.model.Exercise
 
-// Predefined exercise and equipment data
+// 사전 정의된 운동 및 기구 데이터
 object ExerciseData {
 
-    // Equipment list
+    // 기구 목록
     val equipments = listOf(
         Equipment(
             id = "eq001",
@@ -80,7 +80,7 @@ object ExerciseData {
         )
     )
 
-    // Exercise list
+    // 운동 목록
     val exercises = listOf(
         // 가슴 운동
         Exercise(
@@ -610,22 +610,22 @@ object ExerciseData {
         )
     )
 
-// Get exercises by category
+// 카테고리별 운동 조회
     fun getExercisesByCategory(category: String): List<Exercise> {
         return exercises.filter { it.category == category }
     }
 
-// Get exercises by equipment
+// 기구별 운동 조회
     fun getExercisesByEquipment(equipmentId: String): List<Exercise> {
         return exercises.filter { it.equipmentId == equipmentId }
     }
 
-// Get equipment by id
+// id로 기구 조회
     fun getEquipmentById(equipmentId: String): Equipment? {
         return equipments.find { it.id == equipmentId }
     }
 
-// Get all categories
+// 모든 카테고리 조회
     fun getCategories(): List<String> {
         return listOf("가슴", "등", "어깨", "팔", "하체", "코어", "유산소")
     }

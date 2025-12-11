@@ -15,9 +15,7 @@ import com.example.gymroutine.data.model.Gym
 import com.example.gymroutine.data.model.GymEquipment
 import com.example.gymroutine.util.Resource
 
-/**
- * Gym registration screen
- */
+// 헬스장 등록 화면
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GymRegisterScreen(
@@ -34,12 +32,12 @@ fun GymRegisterScreen(
 
     val availableEquipments = remember { GymEquipment.getStandardEquipmentList() }
 
-    // Set selected gym on init
+    // 초기화 시 선택된 헬스장 설정
     LaunchedEffect(gym) {
         viewModel.setSelectedGym(gym)
     }
 
-    // Handle registration state
+    // 등록 상태 처리
     LaunchedEffect(registerState) {
         when (registerState) {
             is Resource.Success -> {
@@ -79,7 +77,7 @@ fun GymRegisterScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Gym info card
+                // 헬스장 정보 카드
                 Card(
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -113,7 +111,7 @@ fun GymRegisterScreen(
                     }
                 }
 
-                // Equipment selection card
+                // 기구 선택 카드
                 Card(
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -133,7 +131,7 @@ fun GymRegisterScreen(
                         )
                         Spacer(modifier = Modifier.height(12.dp))
 
-                        // Equipment selection list
+                        // 기구 선택 목록
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -175,7 +173,7 @@ fun GymRegisterScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Error message
+                // 오류 메시지
                 if (showError) {
                     Text(
                         text = errorMessage,
@@ -184,7 +182,7 @@ fun GymRegisterScreen(
                     )
                 }
 
-                // Register button
+                // 등록 버튼
                 Button(
                     onClick = viewModel::registerGym,
                     modifier = Modifier.fillMaxWidth(),
@@ -206,7 +204,7 @@ fun GymRegisterScreen(
                     }
                 }
 
-                // Cancel button
+                // 취소 버튼
                 OutlinedButton(
                     onClick = onNavigateBack,
                     modifier = Modifier.fillMaxWidth(),

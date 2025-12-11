@@ -22,9 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gymroutine.data.model.Gym
 import com.example.gymroutine.util.Resource
 
-/**
- * Gym search screen
- */
+// 헬스장 검색 화면
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GymSearchScreen(
@@ -41,7 +39,7 @@ fun GymSearchScreen(
     var errorMessage by remember { mutableStateOf("") }
     var showMap by remember { mutableStateOf(true) }
 
-    // Location permission launcher
+    // 위치 권한 런처
     val locationPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -52,7 +50,7 @@ fun GymSearchScreen(
         }
     }
 
-    // Request location on start
+    // 시작 시 위치 요청
     LaunchedEffect(Unit) {
         if (!hasLocationPermission) {
             locationPermissionLauncher.launch(
@@ -66,7 +64,7 @@ fun GymSearchScreen(
         }
     }
 
-    // Handle search state
+    // 검색 상태 처리
     LaunchedEffect(searchState) {
         when (searchState) {
             is Resource.Error -> {
@@ -105,7 +103,7 @@ fun GymSearchScreen(
                 .padding(paddingValues)
                 .padding(16.dp)
         ) {
-            // Search field
+            // 검색 필드
             OutlinedTextField(
                 value = searchKeyword,
                 onValueChange = viewModel::onSearchKeywordChange,
@@ -127,7 +125,7 @@ fun GymSearchScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Nearby search button
+            // 주변 검색 버튼
             Button(
                 onClick = { viewModel.searchNearbyGyms() },
                 modifier = Modifier.fillMaxWidth(),
@@ -140,7 +138,7 @@ fun GymSearchScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Error message
+            // 오류 메시지
             if (showError) {
                 Text(
                     text = errorMessage,
@@ -150,7 +148,7 @@ fun GymSearchScreen(
                 )
             }
 
-            // Search results (Map or List)
+            // 검색 결과 (지도 또는 목록)
             when (searchState) {
                 is Resource.Loading -> {
                     Box(
@@ -171,7 +169,7 @@ fun GymSearchScreen(
                         }
                     } else {
                         if (showMap) {
-                            // Map view
+                            // 지도 뷰
                             GoogleMapView(
                                 modifier = Modifier.fillMaxSize(),
                                 currentLocation = currentLocation,
@@ -181,7 +179,7 @@ fun GymSearchScreen(
                                 }
                             )
                         } else {
-                            // List view
+                            // 목록 뷰
                             LazyColumn(
                                 modifier = Modifier.fillMaxSize(),
                                 verticalArrangement = Arrangement.spacedBy(8.dp)

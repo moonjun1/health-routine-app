@@ -6,14 +6,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-// Firestore data source
-// Handles all Firestore database operations
+// Firestore 데이터 소스
+// 모든 Firestore 데이터베이스 작업 처리
 class FirestoreDataSource @Inject constructor(
     private val firestore: FirebaseFirestore
 ) {
     // ==================== User Operations ====================
 
-// Create user document in Firestore
+// Firestore에 사용자 문서 생성
     suspend fun createUser(user: User) {
         firestore.collection(Constants.COLLECTION_USERS)
             .document(user.id)
@@ -21,7 +21,7 @@ class FirestoreDataSource @Inject constructor(
             .await()
     }
 
-// Get user by ID
+// ID로 사용자 조회
     suspend fun getUser(userId: String): User? {
         return try {
             val document = firestore.collection(Constants.COLLECTION_USERS)
@@ -39,7 +39,7 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-// Update user's gym ID
+// 사용자의 헬스장 ID 업데이트
     suspend fun updateUserGym(userId: String, gymId: String) {
         firestore.collection(Constants.COLLECTION_USERS)
             .document(userId)
@@ -49,7 +49,7 @@ class FirestoreDataSource @Inject constructor(
 
     // ==================== Gym Operations ====================
 
-// Create gym document
+// 헬스장 문서 생성
     suspend fun createGym(gym: Gym) {
         val gymMap = gym.toMap()
         android.util.Log.d("FirestoreDataSource", "createGym: Saving gym ${gym.name} (${gym.placeId})")
@@ -64,7 +64,7 @@ class FirestoreDataSource @Inject constructor(
         android.util.Log.d("FirestoreDataSource", "createGym: Saved successfully")
     }
 
-// Get gym by place ID
+// placeID로 헬스장 조회
     suspend fun getGym(placeId: String): Gym? {
         return try {
             val document = firestore.collection(Constants.COLLECTION_GYMS)
@@ -82,7 +82,7 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-// Update gym information
+// 헬스장 정보 업데이트
     suspend fun updateGym(gym: Gym) {
         firestore.collection(Constants.COLLECTION_GYMS)
             .document(gym.placeId)
@@ -90,7 +90,7 @@ class FirestoreDataSource @Inject constructor(
             .await()
     }
 
-// Delete gym by ID
+// ID로 헬스장 삭제
     suspend fun deleteGym(placeId: String) {
         firestore.collection(Constants.COLLECTION_GYMS)
             .document(placeId)
@@ -98,7 +98,7 @@ class FirestoreDataSource @Inject constructor(
             .await()
     }
 
-// Get all gyms
+// 모든 헬스장 조회
     suspend fun getGyms(): List<Gym> {
         return try {
             val snapshot = firestore.collection(Constants.COLLECTION_GYMS)
@@ -132,7 +132,7 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-// Get all user's registered gyms
+// 사용자가 등록한 모든 헬스장 조회
     suspend fun getUserGyms(userId: String): List<Gym> {
         return try {
             android.util.Log.d("FirestoreDataSource", "getUserGyms: Querying for userId=$userId")
@@ -157,7 +157,7 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-// Set user's my gym
+// 사용자의 내 헬스장 설정
     suspend fun setMyGym(userId: String, gymId: String) {
         firestore.collection(Constants.COLLECTION_USERS)
             .document(userId)
@@ -167,7 +167,7 @@ class FirestoreDataSource @Inject constructor(
 
     // ==================== Equipment Operations ====================
 
-// Get all equipments
+// 모든 기구 조회
     suspend fun getAllEquipments(): List<Equipment> {
         return try {
             val snapshot = firestore.collection(Constants.COLLECTION_EQUIPMENTS)
@@ -182,7 +182,7 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-// Get equipment by ID
+// ID로 기구 조회
     suspend fun getEquipment(equipmentId: String): Equipment? {
         return try {
             val document = firestore.collection(Constants.COLLECTION_EQUIPMENTS)
@@ -202,7 +202,7 @@ class FirestoreDataSource @Inject constructor(
 
     // ==================== Exercise Operations ====================
 
-// Get all exercises
+// 모든 운동 조회
     suspend fun getAllExercises(): List<Exercise> {
         return try {
             val snapshot = firestore.collection(Constants.COLLECTION_EXERCISES)
@@ -217,7 +217,7 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-// Get exercises by equipment ID
+// 기구 ID로 운동 조회
     suspend fun getExercisesByEquipment(equipmentId: String): List<Exercise> {
         return try {
             val snapshot = firestore.collection(Constants.COLLECTION_EXERCISES)
@@ -233,7 +233,7 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-// Get exercises by category
+// 카테고리별 운동 조회
     suspend fun getExercisesByCategory(category: String): List<Exercise> {
         return try {
             val snapshot = firestore.collection(Constants.COLLECTION_EXERCISES)
@@ -251,7 +251,7 @@ class FirestoreDataSource @Inject constructor(
 
     // ==================== Routine Operations ====================
 
-// Create routine
+// 루틴 생성
     suspend fun createRoutine(userId: String, routine: Routine) {
         firestore.collection(Constants.COLLECTION_ROUTINES)
             .document(userId)
@@ -261,7 +261,7 @@ class FirestoreDataSource @Inject constructor(
             .await()
     }
 
-// Get user's routines
+// 사용자의 루틴 조회
     suspend fun getUserRoutines(userId: String): List<Routine> {
         return try {
             val snapshot = firestore.collection(Constants.COLLECTION_ROUTINES)
@@ -278,7 +278,7 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-// Get routine by ID
+// ID로 루틴 조회
     suspend fun getRoutine(userId: String, routineId: String): Routine? {
         return try {
             val document = firestore.collection(Constants.COLLECTION_ROUTINES)
@@ -298,7 +298,7 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-// Update routine
+// 루틴 업데이트
     suspend fun updateRoutine(userId: String, routine: Routine) {
         firestore.collection(Constants.COLLECTION_ROUTINES)
             .document(userId)
@@ -308,7 +308,7 @@ class FirestoreDataSource @Inject constructor(
             .await()
     }
 
-// Delete routine
+// 루틴 삭제
     suspend fun deleteRoutine(userId: String, routineId: String) {
         firestore.collection(Constants.COLLECTION_ROUTINES)
             .document(userId)
@@ -320,7 +320,7 @@ class FirestoreDataSource @Inject constructor(
 
     // ==================== Workout Record Operations ====================
 
-// Create workout record
+// 운동 기록 생성
     suspend fun createWorkoutRecord(userId: String, record: WorkoutRecord) {
         firestore.collection(Constants.COLLECTION_WORKOUT_RECORDS)
             .document(userId)
@@ -330,7 +330,7 @@ class FirestoreDataSource @Inject constructor(
             .await()
     }
 
-// Get user's workout records
+// 사용자의 운동 기록 조회
     suspend fun getUserWorkoutRecords(userId: String): List<WorkoutRecord> {
         return try {
             val snapshot = firestore.collection(Constants.COLLECTION_WORKOUT_RECORDS)
@@ -347,7 +347,7 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-// Get workout record by ID
+// ID로 운동 기록 조회
     suspend fun getWorkoutRecord(userId: String, recordId: String): WorkoutRecord? {
         return try {
             val document = firestore.collection(Constants.COLLECTION_WORKOUT_RECORDS)
@@ -367,7 +367,7 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-// Update workout record
+// 운동 기록 업데이트
     suspend fun updateWorkoutRecord(userId: String, record: WorkoutRecord) {
         firestore.collection(Constants.COLLECTION_WORKOUT_RECORDS)
             .document(userId)
@@ -377,7 +377,7 @@ class FirestoreDataSource @Inject constructor(
             .await()
     }
 
-// Delete workout record
+// 운동 기록 삭제
     suspend fun deleteWorkoutRecord(userId: String, recordId: String) {
         firestore.collection(Constants.COLLECTION_WORKOUT_RECORDS)
             .document(userId)

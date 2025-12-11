@@ -25,10 +25,7 @@ import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
 
-/**
- * Kakao Map Composable
- * Displays Kakao Map with gym markers
- */
+// 카카오맵 컴포저블 - 헬스장 마커가 표시된 카카오맵
 @Composable
 fun KakaoMapView(
     modifier: Modifier = Modifier,
@@ -54,7 +51,7 @@ fun KakaoMapView(
     }
 
     if (mapView == null) {
-        // Fallback UI if map initialization fails
+        // 지도 초기화 실패 시 대체 UI
         Box(
             modifier = modifier,
             contentAlignment = Alignment.Center
@@ -84,7 +81,7 @@ fun KakaoMapView(
                         try {
                             isMapReady = true
 
-                            // Move camera to current location or first gym
+                            // 현재 위치 또는 첫 번째 헬스장으로 카메라 이동
                             val centerLocation = if (currentLocation != null) {
                                 LatLng.from(currentLocation.first, currentLocation.second)
                             } else if (gyms.isNotEmpty() && gyms[0].latitude != 0.0 && gyms[0].longitude != 0.0) {
@@ -99,7 +96,7 @@ fun KakaoMapView(
 
                             val labelManager = kakaoMap.labelManager
 
-                            // Add current location marker
+                            // 현재 위치 마커 추가
                             if (currentLocation != null && labelManager != null) {
                                 try {
                                     val currentLocationLatLng = LatLng.from(currentLocation.first, currentLocation.second)
@@ -110,7 +107,7 @@ fun KakaoMapView(
                                 }
                             }
 
-                            // Add gym markers
+                            // 헬스장 마커 추가
                             if (labelManager != null) {
                                 gyms.forEach { gym ->
                                     try {

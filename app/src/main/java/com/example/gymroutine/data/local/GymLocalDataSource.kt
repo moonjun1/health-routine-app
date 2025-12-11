@@ -18,8 +18,8 @@ import javax.inject.Singleton
 
 private val Context.gymDataStore: DataStore<Preferences> by preferencesDataStore(name = "gym_prefs")
 
-// Local data source for gym data using DataStore
-// Used when user is not logged in
+// DataStore를 사용하는 헬스장 로컬 데이터 소스
+// 사용자가 로그인하지 않은 경우 사용됨
 @Singleton
 class GymLocalDataSource @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -31,15 +31,15 @@ class GymLocalDataSource @Inject constructor(
         private val SELECTED_GYM_ID_KEY = stringPreferencesKey("selected_gym_id")
     }
 
-// Save gym to local storage
+// 헬스장 로컬 저장소에 저장
     suspend fun saveGym(gym: Gym) {
         try {
             val currentGyms = getGyms().toMutableList()
 
-            // Remove existing gym with same placeId
+            // 동일한 placeId를 가진 기존 헬스장 제거
             currentGyms.removeAll { it.placeId == gym.placeId }
 
-            // Add new/updated gym
+            // 새로운/업데이트된 헬스장 추가
             currentGyms.add(gym)
 
             context.gymDataStore.edit { prefs ->
@@ -54,7 +54,7 @@ class GymLocalDataSource @Inject constructor(
         }
     }
 
-// Get all local gyms
+// 모든 로컬 헬스장 조회
     suspend fun getGyms(): List<Gym> {
         return try {
             val gymsJson = context.gymDataStore.data
@@ -76,7 +76,7 @@ class GymLocalDataSource @Inject constructor(
         }
     }
 
-// Get gym by placeId
+// placeId로 헬스장 조회
     suspend fun getGym(placeId: String): Gym? {
         return try {
             val gyms = getGyms()
@@ -93,7 +93,7 @@ class GymLocalDataSource @Inject constructor(
         }
     }
 
-// Delete gym
+// 헬스장 삭제
     suspend fun deleteGym(placeId: String) {
         try {
             val currentGyms = getGyms().toMutableList()
@@ -111,7 +111,7 @@ class GymLocalDataSource @Inject constructor(
         }
     }
 
-// Set selected gym (for non-logged in users)
+// 선택된 헬스장 설정 (비로그인 사용자용)
     suspend fun setSelectedGymId(placeId: String) {
         try {
             context.gymDataStore.edit { prefs ->
@@ -123,7 +123,7 @@ class GymLocalDataSource @Inject constructor(
         }
     }
 
-// Get selected gym
+// 선택된 헬스장 조회
     suspend fun getSelectedGym(): Gym? {
         return try {
             val selectedId = context.gymDataStore.data
@@ -131,7 +131,7 @@ class GymLocalDataSource @Inject constructor(
                 .first()
 
             if (selectedId.isNullOrEmpty()) {
-                // Return first gym if no selection
+                // 선택된 헬스장이 없으면 첫 번째 헬스장 반환
                 val gyms = getGyms()
                 gyms.firstOrNull()
             } else {
@@ -143,7 +143,7 @@ class GymLocalDataSource @Inject constructor(
         }
     }
 
-// Clear all local gym data
+// 모든 로컬 헬스장 데이터 삭제
     suspend fun clearAll() {
         try {
             context.gymDataStore.edit { prefs ->

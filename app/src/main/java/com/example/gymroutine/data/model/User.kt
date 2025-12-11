@@ -1,7 +1,7 @@
 package com.example.gymroutine.data.model
 
-// User data model
-// Firestore collection: users/{userId}
+// 사용자 데이터 모델
+// Firestore 컬렉션: users/{userId}
 data class User(
     val id: String = "",
     val email: String = "",
@@ -9,7 +9,7 @@ data class User(
     val myGymId: String? = null, // 내 헬스장 (주로 사용하는 헬스장)
     val createdAt: Long = System.currentTimeMillis()
 ) {
-    // No-arg constructor for Firestore
+    // Firestore용 매개변수 없는 생성자
     constructor() : this("", "", null, null, 0L)
 
     fun toMap(): Map<String, Any?> {

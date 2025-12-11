@@ -18,9 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gymroutine.data.model.AIRoutineResponse
 import com.example.gymroutine.util.Resource
 
-/**
- * AI-powered routine generation screen
- */
+// AI 기반 루틴 생성 화면
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AIRoutineScreen(
@@ -43,14 +41,14 @@ fun AIRoutineScreen(
 
     var showResultDialog by remember { mutableStateOf<AIRoutineResponse?>(null) }
 
-    // Handle generation success
+    // 생성 성공 처리
     LaunchedEffect(generationState) {
         if (generationState is Resource.Success) {
             showResultDialog = (generationState as Resource.Success<AIRoutineResponse>).data
         }
     }
 
-    // Handle save success
+    // 저장 성공 처리
     LaunchedEffect(saveState) {
         if (saveState is Resource.Success) {
             onRoutineCreated()
@@ -58,7 +56,7 @@ fun AIRoutineScreen(
         }
     }
 
-    // Debug: Log form validation state changes
+    // 디버그: 폼 검증 상태 변경 로그
     LaunchedEffect(goal, selectedCategories.size, selectedGym) {
         val isValid = goal.isNotEmpty() && selectedCategories.isNotEmpty() && selectedGym != null
         android.util.Log.d("AIRoutineScreen",
@@ -96,7 +94,7 @@ fun AIRoutineScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Header
+            // 헤더
             item {
                 Text(
                     text = "AI가 당신에게 맞는 완벽한 루틴을 만들어드립니다",
@@ -105,7 +103,7 @@ fun AIRoutineScreen(
                 )
             }
 
-            // Gym selection
+            // 헬스장 선택
             item {
                 GymSelectionSection(
                     userGyms = userGyms,
@@ -114,7 +112,7 @@ fun AIRoutineScreen(
                 )
             }
 
-            // Goal selection
+            // 목표 선택
             item {
                 Text(
                     text = "운동 목표",
@@ -131,7 +129,7 @@ fun AIRoutineScreen(
                 )
             }
 
-            // Experience level
+            // 경력 수준
             item {
                 Text(
                     text = "운동 경력",
@@ -148,7 +146,7 @@ fun AIRoutineScreen(
                 )
             }
 
-            // Workouts per week
+            // 주당 운동 횟수
             item {
                 Text(
                     text = "주당 운동 횟수: ${workoutsPerWeek}회",
@@ -163,7 +161,7 @@ fun AIRoutineScreen(
                 )
             }
 
-            // Workout duration
+            // 운동 시간
             item {
                 Text(
                     text = "운동 시간: ${workoutDuration}분",
@@ -178,7 +176,7 @@ fun AIRoutineScreen(
                 )
             }
 
-            // Preferred categories
+            // 선호 카테고리
             item {
                 Text(
                     text = "선호하는 운동 부위",
@@ -195,7 +193,7 @@ fun AIRoutineScreen(
                 )
             }
 
-            // Additional info
+            // 추가 정보
             item {
                 Text(
                     text = "추가 정보 (선택사항)",
@@ -213,9 +211,9 @@ fun AIRoutineScreen(
                 )
             }
 
-            // Generate button
+            // 생성 버튼
             item {
-                // Calculate enabled state from collected states
+                // 수집된 상태에서 활성화 상태 계산
                 val isFormValid = goal.isNotEmpty() &&
                                  selectedCategories.isNotEmpty() &&
                                  selectedGym != null
@@ -240,7 +238,7 @@ fun AIRoutineScreen(
         }
     }
 
-    // Result dialog
+    // 결과 다이얼로그
     showResultDialog?.let { result ->
         AIRoutineResultDialog(
             result = result,

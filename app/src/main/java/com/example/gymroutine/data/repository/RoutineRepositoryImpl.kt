@@ -6,8 +6,8 @@ import com.example.gymroutine.data.remote.FirestoreDataSource
 import com.example.gymroutine.domain.repository.RoutineRepository
 import javax.inject.Inject
 
-// Routine repository implementation
-// Uses local storage when not logged in, Firebase when logged in
+// 루틴 레포지토리 구현
+// 비로그인 시 로컬 저장소 사용, 로그인 시 Firebase 사용
 class RoutineRepositoryImpl @Inject constructor(
     private val firestoreDataSource: FirestoreDataSource,
     private val localRoutineDataSource: LocalRoutineDataSource
@@ -15,10 +15,10 @@ class RoutineRepositoryImpl @Inject constructor(
 
     override suspend fun getUserRoutines(userId: String): List<Routine> {
         return if (userId.isEmpty()) {
-            // Not logged in - use local storage
+            // 비로그인 - 로컬 저장소 사용
             localRoutineDataSource.getAllRoutines()
         } else {
-            // Logged in - use Firebase
+            // 로그인 - Firebase 사용
             firestoreDataSource.getUserRoutines(userId)
         }
     }
@@ -29,10 +29,10 @@ class RoutineRepositoryImpl @Inject constructor(
 
     override suspend fun createRoutine(routine: Routine): Routine {
         if (routine.userId.isEmpty()) {
-            // Not logged in - save locally
+            // 비로그인 - 로컬에 저장
             localRoutineDataSource.saveRoutine(routine)
         } else {
-            // Logged in - save to Firebase
+            // 로그인 - Firebase에 저장
             firestoreDataSource.createRoutine(routine.userId, routine)
         }
         return routine
@@ -40,31 +40,31 @@ class RoutineRepositoryImpl @Inject constructor(
 
     override suspend fun updateRoutine(routine: Routine): Routine {
         if (routine.userId.isEmpty()) {
-            // Not logged in - update locally
+            // 비로그인 - 로컬에서 업데이트
             localRoutineDataSource.saveRoutine(routine)
         } else {
-            // Logged in - update Firebase
+            // 로그인 - Firebase에서 업데이트
             firestoreDataSource.updateRoutine(routine.userId, routine)
         }
         return routine
     }
 
     override suspend fun deleteRoutine(routineId: String) {
-        // This method requires extension - see below
+        // 이 메서드는 확장 필요 - 아래 참조
     }
 
-// Delete routine with userId
+// userId로 루틴 삭제
     override suspend fun deleteRoutine(userId: String, routineId: String) {
         if (userId.isEmpty()) {
-            // Not logged in - delete from local
+            // 비로그인 - 로컬에서 삭제
             localRoutineDataSource.deleteRoutine(routineId)
         } else {
-            // Logged in - delete from Firebase
+            // 로그인 - Firebase에서 삭제
             firestoreDataSource.deleteRoutine(userId, routineId)
         }
     }
 
-// Get routine by id with userId
+// userId로 루틴 ID 조회
     suspend fun getRoutineById(userId: String, routineId: String): Routine? {
         return if (userId.isEmpty()) {
             localRoutineDataSource.getRoutineById(routineId)

@@ -16,9 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.gymroutine.data.model.Exercise
 
-/**
- * Exercise selection screen for adding exercises to routine
- */
+// 루틴에 운동을 추가하기 위한 운동 선택 화면
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExerciseSelectionScreen(
@@ -59,7 +57,7 @@ fun ExerciseSelectionScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // Search bar
+            // 검색 바
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
@@ -71,7 +69,7 @@ fun ExerciseSelectionScreen(
                 singleLine = true
             )
 
-            // Category chips
+            // 카테고리 칩
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
@@ -92,7 +90,7 @@ fun ExerciseSelectionScreen(
                     }
                 }
 
-                // Exercise list
+                // 운동 목록
                 items(filteredExercises) { exercise ->
                     ExerciseSelectionItem(
                         exercise = exercise,
@@ -122,9 +120,7 @@ fun ExerciseSelectionScreen(
     }
 }
 
-/**
- * Exercise selection item component
- */
+// 운동 선택 항목 컴포넌트
 @Composable
 fun ExerciseSelectionItem(
     exercise: Exercise,

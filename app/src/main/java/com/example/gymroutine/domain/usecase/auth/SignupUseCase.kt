@@ -7,7 +7,7 @@ import com.example.gymroutine.util.isValidEmail
 import com.example.gymroutine.util.isValidPassword
 import javax.inject.Inject
 
-// Use case for user signup
+// 사용자 회원가입 유스케이스
 class SignupUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
@@ -17,7 +17,7 @@ class SignupUseCase @Inject constructor(
         confirmPassword: String
     ): Result<User> {
         return try {
-            // Validate email
+            // 이메일 유효성 검증
             if (email.isBlank()) {
                 return Result.failure(Exception("이메일을 입력해주세요"))
             }
@@ -26,7 +26,7 @@ class SignupUseCase @Inject constructor(
                 return Result.failure(Exception(Constants.ERROR_INVALID_EMAIL))
             }
 
-            // Validate password
+            // 비밀번호 유효성 검증
             if (password.isBlank()) {
                 return Result.failure(Exception("비밀번호를 입력해주세요"))
             }
@@ -35,7 +35,7 @@ class SignupUseCase @Inject constructor(
                 return Result.failure(Exception(Constants.ERROR_WEAK_PASSWORD))
             }
 
-            // Validate password confirmation
+            // 비밀번호 확인 유효성 검증
             if (password != confirmPassword) {
                 return Result.failure(Exception("비밀번호가 일치하지 않습니다"))
             }

@@ -9,13 +9,13 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-// Firebase Authentication data source
-// Handles authentication operations with Firebase Auth
+// Firebase 인증 데이터 소스
+// Firebase Auth를 사용한 인증 작업 처리
 class FirebaseAuthDataSource @Inject constructor(
     private val firebaseAuth: FirebaseAuth
 ) {
-// Sign up with email and password
-// @throws FirebaseAuthException on failure
+// 이메일과 비밀번호로 회원가입
+// @throws FirebaseAuthException 실패 시
     suspend fun signUp(email: String, password: String): User {
         try {
             val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
@@ -38,8 +38,8 @@ class FirebaseAuthDataSource @Inject constructor(
         }
     }
 
-// Sign in with email and password
-// @throws FirebaseAuthException on failure
+// 이메일과 비밀번호로 로그인
+// @throws FirebaseAuthException 실패 시
     suspend fun signIn(email: String, password: String): User {
         try {
             val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
@@ -60,12 +60,12 @@ class FirebaseAuthDataSource @Inject constructor(
         }
     }
 
-// Sign out current user
+// 현재 사용자 로그아웃
     fun signOut() {
         firebaseAuth.signOut()
     }
 
-// Get current user ID
+// 현재 사용자 ID 조회
     fun getCurrentUserId(): String? {
         return firebaseAuth.currentUser?.uid
     }
@@ -75,7 +75,7 @@ class FirebaseAuthDataSource @Inject constructor(
         return firebaseAuth.currentUser != null
     }
 
-// Get current user
+// 현재 사용자 조회
     fun getCurrentUser(): User? {
         val firebaseUser = firebaseAuth.currentUser ?: return null
         return User(

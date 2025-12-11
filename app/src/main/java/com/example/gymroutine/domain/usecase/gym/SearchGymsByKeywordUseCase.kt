@@ -4,7 +4,7 @@ import com.example.gymroutine.data.model.Gym
 import com.example.gymroutine.domain.repository.GymRepository
 import javax.inject.Inject
 
-// Use case for searching gyms by keyword
+// 키워드로 헬스장 검색 유스케이스
 class SearchGymsByKeywordUseCase @Inject constructor(
     private val gymRepository: GymRepository
 ) {
@@ -14,7 +14,7 @@ class SearchGymsByKeywordUseCase @Inject constructor(
         longitude: Double? = null
     ): Result<List<Gym>> {
         return try {
-            // Validate keyword
+            // 키워드 유효성 검증
             if (keyword.isBlank()) {
                 return Result.failure(Exception("검색어를 입력해주세요"))
             }

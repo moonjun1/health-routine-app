@@ -4,7 +4,7 @@ import com.example.gymroutine.data.model.Gym
 import com.example.gymroutine.domain.repository.GymRepository
 import javax.inject.Inject
 
-// Use case for searching nearby gyms
+// 근처 헬스장 검색 유스케이스
 class SearchNearbyGymsUseCase @Inject constructor(
     private val gymRepository: GymRepository
 ) {

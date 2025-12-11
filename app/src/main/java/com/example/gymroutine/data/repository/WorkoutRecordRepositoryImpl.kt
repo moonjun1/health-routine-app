@@ -6,8 +6,8 @@ import com.example.gymroutine.domain.repository.WorkoutRecordRepository
 import java.util.Calendar
 import javax.inject.Inject
 
-// Workout record repository implementation
-// Uses Firebase for logged-in users
+// 운동 기록 레포지토리 구현
+// 로그인 사용자는 Firebase 사용
 class WorkoutRecordRepositoryImpl @Inject constructor(
     private val firestoreDataSource: FirestoreDataSource
 ) : WorkoutRecordRepository {
@@ -18,7 +18,7 @@ class WorkoutRecordRepositoryImpl @Inject constructor(
         month: Int
     ): List<WorkoutRecord> {
         if (userId.isEmpty()) {
-            return emptyList() // For now, no local storage for guest users
+            return emptyList() // 현재 게스트 사용자용 로컬 저장소 없음
         }
 
         val calendar = Calendar.getInstance()
@@ -66,7 +66,7 @@ class WorkoutRecordRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getWorkoutRecordById(recordId: String): WorkoutRecord? {
-        // This would need userId - for now return null
+        // userId 필요 - 현재는 null 반환
         return null
     }
 

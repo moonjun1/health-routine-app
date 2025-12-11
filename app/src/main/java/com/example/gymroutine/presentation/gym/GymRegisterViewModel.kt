@@ -14,9 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/**
- * ViewModel for gym registration screen
- */
+// 헬스장 등록 화면 뷰모델
 @HiltViewModel
 class GymRegisterViewModel @Inject constructor(
     private val registerGymUseCase: RegisterGymUseCase,
@@ -38,7 +36,7 @@ class GymRegisterViewModel @Inject constructor(
 
     fun setSelectedGym(gym: Gym) {
         _selectedGym.value = gym
-        // Pre-fill equipments if already registered
+        // 이미 등록된 경우 기구 목록 미리 채우기
         _selectedEquipments.value = gym.equipments
     }
 
@@ -67,13 +65,13 @@ class GymRegisterViewModel @Inject constructor(
                 return@launch
             }
 
-            // Get current user ID (nullable for non-logged in users)
+            // 현재 사용자 ID 가져오기 (비로그인 사용자의 경우 null)
             val userId = authRepository.getCurrentUserId()
             val isLoggedIn = !userId.isNullOrEmpty()
 
             _registerState.value = Resource.Loading
 
-            // Add selected equipments and registeredBy to gym
+            // 선택된 기구와 registeredBy를 헬스장에 추가
             val gymWithEquipments = gym.copy(
                 equipments = _selectedEquipments.value,
                 registeredBy = userId ?: "local" // Use "local" if not logged in
