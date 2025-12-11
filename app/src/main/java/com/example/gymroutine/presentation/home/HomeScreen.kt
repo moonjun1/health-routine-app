@@ -27,6 +27,7 @@ fun HomeScreen(
     onNavigateToGymSearch: () -> Unit = {},
     onNavigateToExerciseList: () -> Unit = {},
     onNavigateToRoutineList: () -> Unit = {},
+    onNavigateToCalendar: () -> Unit = {},
     onRoutineSelected: (Routine) -> Unit = {}
 ) {
     val isLoggedIn by viewModel.isLoggedIn.collectAsState()
@@ -222,9 +223,9 @@ fun HomeScreen(
                     )
                     QuickMenuCard(
                         modifier = Modifier.weight(1f),
-                        icon = Icons.Default.Star,
-                        title = "AI 루틴",
-                        onClick = onNavigateToRoutineList
+                        icon = Icons.Default.DateRange,
+                        title = "운동 캘린더",
+                        onClick = onNavigateToCalendar
                     )
                 }
             }
