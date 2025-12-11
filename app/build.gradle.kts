@@ -102,6 +102,9 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.coroutines.play.services)
 
+    // DataStore
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+
     // Navigation Compose
     implementation(libs.androidx.navigation.compose)
 
