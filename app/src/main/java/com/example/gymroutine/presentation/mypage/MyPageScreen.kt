@@ -26,7 +26,6 @@ import kotlinx.coroutines.launch
 fun MyPageScreen(
     viewModel: MyPageViewModel = hiltViewModel(),
     onNavigateToLogin: () -> Unit,
-    onNavigateToEditProfile: () -> Unit,
     onNavigateToChangePassword: () -> Unit = {},
     onNavigateToSettings: () -> Unit = {},
     onLogoutSuccess: () -> Unit
@@ -71,8 +70,7 @@ fun MyPageScreen(
                 if (isLoggedIn) {
                     LoggedInProfileCard(
                         userName = currentUser?.email?.substringBefore("@") ?: "사용자",
-                        userEmail = currentUser?.email ?: "",
-                        onEditProfile = onNavigateToEditProfile
+                        userEmail = currentUser?.email ?: ""
                     )
                 } else {
                     GuestProfileCard(
@@ -94,14 +92,6 @@ fun MyPageScreen(
                         text = "계정 관리",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
-                    )
-                }
-
-                item {
-                    MenuItemCard(
-                        icon = Icons.Default.Person,
-                        title = "회원정보 수정",
-                        onClick = onNavigateToEditProfile
                     )
                 }
 
@@ -231,8 +221,7 @@ fun MyPageScreen(
 @Composable
 fun LoggedInProfileCard(
     userName: String,
-    userEmail: String,
-    onEditProfile: () -> Unit
+    userEmail: String
 ) {
     Card(
         modifier = Modifier.fillMaxWidth()
@@ -273,13 +262,6 @@ fun LoggedInProfileCard(
                     text = userEmail,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            IconButton(onClick = onEditProfile) {
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = "프로필 수정"
                 )
             }
         }

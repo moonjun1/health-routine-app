@@ -4,7 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.launch
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -279,10 +281,22 @@ fun NavGraph(
                 return@composable
             }
 
+            val viewModel: com.example.gymroutine.presentation.routine.RoutineDetailViewModel = hiltViewModel()
+            val coroutineScope = rememberCoroutineScope()
+
             RoutineDetailScreen(
                 routine = routine,
                 onNavigateBack = {
                     navController.popBackStack()
+                },
+                onExerciseClick = { exerciseId ->
+                    coroutineScope.launch {
+                        val exercise = viewModel.getExerciseById(exerciseId)
+                        if (exercise != null) {
+                            val exerciseJson = URLEncoder.encode(Gson().toJson(exercise), StandardCharsets.UTF_8.toString())
+                            navController.navigate("exercise_detail/$exerciseJson")
+                        }
+                    }
                 }
             )
         }
@@ -307,9 +321,6 @@ fun NavGraph(
                 onNavigateToLogin = {
                     navController.navigate(Screen.Login.route)
                 },
-                onNavigateToEditProfile = {
-                    navController.navigate(Screen.EditProfile.route)
-                },
                 onNavigateToChangePassword = {
                     navController.navigate(Screen.ChangePassword.route)
                 },
@@ -320,15 +331,6 @@ fun NavGraph(
                     navController.navigate(Screen.Login.route) {
                         popUpTo(Screen.Home.route) { inclusive = true }
                     }
-                }
-            )
-        }
-
-        // Edit Profile screen
-        composable(Screen.EditProfile.route) {
-            com.example.gymroutine.presentation.mypage.EditProfileScreen(
-                onNavigateBack = {
-                    navController.popBackStack()
                 }
             )
         }

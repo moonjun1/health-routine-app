@@ -25,6 +25,5 @@ sealed class Screen(val route: String) {
     }
     object Settings : Screen("settings")
     object MyPage : Screen("mypage")
-    object EditProfile : Screen("edit_profile")
     object ChangePassword : Screen("change_password")
 }
