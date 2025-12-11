@@ -17,6 +17,7 @@ import com.example.gymroutine.data.model.Gym
 import com.example.gymroutine.data.model.Routine
 import com.example.gymroutine.presentation.auth.LoginScreen
 import com.example.gymroutine.presentation.auth.SignupScreen
+import com.example.gymroutine.presentation.calendar.CalendarScreen
 import com.example.gymroutine.presentation.exercise.ExerciseDetailScreen
 import com.example.gymroutine.presentation.exercise.ExerciseListScreen
 import com.example.gymroutine.presentation.gym.GymRegisterScreen
@@ -91,6 +92,9 @@ fun NavGraph(
                 },
                 onNavigateToRoutineList = {
                     navController.navigate(Screen.RoutineList.route)
+                },
+                onNavigateToCalendar = {
+                    navController.navigate(Screen.Calendar.route)
                 },
                 onRoutineSelected = { routine ->
                     val routineJson = URLEncoder.encode(Gson().toJson(routine), StandardCharsets.UTF_8.toString())
@@ -338,6 +342,15 @@ fun NavGraph(
         // Change Password screen
         composable(Screen.ChangePassword.route) {
             com.example.gymroutine.presentation.mypage.ChangePasswordScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        // Calendar screen
+        composable(Screen.Calendar.route) {
+            CalendarScreen(
                 onNavigateBack = {
                     navController.popBackStack()
                 }

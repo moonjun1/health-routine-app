@@ -26,4 +26,5 @@ sealed class Screen(val route: String) {
     object Settings : Screen("settings")
     object MyPage : Screen("mypage")
     object ChangePassword : Screen("change_password")
+    object Calendar : Screen("calendar")
 }
