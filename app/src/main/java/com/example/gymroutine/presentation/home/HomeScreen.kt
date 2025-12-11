@@ -1,9 +1,13 @@
 package com.example.gymroutine.presentation.home
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -32,6 +36,7 @@ fun HomeScreen(
     val isLoggedIn by viewModel.isLoggedIn.collectAsState()
     val userState by viewModel.userState.collectAsState()
     val gymState by viewModel.gymState.collectAsState()
+    val userGymsState by viewModel.userGymsState.collectAsState()
     val recentRoutinesState by viewModel.recentRoutinesState.collectAsState()
 
     Scaffold(
@@ -56,6 +61,24 @@ fun HomeScreen(
             // Welcome message
             item {
                 WelcomeCard(isLoggedIn = isLoggedIn)
+            }
+
+            // User's gyms carousel (로그인했을 때만)
+            if (isLoggedIn) {
+                item {
+                    when (val state = userGymsState) {
+                        is Resource.Success -> {
+                            if (state.data.size > 1) {
+                                UserGymsCarousel(
+                                    gyms = state.data,
+                                    onGymClick = { /* TODO: Navigate to gym detail */ },
+                                    onChangeGym = onNavigateToGymSearch
+                                )
+                            }
+                        }
+                        else -> { /* No carousel for loading/error/single gym */ }
+                    }
+                }
             }
 
             // Gym info card (로그인 없이도 보임)
@@ -228,6 +251,122 @@ fun HomeScreen(
                         icon = Icons.Default.Star,
                         title = "AI 루틴",
                         onClick = onNavigateToRoutineList
+                    )
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun UserGymsCarousel(
+    gyms: List<Gym>,
+    onGymClick: (Gym) -> Unit,
+    onChangeGym: () -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "내 헬스장 목록 (${gyms.size}개)",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            TextButton(onClick = onChangeGym) {
+                Text("관리")
+            }
+        }
+
+        val pagerState = rememberPagerState(pageCount = { gyms.size })
+
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.fillMaxWidth(),
+            pageSpacing = 8.dp
+        ) { page ->
+            val gym = gyms[page]
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onGymClick(gym) },
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                )
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.LocationOn,
+                            null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = gym.name,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    Text(
+                        text = gym.address,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    Divider()
+
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Default.Build,
+                            null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Text(
+                            text = "보유 기구: ${gym.equipments.size}개",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+            }
+        }
+
+        // Page indicator
+        if (gyms.size > 1) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                repeat(gyms.size) { index ->
+                    val isSelected = pagerState.currentPage == index
+                    Box(
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .size(if (isSelected) 8.dp else 6.dp)
+                            .background(
+                                color = if (isSelected)
+                                    MaterialTheme.colorScheme.primary
+                                else
+                                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
+                                shape = MaterialTheme.shapes.small
+                            )
                     )
                 }
             }
