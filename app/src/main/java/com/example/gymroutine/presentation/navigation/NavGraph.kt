@@ -308,12 +308,36 @@ fun NavGraph(
                     navController.navigate(Screen.Login.route)
                 },
                 onNavigateToEditProfile = {
-                    // TODO: Navigate to edit profile when implemented
+                    navController.navigate(Screen.EditProfile.route)
+                },
+                onNavigateToChangePassword = {
+                    navController.navigate(Screen.ChangePassword.route)
+                },
+                onNavigateToSettings = {
+                    navController.navigate(Screen.Settings.route)
                 },
                 onLogoutSuccess = {
                     navController.navigate(Screen.Login.route) {
                         popUpTo(Screen.Home.route) { inclusive = true }
                     }
+                }
+            )
+        }
+
+        // Edit Profile screen
+        composable(Screen.EditProfile.route) {
+            com.example.gymroutine.presentation.mypage.EditProfileScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        // Change Password screen
+        composable(Screen.ChangePassword.route) {
+            com.example.gymroutine.presentation.mypage.ChangePasswordScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
                 }
             )
         }

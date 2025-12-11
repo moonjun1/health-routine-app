@@ -27,6 +27,8 @@ fun MyPageScreen(
     viewModel: MyPageViewModel = hiltViewModel(),
     onNavigateToLogin: () -> Unit,
     onNavigateToEditProfile: () -> Unit,
+    onNavigateToChangePassword: () -> Unit = {},
+    onNavigateToSettings: () -> Unit = {},
     onLogoutSuccess: () -> Unit
 ) {
     val isLoggedIn by viewModel.isLoggedIn.collectAsState()
@@ -70,11 +72,7 @@ fun MyPageScreen(
                     LoggedInProfileCard(
                         userName = currentUser?.email?.substringBefore("@") ?: "사용자",
                         userEmail = currentUser?.email ?: "",
-                        onEditProfile = {
-                            scope.launch {
-                                snackbarHostState.showSnackbar("준비 중인 기능입니다")
-                            }
-                        }
+                        onEditProfile = onNavigateToEditProfile
                     )
                 } else {
                     GuestProfileCard(
@@ -103,11 +101,7 @@ fun MyPageScreen(
                     MenuItemCard(
                         icon = Icons.Default.Person,
                         title = "회원정보 수정",
-                        onClick = {
-                            scope.launch {
-                                snackbarHostState.showSnackbar("준비 중인 기능입니다")
-                            }
-                        }
+                        onClick = onNavigateToEditProfile
                     )
                 }
 
@@ -115,11 +109,7 @@ fun MyPageScreen(
                     MenuItemCard(
                         icon = Icons.Default.Lock,
                         title = "비밀번호 변경",
-                        onClick = {
-                            scope.launch {
-                                snackbarHostState.showSnackbar("준비 중인 기능입니다")
-                            }
-                        }
+                        onClick = onNavigateToChangePassword
                     )
                 }
 
@@ -190,11 +180,7 @@ fun MyPageScreen(
                 MenuItemCard(
                     icon = Icons.Default.Settings,
                     title = "설정",
-                    onClick = {
-                        scope.launch {
-                            snackbarHostState.showSnackbar("준비 중인 기능입니다")
-                        }
-                    }
+                    onClick = onNavigateToSettings
                 )
             }
         }
