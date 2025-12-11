@@ -47,10 +47,15 @@ class SettingsViewModel @Inject constructor(
             if (userId != null) {
                 val user = userRepository.getUser(userId)
                 _userEmail.value = user?.email ?: ""
-                if (user != null && !user.gymId.isNullOrEmpty()) {
-                    val gym = gymRepository.getGymById(user.gymId)
-                    _gymName.value = gym?.name ?: ""
-                }
+            }
+
+            // Load gym for both logged-in and guest users
+            try {
+                val gyms = gymRepository.getUserGyms(userId ?: "")
+                _gymName.value = gyms.firstOrNull()?.name ?: ""
+            } catch (e: Exception) {
+                android.util.Log.e("SettingsViewModel", "Failed to load gym", e)
+                _gymName.value = ""
             }
         }
     }
