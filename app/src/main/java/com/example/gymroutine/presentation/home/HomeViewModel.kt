@@ -66,18 +66,26 @@ class HomeViewModel @Inject constructor(
     private fun loadUserGyms() {
         viewModelScope.launch {
             val userId = authRepository.getCurrentUserId()
+            android.util.Log.d("HomeViewModel", "loadUserGyms: userId=$userId, isLoggedIn=${_isLoggedIn.value}")
 
             _userGymsState.value = Resource.Loading
             try {
                 // Load gyms regardless of login status
                 // Repository will handle local/Firebase automatically
                 val gyms = gymRepository.getUserGyms(userId ?: "")
+                android.util.Log.d("HomeViewModel", "loadUserGyms: Loaded ${gyms.size} gyms")
+                gyms.forEachIndexed { index, gym ->
+                    android.util.Log.d("HomeViewModel", "  Gym $index: ${gym.name} (${gym.placeId})")
+                }
+
                 _userGymsState.value = if (gyms.isNotEmpty()) {
                     Resource.Success(gyms)
                 } else {
+                    android.util.Log.w("HomeViewModel", "loadUserGyms: No gyms found")
                     Resource.Error("등록된 헬스장이 없습니다")
                 }
             } catch (e: Exception) {
+                android.util.Log.e("HomeViewModel", "loadUserGyms: Failed", e)
                 _userGymsState.value = Resource.Error(e.message ?: "헬스장 목록 로드 실패")
             }
         }

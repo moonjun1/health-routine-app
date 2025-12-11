@@ -86,7 +86,7 @@ fun EditProfileScreen(
                     )
 
                     Text(
-                        text = "현재 이메일",
+                        text = "이메일",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -98,31 +98,26 @@ fun EditProfileScreen(
                 }
             }
 
-            // Email field (read-only for now)
-            OutlinedTextField(
-                value = email,
-                onValueChange = { viewModel.updateEmail(it) },
-                label = { Text("이메일") },
-                enabled = false, // Disabled because email change requires re-authentication
+            Card(
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
-            )
-
-            Text(
-                text = "※ 이메일 변경은 보안상의 이유로 현재 지원하지 않습니다",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Save button (disabled for now)
-            Button(
-                onClick = { viewModel.saveProfile() },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = false // No editable fields yet
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                )
             ) {
-                Text("저장")
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = "안내",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "현재 편집 가능한 정보가 없습니다.\n비밀번호는 별도 메뉴에서 변경할 수 있습니다.",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             }
         }
 
