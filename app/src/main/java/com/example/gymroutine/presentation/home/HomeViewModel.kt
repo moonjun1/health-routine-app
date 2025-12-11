@@ -54,9 +54,11 @@ class HomeViewModel @Inject constructor(
         val currentUser = authRepository.getCurrentUser()
         _isLoggedIn.value = currentUser != null
 
+        // Load gyms for both logged-in and guest users
+        loadUserGyms()
+
         if (currentUser != null) {
             loadUserData()
-            loadUserGyms()
             loadRecentRoutines()
         }
     }
