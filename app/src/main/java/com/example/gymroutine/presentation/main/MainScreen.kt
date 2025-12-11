@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.gymroutine.presentation.navigation.NavGraph
 import com.example.gymroutine.presentation.navigation.Screen
 
 /**
@@ -16,54 +17,55 @@ import com.example.gymroutine.presentation.navigation.Screen
 @Composable
 fun MainScreen(
     navController: NavHostController,
-    onNavigateToGymSearch: () -> Unit,
-    onNavigateToExerciseList: () -> Unit,
-    onNavigateToRoutineList: () -> Unit,
-    onNavigateToSettings: () -> Unit,
-    onNavigateToMyPage: () -> Unit
+    startDestination: String = Screen.Login.route
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+    // Bottom navigation should only be visible on main screens
+    val showBottomBar = currentRoute in listOf(
+        Screen.Home.route,
+        Screen.ExerciseList.route,
+        Screen.RoutineList.route,
+        Screen.MyPage.route
+    )
+
     Scaffold(
         bottomBar = {
-            NavigationBar {
-                BottomNavItem.values().forEach { item ->
-                    NavigationBarItem(
-                        icon = {
-                            Icon(
-                                imageVector = item.icon,
-                                contentDescription = item.title
-                            )
-                        },
-                        label = { Text(item.title) },
-                        selected = currentRoute == item.route,
-                        onClick = {
-                            when (item) {
-                                BottomNavItem.HOME -> {
-                                    if (currentRoute != Screen.Home.route) {
-                                        navController.navigate(Screen.Home.route) {
-                                            popUpTo(navController.graph.startDestinationId) {
-                                                saveState = true
-                                            }
-                                            launchSingleTop = true
-                                            restoreState = true
+            if (showBottomBar) {
+                NavigationBar {
+                    BottomNavItem.values().forEach { item ->
+                        NavigationBarItem(
+                            icon = {
+                                Icon(
+                                    imageVector = item.icon,
+                                    contentDescription = item.title
+                                )
+                            },
+                            label = { Text(item.title) },
+                            selected = currentRoute == item.route,
+                            onClick = {
+                                if (currentRoute != item.route) {
+                                    navController.navigate(item.route) {
+                                        popUpTo(navController.graph.startDestinationId) {
+                                            saveState = true
                                         }
+                                        launchSingleTop = true
+                                        restoreState = true
                                     }
                                 }
-                                BottomNavItem.EXERCISE -> onNavigateToExerciseList()
-                                BottomNavItem.ROUTINE -> onNavigateToRoutineList()
-                                BottomNavItem.MYPAGE -> onNavigateToMyPage()
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }
     ) { paddingValues ->
-        // NavHost content will be displayed here with bottom padding
-        // The actual NavHost is in NavGraph.kt
-        // This is just the shell that provides the BottomNavigationBar
+        NavGraph(
+            navController = navController,
+            startDestination = startDestination,
+            modifier = Modifier.padding(paddingValues)
+        )
     }
 }
 

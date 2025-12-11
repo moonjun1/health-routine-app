@@ -38,11 +38,13 @@ import java.nio.charset.StandardCharsets
 @Composable
 fun NavGraph(
     navController: NavHostController,
-    startDestination: String = Screen.Login.route
+    startDestination: String = Screen.Login.route,
+    modifier: androidx.compose.ui.Modifier = androidx.compose.ui.Modifier
 ) {
     NavHost(
         navController = navController,
-        startDestination = startDestination
+        startDestination = startDestination,
+        modifier = modifier
     ) {
         // Auth screens
         composable(Screen.Login.route) {
