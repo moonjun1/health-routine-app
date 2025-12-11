@@ -1,5 +1,6 @@
 package com.example.gymroutine.data.remote
 
+import android.util.Log
 import com.example.gymroutine.BuildConfig
 import com.example.gymroutine.data.model.AIRoutineRequest
 import com.example.gymroutine.data.model.AIRoutineResponse
@@ -17,12 +18,26 @@ import javax.inject.Singleton
 class OpenAIDataSource @Inject constructor(
     private val openAIApiService: OpenAIApiService
 ) {
+    companion object {
+        private const val TAG = "OpenAIDataSource"
+    }
+
     private val gson = Gson()
 
     /**
      * Generate workout routine using GPT
      */
     suspend fun generateRoutine(request: AIRoutineRequest): AIRoutineResponse {
+        // Check if API key is configured
+        val apiKey = BuildConfig.OPENAI_API_KEY
+        if (apiKey.isEmpty() || apiKey == "YOUR_OPENAI_API_KEY_HERE" || apiKey == "") {
+            val errorMsg = "OpenAI API 키가 설정되지 않았습니다. local.properties에 OPENAI_API_KEY를 추가해주세요."
+            Log.e(TAG, errorMsg)
+            throw Exception(errorMsg)
+        }
+
+        Log.d(TAG, "generateRoutine: Generating routine with OpenAI API")
+        Log.d(TAG, "Request - Goal: ${request.goal}, Level: ${request.experienceLevel}, Equipment: ${request.equipment.size}")
         val equipmentList = if (request.equipment.isNotEmpty()) {
             """
             **이 헬스장의 보유 기구 목록 (반드시 이 목록에 있는 기구만 사용):**
@@ -98,19 +113,39 @@ class OpenAIDataSource @Inject constructor(
             maxTokens = 2000
         )
 
-        val response = openAIApiService.createChatCompletion(
-            authorization = "Bearer ${BuildConfig.OPENAI_API_KEY}",
-            request = openAIRequest
-        )
-
-        val content = response.choices.firstOrNull()?.message?.content
-            ?: throw Exception("GPT 응답이 비어있습니다")
-
-        // Parse JSON response
         return try {
-            gson.fromJson(content, AIRoutineResponse::class.java)
+            val response = openAIApiService.createChatCompletion(
+                authorization = "Bearer $apiKey",
+                request = openAIRequest
+            )
+
+            Log.d(TAG, "OpenAI API response received successfully")
+
+            val content = response.choices.firstOrNull()?.message?.content
+                ?: throw Exception("GPT 응답이 비어있습니다")
+
+            Log.d(TAG, "Response content: ${content.take(200)}...")
+
+            // Parse JSON response
+            try {
+                gson.fromJson(content, AIRoutineResponse::class.java)
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to parse GPT response: ${e.message}")
+                Log.e(TAG, "Response content: $content")
+                throw Exception("GPT 응답 파싱 실패: ${e.message}\n응답: $content")
+            }
+        } catch (e: retrofit2.HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            Log.e(TAG, "HTTP ${e.code()} error: $errorBody")
+            when (e.code()) {
+                401 -> throw Exception("OpenAI API 키가 유효하지 않습니다. (401 Unauthorized)")
+                429 -> throw Exception("API 요청 한도를 초과했습니다. (429 Too Many Requests)")
+                500, 502, 503 -> throw Exception("OpenAI 서버 오류입니다. 잠시 후 다시 시도해주세요.")
+                else -> throw Exception("API 요청 실패 (${e.code()}): ${e.message()}")
+            }
         } catch (e: Exception) {
-            throw Exception("GPT 응답 파싱 실패: ${e.message}\n응답: $content")
+            Log.e(TAG, "Failed to generate routine", e)
+            throw e
         }
     }
 }
