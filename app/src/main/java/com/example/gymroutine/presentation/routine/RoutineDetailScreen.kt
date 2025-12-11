@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,7 +21,8 @@ import com.example.gymroutine.data.model.Routine
 fun RoutineDetailScreen(
     routine: Routine,
     onNavigateBack: () -> Unit,
-    onEditRoutine: () -> Unit = {}
+    onEditRoutine: () -> Unit = {},
+    onExerciseClick: (String) -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -91,14 +93,17 @@ fun RoutineDetailScreen(
                 }
             } else {
                 items(routine.exercises) { exercise ->
-                    Card(modifier = Modifier.fillMaxWidth()) {
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = { onExerciseClick(exercise.exerciseId) }
+                    ) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(16.dp),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Column {
+                            Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     exercise.exerciseName,
                                     style = MaterialTheme.typography.titleSmall
@@ -117,6 +122,11 @@ fun RoutineDetailScreen(
                                     )
                                 }
                             }
+                            Icon(
+                                Icons.Default.KeyboardArrowRight,
+                                contentDescription = "자세히 보기",
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                         }
                     }
                 }
