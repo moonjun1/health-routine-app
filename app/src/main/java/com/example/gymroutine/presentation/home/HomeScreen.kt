@@ -1,5 +1,6 @@
 package com.example.gymroutine.presentation.home
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,12 +11,15 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.gymroutine.R
 import com.example.gymroutine.data.model.Gym
 import com.example.gymroutine.data.model.Routine
 import com.example.gymroutine.util.Resource
+import kotlinx.coroutines.delay
 
 /**
  * Home screen with gym info and quick access
@@ -54,6 +58,11 @@ fun HomeScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            // Running animation
+            item {
+                RunningAnimation()
+            }
+
             // Welcome message
             item {
                 WelcomeCard(isLoggedIn = isLoggedIn)
@@ -234,6 +243,36 @@ fun HomeScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun RunningAnimation() {
+    var currentFrame by remember { mutableStateOf(0) }
+    val runningImages = listOf(
+        R.drawable.running_1,
+        R.drawable.running_2,
+        R.drawable.running_3
+    )
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(300) // 0.3초마다 프레임 변경
+            currentFrame = (currentFrame + 1) % runningImages.size
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(120.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = painterResource(id = runningImages[currentFrame]),
+            contentDescription = "달리기 애니메이션",
+            modifier = Modifier.size(100.dp)
+        )
     }
 }
 
