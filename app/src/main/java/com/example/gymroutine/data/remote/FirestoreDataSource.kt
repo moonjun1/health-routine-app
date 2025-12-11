@@ -61,10 +61,17 @@ class FirestoreDataSource @Inject constructor(
      * Create gym document
      */
     suspend fun createGym(gym: Gym) {
+        val gymMap = gym.toMap()
+        android.util.Log.d("FirestoreDataSource", "createGym: Saving gym ${gym.name} (${gym.placeId})")
+        android.util.Log.d("FirestoreDataSource", "  registeredBy=${gymMap["registeredBy"]}")
+        android.util.Log.d("FirestoreDataSource", "  equipments=${gymMap["equipments"]}")
+
         firestore.collection(Constants.COLLECTION_GYMS)
             .document(gym.placeId)
-            .set(gym.toMap())
+            .set(gymMap)
             .await()
+
+        android.util.Log.d("FirestoreDataSource", "createGym: Saved successfully")
     }
 
     /**
@@ -150,15 +157,24 @@ class FirestoreDataSource @Inject constructor(
      */
     suspend fun getUserGyms(userId: String): List<Gym> {
         return try {
+            android.util.Log.d("FirestoreDataSource", "getUserGyms: Querying for userId=$userId")
             val snapshot = firestore.collection(Constants.COLLECTION_GYMS)
                 .whereEqualTo("registeredBy", userId)
                 .get()
                 .await()
 
-            snapshot.documents.mapNotNull { doc ->
+            android.util.Log.d("FirestoreDataSource", "getUserGyms: Found ${snapshot.documents.size} documents")
+            snapshot.documents.forEachIndexed { index, doc ->
+                android.util.Log.d("FirestoreDataSource", "  Doc $index: ${doc.id}, registeredBy=${doc.data?.get("registeredBy")}")
+            }
+
+            val gyms = snapshot.documents.mapNotNull { doc ->
                 Gym.fromMap(doc.data ?: emptyMap())
             }
+            android.util.Log.d("FirestoreDataSource", "getUserGyms: Parsed ${gyms.size} gyms")
+            gyms
         } catch (e: Exception) {
+            android.util.Log.e("FirestoreDataSource", "getUserGyms: Failed", e)
             emptyList()
         }
     }
