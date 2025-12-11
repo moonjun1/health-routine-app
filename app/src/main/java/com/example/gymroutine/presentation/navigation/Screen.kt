@@ -24,4 +24,6 @@ sealed class Screen(val route: String) {
         fun createRoute(routineId: String) = "routine_detail/$routineId"
     }
     object Settings : Screen("settings")
+    object MyPage : Screen("mypage")
+    object ChangePassword : Screen("change_password")
 }
