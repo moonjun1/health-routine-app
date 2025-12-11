@@ -54,11 +54,6 @@ fun HomeScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Welcome message
-            item {
-                WelcomeCard(isLoggedIn = isLoggedIn)
-            }
-
             // User's gyms list (로그인 여부 무관, 등록한 헬스장이 있으면 표시)
             item {
                 when (val state = userGymsState) {
@@ -317,32 +312,6 @@ fun UserGymsList(
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun WelcomeCard(isLoggedIn: Boolean) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        )
-    ) {
-        Column(
-            modifier = Modifier.padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Text(
-                text = if (isLoggedIn) "안녕하세요! 👋" else "헬스 루틴 앱에 오신 것을 환영합니다",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = if (isLoggedIn) "오늘도 힘찬 운동 하세요!" else "로그인 없이도 사용할 수 있습니다",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
-            )
         }
     }
 }
