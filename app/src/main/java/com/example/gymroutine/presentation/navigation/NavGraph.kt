@@ -4,7 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.launch
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -38,11 +40,13 @@ import java.nio.charset.StandardCharsets
 @Composable
 fun NavGraph(
     navController: NavHostController,
-    startDestination: String = Screen.Login.route
+    startDestination: String = Screen.Login.route,
+    modifier: androidx.compose.ui.Modifier = androidx.compose.ui.Modifier
 ) {
     NavHost(
         navController = navController,
-        startDestination = startDestination
+        startDestination = startDestination,
+        modifier = modifier
     ) {
         // Auth screens
         composable(Screen.Login.route) {
@@ -277,10 +281,22 @@ fun NavGraph(
                 return@composable
             }
 
+            val viewModel: com.example.gymroutine.presentation.routine.RoutineDetailViewModel = hiltViewModel()
+            val coroutineScope = rememberCoroutineScope()
+
             RoutineDetailScreen(
                 routine = routine,
                 onNavigateBack = {
                     navController.popBackStack()
+                },
+                onExerciseClick = { exerciseId ->
+                    coroutineScope.launch {
+                        val exercise = viewModel.getExerciseById(exerciseId)
+                        if (exercise != null) {
+                            val exerciseJson = URLEncoder.encode(Gson().toJson(exercise), StandardCharsets.UTF_8.toString())
+                            navController.navigate("exercise_detail/$exerciseJson")
+                        }
+                    }
                 }
             )
         }
@@ -295,6 +311,35 @@ fun NavGraph(
                     navController.navigate(Screen.Login.route) {
                         popUpTo(Screen.Home.route) { inclusive = true }
                     }
+                }
+            )
+        }
+
+        // MyPage screen
+        composable(Screen.MyPage.route) {
+            com.example.gymroutine.presentation.mypage.MyPageScreen(
+                onNavigateToLogin = {
+                    navController.navigate(Screen.Login.route)
+                },
+                onNavigateToChangePassword = {
+                    navController.navigate(Screen.ChangePassword.route)
+                },
+                onNavigateToSettings = {
+                    navController.navigate(Screen.Settings.route)
+                },
+                onLogoutSuccess = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Home.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        // Change Password screen
+        composable(Screen.ChangePassword.route) {
+            com.example.gymroutine.presentation.mypage.ChangePasswordScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
                 }
             )
         }
