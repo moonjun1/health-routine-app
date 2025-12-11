@@ -37,6 +37,9 @@ class HomeViewModel @Inject constructor(
     private val _gymState = MutableStateFlow<Resource<Gym>>(Resource.Idle)
     val gymState: StateFlow<Resource<Gym>> = _gymState.asStateFlow()
 
+    private val _userGymsState = MutableStateFlow<Resource<List<Gym>>>(Resource.Idle)
+    val userGymsState: StateFlow<Resource<List<Gym>>> = _userGymsState.asStateFlow()
+
     private val _recentRoutinesState = MutableStateFlow<Resource<List<Routine>>>(Resource.Idle)
     val recentRoutinesState: StateFlow<Resource<List<Routine>>> = _recentRoutinesState.asStateFlow()
 
@@ -51,9 +54,40 @@ class HomeViewModel @Inject constructor(
         val currentUser = authRepository.getCurrentUser()
         _isLoggedIn.value = currentUser != null
 
+        // Load gyms for both logged-in and guest users
+        loadUserGyms()
+
         if (currentUser != null) {
             loadUserData()
             loadRecentRoutines()
+        }
+    }
+
+    private fun loadUserGyms() {
+        viewModelScope.launch {
+            val userId = authRepository.getCurrentUserId()
+            android.util.Log.d("HomeViewModel", "loadUserGyms: userId=$userId, isLoggedIn=${_isLoggedIn.value}")
+
+            _userGymsState.value = Resource.Loading
+            try {
+                // Load gyms regardless of login status
+                // Repository will handle local/Firebase automatically
+                val gyms = gymRepository.getUserGyms(userId ?: "")
+                android.util.Log.d("HomeViewModel", "loadUserGyms: Loaded ${gyms.size} gyms")
+                gyms.forEachIndexed { index, gym ->
+                    android.util.Log.d("HomeViewModel", "  Gym $index: ${gym.name} (${gym.placeId})")
+                }
+
+                _userGymsState.value = if (gyms.isNotEmpty()) {
+                    Resource.Success(gyms)
+                } else {
+                    android.util.Log.w("HomeViewModel", "loadUserGyms: No gyms found")
+                    Resource.Error("등록된 헬스장이 없습니다")
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("HomeViewModel", "loadUserGyms: Failed", e)
+                _userGymsState.value = Resource.Error(e.message ?: "헬스장 목록 로드 실패")
+            }
         }
     }
 
