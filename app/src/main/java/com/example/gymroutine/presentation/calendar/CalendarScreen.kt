@@ -5,7 +5,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -68,46 +70,81 @@ fun CalendarScreen(
             }
         }
     ) { paddingValues ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
             // Month navigation
-            MonthNavigationBar(
-                year = currentYear,
-                month = currentMonth,
-                onPreviousMonth = { viewModel.previousMonth() },
-                onNextMonth = { viewModel.nextMonth() }
-            )
+            item {
+                MonthNavigationBar(
+                    year = currentYear,
+                    month = currentMonth,
+                    onPreviousMonth = { viewModel.previousMonth() },
+                    onNextMonth = { viewModel.nextMonth() }
+                )
+            }
 
             // Statistics card
-            WorkoutStatisticsCard(viewModel = viewModel)
+            item {
+                WorkoutStatisticsCard(viewModel = viewModel)
+            }
 
             // Calendar grid
-            CalendarGrid(
-                year = currentYear,
-                month = currentMonth,
-                viewModel = viewModel,
-                selectedDay = selectedDay,
-                onDayClick = { day ->
-                    selectedDay = day
-                    viewModel.selectDate(currentYear, currentMonth, day)
-                }
-            )
+            item {
+                CalendarGrid(
+                    year = currentYear,
+                    month = currentMonth,
+                    viewModel = viewModel,
+                    selectedDay = selectedDay,
+                    onDayClick = { day ->
+                        selectedDay = day
+                        viewModel.selectDate(currentYear, currentMonth, day)
+                    }
+                )
+            }
 
-            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+            item {
+                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+            }
 
             // Selected date records
             if (selectedDay != null) {
-                Text(
-                    text = "${currentMonth}월 ${selectedDay}일 운동 기록",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
+                item {
+                    Text(
+                        text = "${currentMonth}월 ${selectedDay}일 운동 기록",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
+                }
 
                 if (selectedDateRecords.isEmpty()) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(32.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                "이 날은 운동 기록이 없습니다",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                } else {
+                    items(selectedDateRecords) { record ->
+                        WorkoutRecordCard(
+                            record = record,
+                            onDeleteClick = { recordToDelete = record.id },
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                        )
+                    }
+                }
+            } else {
+                item {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -115,39 +152,12 @@ fun CalendarScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            "이 날은 운동 기록이 없습니다",
+                            "날짜를 선택하면 운동 기록을 볼 수 있습니다",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center
                         )
                     }
-                } else {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 16.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(selectedDateRecords) { record ->
-                            WorkoutRecordCard(
-                                record = record,
-                                onDeleteClick = { recordToDelete = record.id }
-                            )
-                        }
-                    }
-                }
-            } else {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(32.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        "날짜를 선택하면 운동 기록을 볼 수 있습니다",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        textAlign = TextAlign.Center
-                    )
                 }
             }
         }
@@ -408,10 +418,11 @@ private fun parseColor(colorHex: String): Color {
 @Composable
 fun WorkoutRecordCard(
     record: WorkoutRecord,
-    onDeleteClick: () -> Unit = {}
+    onDeleteClick: () -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         )
