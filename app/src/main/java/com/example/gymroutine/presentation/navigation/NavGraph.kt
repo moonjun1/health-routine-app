@@ -308,7 +308,7 @@ fun NavGraph(
                     navController.navigate(Screen.Login.route)
                 },
                 onNavigateToEditProfile = {
-                    navController.navigate(Screen.EditProfile.route)
+                    // TODO: Navigate to edit profile when implemented
                 },
                 onLogoutSuccess = {
                     navController.navigate(Screen.Login.route) {

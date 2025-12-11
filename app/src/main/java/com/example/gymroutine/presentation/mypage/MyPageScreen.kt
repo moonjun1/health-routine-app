@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gymroutine.util.Resource
+import kotlinx.coroutines.launch
 
 /**
  * MyPage Screen
@@ -33,6 +34,8 @@ fun MyPageScreen(
     val logoutState by viewModel.logoutState.collectAsState()
 
     var showLogoutDialog by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     // Handle logout success
     LaunchedEffect(logoutState) {
@@ -51,7 +54,8 @@ fun MyPageScreen(
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -66,7 +70,11 @@ fun MyPageScreen(
                     LoggedInProfileCard(
                         userName = currentUser?.email?.substringBefore("@") ?: "사용자",
                         userEmail = currentUser?.email ?: "",
-                        onEditProfile = onNavigateToEditProfile
+                        onEditProfile = {
+                            scope.launch {
+                                snackbarHostState.showSnackbar("준비 중인 기능입니다")
+                            }
+                        }
                     )
                 } else {
                     GuestProfileCard(
@@ -95,7 +103,11 @@ fun MyPageScreen(
                     MenuItemCard(
                         icon = Icons.Default.Person,
                         title = "회원정보 수정",
-                        onClick = onNavigateToEditProfile
+                        onClick = {
+                            scope.launch {
+                                snackbarHostState.showSnackbar("준비 중인 기능입니다")
+                            }
+                        }
                     )
                 }
 
@@ -103,7 +115,11 @@ fun MyPageScreen(
                     MenuItemCard(
                         icon = Icons.Default.Lock,
                         title = "비밀번호 변경",
-                        onClick = { /* TODO: Navigate to password change */ }
+                        onClick = {
+                            scope.launch {
+                                snackbarHostState.showSnackbar("준비 중인 기능입니다")
+                            }
+                        }
                     )
                 }
 
@@ -174,7 +190,11 @@ fun MyPageScreen(
                 MenuItemCard(
                     icon = Icons.Default.Settings,
                     title = "설정",
-                    onClick = { /* TODO: Navigate to settings */ }
+                    onClick = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("준비 중인 기능입니다")
+                        }
+                    }
                 )
             }
         }
