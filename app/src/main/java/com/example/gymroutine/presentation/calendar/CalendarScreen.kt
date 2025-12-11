@@ -90,6 +90,11 @@ fun CalendarScreen(
                 WorkoutStatisticsCard(viewModel = viewModel)
             }
 
+            // Routine color legend
+            item {
+                RoutineColorLegend(viewModel = viewModel)
+            }
+
             // Calendar grid
             item {
                 CalendarGrid(
@@ -587,6 +592,60 @@ fun StatisticItem(
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSecondaryContainer
         )
+    }
+}
+
+@Composable
+fun RoutineColorLegend(viewModel: CalendarViewModel) {
+    val routinesState by viewModel.routinesState.collectAsState()
+    val routines = (routinesState as? Resource.Success)?.data ?: emptyList()
+
+    if (routines.isEmpty()) return
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = "루틴 색상 범례",
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            // Display routine colors in a flow layout
+            routines.forEach { routine ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    // Color indicator
+                    Surface(
+                        modifier = Modifier.size(16.dp),
+                        shape = MaterialTheme.shapes.small,
+                        color = parseColor(routine.color)
+                    ) {}
+
+                    // Routine name
+                    Text(
+                        text = routine.name,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
     }
 }
 

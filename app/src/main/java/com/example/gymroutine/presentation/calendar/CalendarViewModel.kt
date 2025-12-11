@@ -35,6 +35,8 @@ class CalendarViewModel @Inject constructor(
     private val _workoutRecordsState = MutableStateFlow<Resource<List<WorkoutRecord>>>(Resource.Loading)
     val workoutRecordsState: StateFlow<Resource<List<WorkoutRecord>>> = _workoutRecordsState
 
+    private val _allWorkoutRecords = MutableStateFlow<List<WorkoutRecord>>(emptyList())
+
     private val _selectedDateRecords = MutableStateFlow<List<WorkoutRecord>>(emptyList())
     val selectedDateRecords: StateFlow<List<WorkoutRecord>> = _selectedDateRecords
 
@@ -44,6 +46,7 @@ class CalendarViewModel @Inject constructor(
     init {
         loadWorkoutRecords()
         loadRoutines()
+        loadAllWorkoutRecords()
     }
 
     /**
@@ -58,6 +61,21 @@ class CalendarViewModel @Inject constructor(
                 _routinesState.value = Resource.Success(routines)
             } catch (e: Exception) {
                 _routinesState.value = Resource.Error(e.message ?: "루틴 로드 실패")
+            }
+        }
+    }
+
+    /**
+     * Load all workout records for statistics
+     */
+    private fun loadAllWorkoutRecords() {
+        viewModelScope.launch {
+            try {
+                val userId = authRepository.getCurrentUserId() ?: ""
+                val records = workoutRecordRepository.getUserWorkoutRecords(userId)
+                _allWorkoutRecords.value = records
+            } catch (e: Exception) {
+                _allWorkoutRecords.value = emptyList()
             }
         }
     }
@@ -227,6 +245,7 @@ class CalendarViewModel @Inject constructor(
 
                 workoutRecordRepository.createWorkoutRecord(record)
                 loadWorkoutRecords() // Reload to show the new record
+                loadAllWorkoutRecords() // Reload all records for statistics
             } catch (e: Exception) {
                 // Handle error
             }
@@ -242,6 +261,7 @@ class CalendarViewModel @Inject constructor(
                 val userId = authRepository.getCurrentUserId() ?: ""
                 workoutRecordRepository.deleteWorkoutRecord(userId, recordId)
                 loadWorkoutRecords() // Reload to remove the deleted record
+                loadAllWorkoutRecords() // Reload all records for statistics
                 // Also reload selected date records
                 _selectedDateRecords.value = _selectedDateRecords.value.filter { it.id != recordId }
             } catch (e: Exception) {
@@ -254,7 +274,9 @@ class CalendarViewModel @Inject constructor(
      * Get weekly workout count (current week)
      */
     fun getWeeklyWorkoutCount(): Int {
-        val records = (_workoutRecordsState.value as? Resource.Success)?.data ?: return 0
+        val records = _allWorkoutRecords.value
+        if (records.isEmpty()) return 0
+
         val calendar = Calendar.getInstance()
 
         // Get start of current week (Sunday)
@@ -282,7 +304,9 @@ class CalendarViewModel @Inject constructor(
      * Get monthly workout count (current month)
      */
     fun getMonthlyWorkoutCount(): Int {
-        val records = (_workoutRecordsState.value as? Resource.Success)?.data ?: return 0
+        val records = _allWorkoutRecords.value
+        if (records.isEmpty()) return 0
+
         val calendar = Calendar.getInstance()
         val currentYear = calendar.get(Calendar.YEAR)
         val currentMonth = calendar.get(Calendar.MONTH) + 1
@@ -300,7 +324,7 @@ class CalendarViewModel @Inject constructor(
      * Get consecutive workout days (current streak)
      */
     fun getConsecutiveWorkoutDays(): Int {
-        val records = (_workoutRecordsState.value as? Resource.Success)?.data ?: return 0
+        val records = _allWorkoutRecords.value
         if (records.isEmpty()) return 0
 
         val calendar = Calendar.getInstance()
