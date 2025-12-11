@@ -16,9 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gymroutine.data.model.Exercise
 
-/**
- * Exercise detail screen showing detailed information
- */
+// 상세 정보를 보여주는 운동 상세 화면
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExerciseDetailScreen(
@@ -52,7 +50,7 @@ fun ExerciseDetailScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Exercise info card
+            // 운동 정보 카드
             Card(
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -110,7 +108,7 @@ fun ExerciseDetailScreen(
                 }
             }
 
-            // Description card
+            // 운동 설명 카드
             Card(
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -130,7 +128,7 @@ fun ExerciseDetailScreen(
                 }
             }
 
-            // Tips card
+            // 운동 팁 카드
             if (exercise.tips.isNotEmpty()) {
                 Card(
                     modifier = Modifier.fillMaxWidth()
@@ -152,7 +150,7 @@ fun ExerciseDetailScreen(
                 }
             }
 
-            // YouTube video link
+            // YouTube 동영상 링크
             if (exercise.youtubeUrl != null) {
                 Card(
                     modifier = Modifier.fillMaxWidth()

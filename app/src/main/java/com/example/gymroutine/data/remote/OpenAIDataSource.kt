@@ -11,9 +11,7 @@ import com.google.gson.Gson
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * OpenAI API data source for AI routine generation
- */
+// OpenAI API data source for AI routine generation
 @Singleton
 class OpenAIDataSource @Inject constructor(
     private val openAIApiService: OpenAIApiService
@@ -24,11 +22,9 @@ class OpenAIDataSource @Inject constructor(
 
     private val gson = Gson()
 
-    /**
-     * Generate workout routine using GPT
-     */
+// Generate workout routine using GPT
     suspend fun generateRoutine(request: AIRoutineRequest): AIRoutineResponse {
-        // Check if API key is configured
+        // 확인: API key is configured
         val apiKey = BuildConfig.OPENAI_API_KEY
         if (apiKey.isEmpty() || apiKey == "YOUR_OPENAI_API_KEY_HERE" || apiKey == "") {
             val errorMsg = "OpenAI API 키가 설정되지 않았습니다. local.properties에 OPENAI_API_KEY를 추가해주세요."

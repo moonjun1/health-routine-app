@@ -8,9 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-/**
- * Exercise repository implementation
- */
+// Exercise repository implementation
 class ExerciseRepositoryImpl @Inject constructor() : ExerciseRepository {
 
     override suspend fun getAllExercises(): List<Exercise> = withContext(Dispatchers.IO) {

@@ -7,9 +7,7 @@ import com.example.gymroutine.util.isValidEmail
 import com.example.gymroutine.util.isValidPassword
 import javax.inject.Inject
 
-/**
- * Use case for user signup
- */
+// Use case for user signup
 class SignupUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
@@ -42,7 +40,7 @@ class SignupUseCase @Inject constructor(
                 return Result.failure(Exception("비밀번호가 일치하지 않습니다"))
             }
 
-            // Perform signup
+            // 회원가입 수행
             val user = authRepository.signUp(email, password)
             Result.success(user)
         } catch (e: Exception) {

@@ -10,9 +10,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-/**
- * Hilt module for app-level dependencies
- */
+// 앱 레벨 의존성 주입 모듈
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {

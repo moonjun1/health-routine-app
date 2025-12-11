@@ -3,11 +3,9 @@ package com.example.gymroutine.util
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Extension functions for common operations
- */
+// 일반적인 작업을 위한 확장 함수
 
-// String extensions
+// String 확장 함수
 fun String.isValidEmail(): Boolean {
     return this.matches(Regex(Constants.EMAIL_PATTERN))
 }
@@ -16,7 +14,7 @@ fun String.isValidPassword(): Boolean {
     return this.length >= Constants.MIN_PASSWORD_LENGTH
 }
 
-// Long (timestamp) extensions
+// Long (타임스탬프) 확장 함수
 fun Long.toFormattedDate(): String {
     val sdf = SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREAN)
     return sdf.format(Date(this))
@@ -32,7 +30,7 @@ fun Long.toFormattedDateTime(): String {
     return sdf.format(Date(this))
 }
 
-// Day of week extensions
+// 요일 확장 함수
 fun getDayOfWeekKey(dayOfWeek: Int): String {
     return when (dayOfWeek) {
         Calendar.MONDAY -> "mon"

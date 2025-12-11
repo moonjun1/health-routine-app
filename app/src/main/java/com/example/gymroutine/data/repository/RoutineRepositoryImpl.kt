@@ -6,10 +6,8 @@ import com.example.gymroutine.data.remote.FirestoreDataSource
 import com.example.gymroutine.domain.repository.RoutineRepository
 import javax.inject.Inject
 
-/**
- * Routine repository implementation
- * Uses local storage when not logged in, Firebase when logged in
- */
+// Routine repository implementation
+// Uses local storage when not logged in, Firebase when logged in
 class RoutineRepositoryImpl @Inject constructor(
     private val firestoreDataSource: FirestoreDataSource,
     private val localRoutineDataSource: LocalRoutineDataSource
@@ -55,9 +53,7 @@ class RoutineRepositoryImpl @Inject constructor(
         // This method requires extension - see below
     }
 
-    /**
-     * Delete routine with userId
-     */
+// Delete routine with userId
     override suspend fun deleteRoutine(userId: String, routineId: String) {
         if (userId.isEmpty()) {
             // Not logged in - delete from local
@@ -68,9 +64,7 @@ class RoutineRepositoryImpl @Inject constructor(
         }
     }
 
-    /**
-     * Get routine by id with userId
-     */
+// Get routine by id with userId
     suspend fun getRoutineById(userId: String, routineId: String): Routine? {
         return if (userId.isEmpty()) {
             localRoutineDataSource.getRoutineById(routineId)

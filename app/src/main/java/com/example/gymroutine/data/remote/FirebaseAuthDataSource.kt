@@ -9,17 +9,13 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-/**
- * Firebase Authentication data source
- * Handles authentication operations with Firebase Auth
- */
+// Firebase Authentication data source
+// Handles authentication operations with Firebase Auth
 class FirebaseAuthDataSource @Inject constructor(
     private val firebaseAuth: FirebaseAuth
 ) {
-    /**
-     * Sign up with email and password
-     * @throws FirebaseAuthException on failure
-     */
+// Sign up with email and password
+// @throws FirebaseAuthException on failure
     suspend fun signUp(email: String, password: String): User {
         try {
             val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
@@ -42,10 +38,8 @@ class FirebaseAuthDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Sign in with email and password
-     * @throws FirebaseAuthException on failure
-     */
+// Sign in with email and password
+// @throws FirebaseAuthException on failure
     suspend fun signIn(email: String, password: String): User {
         try {
             val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
@@ -66,30 +60,22 @@ class FirebaseAuthDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Sign out current user
-     */
+// Sign out current user
     fun signOut() {
         firebaseAuth.signOut()
     }
 
-    /**
-     * Get current user ID
-     */
+// Get current user ID
     fun getCurrentUserId(): String? {
         return firebaseAuth.currentUser?.uid
     }
 
-    /**
-     * Check if user is signed in
-     */
+// 확인: user is signed in
     fun isUserSignedIn(): Boolean {
         return firebaseAuth.currentUser != null
     }
 
-    /**
-     * Get current user
-     */
+// Get current user
     fun getCurrentUser(): User? {
         val firebaseUser = firebaseAuth.currentUser ?: return null
         return User(

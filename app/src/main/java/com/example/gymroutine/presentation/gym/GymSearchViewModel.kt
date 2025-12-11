@@ -14,9 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/**
- * ViewModel for gym search screen
- */
+// 헬스장 검색 화면 뷰모델
 @HiltViewModel
 class GymSearchViewModel @Inject constructor(
     private val searchNearbyGymsUseCase: SearchNearbyGymsUseCase,
@@ -56,7 +54,7 @@ class GymSearchViewModel @Inject constructor(
                     _currentLocation.value = Pair(location.latitude, location.longitude)
                 }
             } catch (e: Exception) {
-                // Handle error silently
+                // 오류를 조용히 처리
             }
         }
     }

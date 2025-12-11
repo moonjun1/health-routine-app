@@ -13,9 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/**
- * ViewModel for exercise list screen
- */
+// 운동 목록 화면 뷰모델
 @HiltViewModel
 class ExerciseListViewModel @Inject constructor(
     private val exerciseRepository: ExerciseRepository
@@ -44,22 +42,18 @@ class ExerciseListViewModel @Inject constructor(
         loadExercises()
     }
 
-    /**
-     * Load all categories
-     */
+    // 모든 카테고리 로드
     private fun loadCategories() {
         viewModelScope.launch {
             try {
                 _categories.value = exerciseRepository.getCategories()
             } catch (e: Exception) {
-                // Handle error if needed
+                // 필요시 오류 처리
             }
         }
     }
 
-    /**
-     * Load all equipment
-     */
+    // 모든 기구 로드
     private fun loadEquipment() {
         viewModelScope.launch {
             _equipmentState.value = Resource.Loading
@@ -72,9 +66,7 @@ class ExerciseListViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Load all exercises
-     */
+    // 모든 운동 로드
     fun loadExercises() {
         viewModelScope.launch {
             _exercisesState.value = Resource.Loading
@@ -87,43 +79,35 @@ class ExerciseListViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Select category filter
-     */
+    // 카테고리 필터 선택
     fun selectCategory(category: String?) {
         _selectedCategory.value = category
         applyFilters()
     }
 
-    /**
-     * Select equipment filter
-     */
+    // 기구 필터 선택
     fun selectEquipment(equipmentId: String?) {
         _selectedEquipment.value = equipmentId
         applyFilters()
     }
 
-    /**
-     * Clear all filters
-     */
+    // 모든 필터 초기화
     fun clearFilters() {
         _selectedCategory.value = null
         _selectedEquipment.value = null
         applyFilters()
     }
 
-    /**
-     * Apply current filters to exercises
-     */
+    // 현재 필터를 운동 목록에 적용
     private fun applyFilters() {
         var filteredExercises = allExercises
 
-        // Apply category filter
+        // 카테고리 필터 적용
         _selectedCategory.value?.let { category ->
             filteredExercises = filteredExercises.filter { it.category == category }
         }
 
-        // Apply equipment filter
+        // 기구 필터 적용
         _selectedEquipment.value?.let { equipmentId ->
             filteredExercises = filteredExercises.filter { it.equipmentId == equipmentId }
         }
@@ -131,9 +115,7 @@ class ExerciseListViewModel @Inject constructor(
         _exercisesState.value = Resource.Success(filteredExercises)
     }
 
-    /**
-     * Get equipment name by id
-     */
+    // ID로 기구 이름 가져오기
     fun getEquipmentName(equipmentId: String): String {
         return when (val state = _equipmentState.value) {
             is Resource.Success -> {

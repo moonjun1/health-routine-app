@@ -1,9 +1,7 @@
 package com.example.gymroutine.data.model
 
-/**
- * Gym data model
- * Firestore collection: gyms/{placeId}
- */
+// Gym data model
+// Firestore collection: gyms/{placeId}
 data class Gym(
     val placeId: String = "",
     val name: String = "",
@@ -55,9 +53,7 @@ data class Gym(
     }
 }
 
-/**
- * Operating hours for each day
- */
+// Operating hours for each day
 data class Hours(
     val open: String = "00:00",
     val close: String = "23:59"

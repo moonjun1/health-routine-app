@@ -3,9 +3,7 @@ package com.example.gymroutine.data.local
 import com.example.gymroutine.data.model.Equipment
 import com.example.gymroutine.data.model.Exercise
 
-/**
- * Predefined exercise and equipment data
- */
+// Predefined exercise and equipment data
 object ExerciseData {
 
     // Equipment list
@@ -612,30 +610,22 @@ object ExerciseData {
         )
     )
 
-    /**
-     * Get exercises by category
-     */
+// Get exercises by category
     fun getExercisesByCategory(category: String): List<Exercise> {
         return exercises.filter { it.category == category }
     }
 
-    /**
-     * Get exercises by equipment
-     */
+// Get exercises by equipment
     fun getExercisesByEquipment(equipmentId: String): List<Exercise> {
         return exercises.filter { it.equipmentId == equipmentId }
     }
 
-    /**
-     * Get equipment by id
-     */
+// Get equipment by id
     fun getEquipmentById(equipmentId: String): Equipment? {
         return equipments.find { it.id == equipmentId }
     }
 
-    /**
-     * Get all categories
-     */
+// Get all categories
     fun getCategories(): List<String> {
         return listOf("가슴", "등", "어깨", "팔", "하체", "코어", "유산소")
     }

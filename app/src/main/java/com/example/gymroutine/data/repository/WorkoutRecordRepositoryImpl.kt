@@ -6,10 +6,8 @@ import com.example.gymroutine.domain.repository.WorkoutRecordRepository
 import java.util.Calendar
 import javax.inject.Inject
 
-/**
- * Workout record repository implementation
- * Uses Firebase for logged-in users
- */
+// Workout record repository implementation
+// Uses Firebase for logged-in users
 class WorkoutRecordRepositoryImpl @Inject constructor(
     private val firestoreDataSource: FirestoreDataSource
 ) : WorkoutRecordRepository {

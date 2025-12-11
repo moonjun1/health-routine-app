@@ -10,9 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gymroutine.util.Resource
 
-/**
- * Signup screen
- */
+// 회원가입 화면
 @Composable
 fun SignupScreen(
     viewModel: SignupViewModel = hiltViewModel(),
@@ -27,7 +25,7 @@ fun SignupScreen(
     var showError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
 
-    // Handle signup state
+    // 회원가입 상태 처리
     LaunchedEffect(signupState) {
         when (signupState) {
             is Resource.Success -> {
@@ -60,14 +58,14 @@ fun SignupScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Title
+            // 제목
             Text(
                 text = "회원가입",
                 style = MaterialTheme.typography.headlineLarge,
                 modifier = Modifier.padding(bottom = 32.dp)
             )
 
-            // Email field
+            // 이메일 입력 필드
             OutlinedTextField(
                 value = email,
                 onValueChange = viewModel::onEmailChange,
@@ -77,7 +75,7 @@ fun SignupScreen(
                 enabled = signupState !is Resource.Loading
             )
 
-            // Password field
+            // 비밀번호 입력 필드
             OutlinedTextField(
                 value = password,
                 onValueChange = viewModel::onPasswordChange,
@@ -88,7 +86,7 @@ fun SignupScreen(
                 enabled = signupState !is Resource.Loading
             )
 
-            // Confirm password field
+            // 비밀번호 확인 입력 필드
             OutlinedTextField(
                 value = confirmPassword,
                 onValueChange = viewModel::onConfirmPasswordChange,
@@ -99,7 +97,7 @@ fun SignupScreen(
                 enabled = signupState !is Resource.Loading
             )
 
-            // Error message
+            // 오류 메시지
             if (showError) {
                 Text(
                     text = errorMessage,
@@ -110,7 +108,7 @@ fun SignupScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Signup button
+            // 회원가입 버튼
             Button(
                 onClick = viewModel::signup,
                 modifier = Modifier.fillMaxWidth(),
@@ -126,7 +124,7 @@ fun SignupScreen(
                 }
             }
 
-            // Back button
+            // 뒤로가기 버튼
             TextButton(
                 onClick = onNavigateBack,
                 enabled = signupState !is Resource.Loading

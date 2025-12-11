@@ -4,9 +4,7 @@ import com.example.gymroutine.data.model.Gym
 import com.example.gymroutine.domain.repository.GymRepository
 import javax.inject.Inject
 
-/**
- * Use case for searching nearby gyms
- */
+// Use case for searching nearby gyms
 class SearchNearbyGymsUseCase @Inject constructor(
     private val gymRepository: GymRepository
 ) {
@@ -16,7 +14,7 @@ class SearchNearbyGymsUseCase @Inject constructor(
         radius: Int = 5000
     ): Result<List<Gym>> {
         return try {
-            // Validate coordinates
+            // 좌표 유효성 검증
             if (latitude !in -90.0..90.0) {
                 return Result.failure(Exception("위도는 -90 ~ 90 사이여야 합니다"))
             }

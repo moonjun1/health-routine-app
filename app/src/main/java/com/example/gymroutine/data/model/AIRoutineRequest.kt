@@ -1,8 +1,6 @@
 package com.example.gymroutine.data.model
 
-/**
- * AI Routine generation request model
- */
+// AI Routine generation request model
 data class AIRoutineRequest(
     val goal: String, // "근력 증가", "체중 감량", "체력 향상", "근비대", "지구력"
     val experienceLevel: String, // "초보자", "중급자", "고급자"
@@ -13,9 +11,7 @@ data class AIRoutineRequest(
     val additionalInfo: String = "" // 추가 정보 (부상, 제한사항 등)
 )
 
-/**
- * AI generated routine response
- */
+// AI generated routine response
 data class AIRoutineResponse(
     val routineName: String,
     val description: String,
@@ -23,9 +19,7 @@ data class AIRoutineResponse(
     val exercises: List<AIExerciseRecommendation>
 )
 
-/**
- * AI exercise recommendation
- */
+// AI exercise recommendation
 data class AIExerciseRecommendation(
     val exerciseId: String,
     val exerciseName: String,

@@ -6,18 +6,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-/**
- * Firestore data source
- * Handles all Firestore database operations
- */
+// Firestore data source
+// Handles all Firestore database operations
 class FirestoreDataSource @Inject constructor(
     private val firestore: FirebaseFirestore
 ) {
     // ==================== User Operations ====================
 
-    /**
-     * Create user document in Firestore
-     */
+// Create user document in Firestore
     suspend fun createUser(user: User) {
         firestore.collection(Constants.COLLECTION_USERS)
             .document(user.id)
@@ -25,9 +21,7 @@ class FirestoreDataSource @Inject constructor(
             .await()
     }
 
-    /**
-     * Get user by ID
-     */
+// Get user by ID
     suspend fun getUser(userId: String): User? {
         return try {
             val document = firestore.collection(Constants.COLLECTION_USERS)
@@ -45,9 +39,7 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Update user's gym ID
-     */
+// Update user's gym ID
     suspend fun updateUserGym(userId: String, gymId: String) {
         firestore.collection(Constants.COLLECTION_USERS)
             .document(userId)
@@ -57,9 +49,7 @@ class FirestoreDataSource @Inject constructor(
 
     // ==================== Gym Operations ====================
 
-    /**
-     * Create gym document
-     */
+// Create gym document
     suspend fun createGym(gym: Gym) {
         val gymMap = gym.toMap()
         android.util.Log.d("FirestoreDataSource", "createGym: Saving gym ${gym.name} (${gym.placeId})")
@@ -74,9 +64,7 @@ class FirestoreDataSource @Inject constructor(
         android.util.Log.d("FirestoreDataSource", "createGym: Saved successfully")
     }
 
-    /**
-     * Get gym by place ID
-     */
+// Get gym by place ID
     suspend fun getGym(placeId: String): Gym? {
         return try {
             val document = firestore.collection(Constants.COLLECTION_GYMS)
@@ -94,9 +82,7 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Update gym information
-     */
+// Update gym information
     suspend fun updateGym(gym: Gym) {
         firestore.collection(Constants.COLLECTION_GYMS)
             .document(gym.placeId)
@@ -104,9 +90,7 @@ class FirestoreDataSource @Inject constructor(
             .await()
     }
 
-    /**
-     * Delete gym by ID
-     */
+// Delete gym by ID
     suspend fun deleteGym(placeId: String) {
         firestore.collection(Constants.COLLECTION_GYMS)
             .document(placeId)
@@ -114,9 +98,7 @@ class FirestoreDataSource @Inject constructor(
             .await()
     }
 
-    /**
-     * Get all gyms
-     */
+// Get all gyms
     suspend fun getGyms(): List<Gym> {
         return try {
             val snapshot = firestore.collection(Constants.COLLECTION_GYMS)
@@ -131,9 +113,7 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Get user's gym by userId (첫 번째 헬스장)
-     */
+// Get user's gym by userId (첫 번째 헬스장)
     suspend fun getUserGym(userId: String): Gym? {
         return try {
             val snapshot = firestore.collection(Constants.COLLECTION_GYMS)
@@ -152,9 +132,7 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Get all user's registered gyms
-     */
+// Get all user's registered gyms
     suspend fun getUserGyms(userId: String): List<Gym> {
         return try {
             android.util.Log.d("FirestoreDataSource", "getUserGyms: Querying for userId=$userId")
@@ -179,9 +157,7 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Set user's my gym
-     */
+// Set user's my gym
     suspend fun setMyGym(userId: String, gymId: String) {
         firestore.collection(Constants.COLLECTION_USERS)
             .document(userId)
@@ -191,9 +167,7 @@ class FirestoreDataSource @Inject constructor(
 
     // ==================== Equipment Operations ====================
 
-    /**
-     * Get all equipments
-     */
+// Get all equipments
     suspend fun getAllEquipments(): List<Equipment> {
         return try {
             val snapshot = firestore.collection(Constants.COLLECTION_EQUIPMENTS)
@@ -208,9 +182,7 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Get equipment by ID
-     */
+// Get equipment by ID
     suspend fun getEquipment(equipmentId: String): Equipment? {
         return try {
             val document = firestore.collection(Constants.COLLECTION_EQUIPMENTS)
@@ -230,9 +202,7 @@ class FirestoreDataSource @Inject constructor(
 
     // ==================== Exercise Operations ====================
 
-    /**
-     * Get all exercises
-     */
+// Get all exercises
     suspend fun getAllExercises(): List<Exercise> {
         return try {
             val snapshot = firestore.collection(Constants.COLLECTION_EXERCISES)
@@ -247,9 +217,7 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Get exercises by equipment ID
-     */
+// Get exercises by equipment ID
     suspend fun getExercisesByEquipment(equipmentId: String): List<Exercise> {
         return try {
             val snapshot = firestore.collection(Constants.COLLECTION_EXERCISES)
@@ -265,9 +233,7 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Get exercises by category
-     */
+// Get exercises by category
     suspend fun getExercisesByCategory(category: String): List<Exercise> {
         return try {
             val snapshot = firestore.collection(Constants.COLLECTION_EXERCISES)
@@ -285,9 +251,7 @@ class FirestoreDataSource @Inject constructor(
 
     // ==================== Routine Operations ====================
 
-    /**
-     * Create routine
-     */
+// Create routine
     suspend fun createRoutine(userId: String, routine: Routine) {
         firestore.collection(Constants.COLLECTION_ROUTINES)
             .document(userId)
@@ -297,9 +261,7 @@ class FirestoreDataSource @Inject constructor(
             .await()
     }
 
-    /**
-     * Get user's routines
-     */
+// Get user's routines
     suspend fun getUserRoutines(userId: String): List<Routine> {
         return try {
             val snapshot = firestore.collection(Constants.COLLECTION_ROUTINES)
@@ -316,9 +278,7 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Get routine by ID
-     */
+// Get routine by ID
     suspend fun getRoutine(userId: String, routineId: String): Routine? {
         return try {
             val document = firestore.collection(Constants.COLLECTION_ROUTINES)
@@ -338,9 +298,7 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Update routine
-     */
+// Update routine
     suspend fun updateRoutine(userId: String, routine: Routine) {
         firestore.collection(Constants.COLLECTION_ROUTINES)
             .document(userId)
@@ -350,9 +308,7 @@ class FirestoreDataSource @Inject constructor(
             .await()
     }
 
-    /**
-     * Delete routine
-     */
+// Delete routine
     suspend fun deleteRoutine(userId: String, routineId: String) {
         firestore.collection(Constants.COLLECTION_ROUTINES)
             .document(userId)
@@ -364,9 +320,7 @@ class FirestoreDataSource @Inject constructor(
 
     // ==================== Workout Record Operations ====================
 
-    /**
-     * Create workout record
-     */
+// Create workout record
     suspend fun createWorkoutRecord(userId: String, record: WorkoutRecord) {
         firestore.collection(Constants.COLLECTION_WORKOUT_RECORDS)
             .document(userId)
@@ -376,9 +330,7 @@ class FirestoreDataSource @Inject constructor(
             .await()
     }
 
-    /**
-     * Get user's workout records
-     */
+// Get user's workout records
     suspend fun getUserWorkoutRecords(userId: String): List<WorkoutRecord> {
         return try {
             val snapshot = firestore.collection(Constants.COLLECTION_WORKOUT_RECORDS)
@@ -395,9 +347,7 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Get workout record by ID
-     */
+// Get workout record by ID
     suspend fun getWorkoutRecord(userId: String, recordId: String): WorkoutRecord? {
         return try {
             val document = firestore.collection(Constants.COLLECTION_WORKOUT_RECORDS)
@@ -417,9 +367,7 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Update workout record
-     */
+// Update workout record
     suspend fun updateWorkoutRecord(userId: String, record: WorkoutRecord) {
         firestore.collection(Constants.COLLECTION_WORKOUT_RECORDS)
             .document(userId)
@@ -429,9 +377,7 @@ class FirestoreDataSource @Inject constructor(
             .await()
     }
 
-    /**
-     * Delete workout record
-     */
+// Delete workout record
     suspend fun deleteWorkoutRecord(userId: String, recordId: String) {
         firestore.collection(Constants.COLLECTION_WORKOUT_RECORDS)
             .document(userId)

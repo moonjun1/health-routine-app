@@ -1,9 +1,7 @@
 package com.example.gymroutine.data.model
 
-/**
- * Workout record data model
- * Firestore collection: workout_records/{recordId}
- */
+// Workout record data model
+// Firestore collection: workout_records/{recordId}
 data class WorkoutRecord(
     val id: String = "",
     val userId: String = "",
@@ -55,9 +53,7 @@ data class WorkoutRecord(
     }
 }
 
-/**
- * Completed exercise within a workout record
- */
+// Completed exercise within a workout record
 data class CompletedExercise(
     val exerciseId: String = "",
     val exerciseName: String = "",
@@ -91,9 +87,7 @@ data class CompletedExercise(
     }
 }
 
-/**
- * Completed set information
- */
+// Completed set information
 data class CompletedSet(
     val reps: Int = 0,
     val weight: Double = 0.0,

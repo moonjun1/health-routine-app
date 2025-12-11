@@ -16,9 +16,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
-/**
- * Hilt module for network dependencies (Retrofit, OkHttp)
- */
+// 네트워크 의존성 주입 모듈 (Retrofit, OkHttp)
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {

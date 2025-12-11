@@ -17,9 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gymroutine.data.model.Exercise
 import com.example.gymroutine.util.Resource
 
-/**
- * Exercise list screen with category and equipment filters
- */
+// 카테고리 및 기구 필터가 있는 운동 목록 화면
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExerciseListScreen(
@@ -57,7 +55,7 @@ fun ExerciseListScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // Category filter
+            // 카테고리 필터
             if (categories.isNotEmpty()) {
                 Text(
                     text = "운동 부위",
@@ -86,7 +84,7 @@ fun ExerciseListScreen(
                 }
             }
 
-            // Equipment filter
+            // 기구 필터
             when (val state = equipmentState) {
                 is Resource.Success -> {
                     if (state.data.isNotEmpty()) {
@@ -122,7 +120,7 @@ fun ExerciseListScreen(
 
             Divider()
 
-            // Exercise list
+            // 운동 목록
             when (val state = exercisesState) {
                 is Resource.Loading -> {
                     Box(

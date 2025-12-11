@@ -1,13 +1,9 @@
 package com.example.gymroutine.data.model
 
-/**
- * Gym equipment categories and items
- */
+// Gym equipment categories and items
 object GymEquipment {
 
-    /**
-     * Get standard gym equipment list
-     */
+// Get standard gym equipment list
     fun getStandardEquipmentList(): List<String> {
         return listOf(
             // 프리 웨이트
@@ -55,9 +51,7 @@ object GymEquipment {
         )
     }
 
-    /**
-     * Get equipment description for AI prompt
-     */
+// Get equipment description for AI prompt
     fun getEquipmentDescription(): String {
         return """
             헬스장 보유 기구 목록:
@@ -88,9 +82,7 @@ object GymEquipment {
         """.trimIndent()
     }
 
-    /**
-     * Get experience level guidelines
-     */
+// Get experience level guidelines
     fun getExperienceLevelGuidelines(): String {
         return """
             경험 수준별 가이드라인:

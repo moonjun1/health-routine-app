@@ -2,37 +2,23 @@ package com.example.gymroutine.domain.repository
 
 import com.example.gymroutine.data.model.Routine
 
-/**
- * Routine repository interface
- */
+// Routine repository interface
 interface RoutineRepository {
-    /**
-     * Get all routines for current user
-     */
+// Get all routines for current user
     suspend fun getUserRoutines(userId: String): List<Routine>
 
-    /**
-     * Get routine by id
-     */
+// Get routine by id
     suspend fun getRoutineById(routineId: String): Routine?
 
-    /**
-     * Create new routine
-     */
+// Create new routine
     suspend fun createRoutine(routine: Routine): Routine
 
-    /**
-     * Update existing routine
-     */
+// Update existing routine
     suspend fun updateRoutine(routine: Routine): Routine
 
-    /**
-     * Delete routine
-     */
+// Delete routine
     suspend fun deleteRoutine(routineId: String)
 
-    /**
-     * Delete routine with userId
-     */
+// Delete routine with userId
     suspend fun deleteRoutine(userId: String, routineId: String)
 }

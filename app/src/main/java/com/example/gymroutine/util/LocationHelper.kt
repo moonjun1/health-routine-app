@@ -13,9 +13,7 @@ import com.google.android.gms.tasks.CancellationTokenSource
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-/**
- * Helper class for location operations
- */
+// 위치 작업을 위한 헬퍼 클래스
 class LocationHelper @Inject constructor(
     private val context: Context
 ) {
@@ -23,9 +21,7 @@ class LocationHelper @Inject constructor(
     private val fusedLocationClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(context)
 
-    /**
-     * Check if location permissions are granted
-     */
+    // 위치 권한이 부여되었는지 확인
     fun hasLocationPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
             context,
@@ -37,19 +33,15 @@ class LocationHelper @Inject constructor(
                 ) == PackageManager.PERMISSION_GRANTED
     }
 
-    /**
-     * Check if location services are enabled
-     */
+    // 위치 서비스가 활성화되었는지 확인
     fun isLocationEnabled(): Boolean {
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 
-    /**
-     * Get current location
-     * @return Location or null if failed
-     */
+    // 현재 위치 가져오기
+    // @return 위치 정보 또는 실패 시 null
     suspend fun getCurrentLocation(): Location? {
         if (!hasLocationPermission()) {
             return null
@@ -66,9 +58,7 @@ class LocationHelper @Inject constructor(
         }
     }
 
-    /**
-     * Get last known location (faster but may be outdated)
-     */
+    // 마지막으로 알려진 위치 가져오기 (빠르지만 오래된 정보일 수 있음)
     suspend fun getLastKnownLocation(): Location? {
         if (!hasLocationPermission()) {
             return null

@@ -18,10 +18,8 @@ import javax.inject.Singleton
 
 private val Context.gymDataStore: DataStore<Preferences> by preferencesDataStore(name = "gym_prefs")
 
-/**
- * Local data source for gym data using DataStore
- * Used when user is not logged in
- */
+// Local data source for gym data using DataStore
+// Used when user is not logged in
 @Singleton
 class GymLocalDataSource @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -33,9 +31,7 @@ class GymLocalDataSource @Inject constructor(
         private val SELECTED_GYM_ID_KEY = stringPreferencesKey("selected_gym_id")
     }
 
-    /**
-     * Save gym to local storage
-     */
+// Save gym to local storage
     suspend fun saveGym(gym: Gym) {
         try {
             val currentGyms = getGyms().toMutableList()
@@ -58,9 +54,7 @@ class GymLocalDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Get all local gyms
-     */
+// Get all local gyms
     suspend fun getGyms(): List<Gym> {
         return try {
             val gymsJson = context.gymDataStore.data
@@ -82,9 +76,7 @@ class GymLocalDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Get gym by placeId
-     */
+// Get gym by placeId
     suspend fun getGym(placeId: String): Gym? {
         return try {
             val gyms = getGyms()
@@ -101,9 +93,7 @@ class GymLocalDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Delete gym
-     */
+// Delete gym
     suspend fun deleteGym(placeId: String) {
         try {
             val currentGyms = getGyms().toMutableList()
@@ -121,9 +111,7 @@ class GymLocalDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Set selected gym (for non-logged in users)
-     */
+// Set selected gym (for non-logged in users)
     suspend fun setSelectedGymId(placeId: String) {
         try {
             context.gymDataStore.edit { prefs ->
@@ -135,9 +123,7 @@ class GymLocalDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Get selected gym
-     */
+// Get selected gym
     suspend fun getSelectedGym(): Gym? {
         return try {
             val selectedId = context.gymDataStore.data
@@ -157,9 +143,7 @@ class GymLocalDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Clear all local gym data
-     */
+// Clear all local gym data
     suspend fun clearAll() {
         try {
             context.gymDataStore.edit { prefs ->

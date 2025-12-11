@@ -9,11 +9,9 @@ import com.example.gymroutine.domain.repository.AuthRepository
 import com.example.gymroutine.domain.repository.GymRepository
 import javax.inject.Inject
 
-/**
- * Implementation of GymRepository
- * Combines Kakao Local API for search and Firestore/Local storage for gym data management
- * Automatically uses local storage when user is not logged in
- */
+// Implementation of GymRepository
+// 검색을 위한 Kakao Local API와 헬스장 데이터 관리를 위한 Firestore/로컬 저장소 결합
+// 사용자가 로그인하지 않은 경우 자동으로 로컬 저장소 사용
 class GymRepositoryImpl @Inject constructor(
     private val kakaoLocalDataSource: KakaoLocalDataSource,
     private val firestoreDataSource: FirestoreDataSource,

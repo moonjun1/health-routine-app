@@ -10,9 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gymroutine.util.Resource
 
-/**
- * Login screen
- */
+// 로그인 화면
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
@@ -27,7 +25,7 @@ fun LoginScreen(
     var showError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
 
-    // Handle login state
+    // 로그인 상태 처리
     LaunchedEffect(loginState) {
         when (loginState) {
             is Resource.Success -> {
@@ -60,14 +58,14 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Title
+            // 제목
             Text(
                 text = "헬스 루틴",
                 style = MaterialTheme.typography.headlineLarge,
                 modifier = Modifier.padding(bottom = 32.dp)
             )
 
-            // Email field
+            // 이메일 입력 필드
             OutlinedTextField(
                 value = email,
                 onValueChange = viewModel::onEmailChange,
@@ -77,7 +75,7 @@ fun LoginScreen(
                 enabled = loginState !is Resource.Loading
             )
 
-            // Password field
+            // 비밀번호 입력 필드
             OutlinedTextField(
                 value = password,
                 onValueChange = viewModel::onPasswordChange,
@@ -88,7 +86,7 @@ fun LoginScreen(
                 enabled = loginState !is Resource.Loading
             )
 
-            // Error message
+            // 오류 메시지
             if (showError) {
                 Text(
                     text = errorMessage,
@@ -99,7 +97,7 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Login button
+            // 로그인 버튼
             Button(
                 onClick = viewModel::login,
                 modifier = Modifier.fillMaxWidth(),
@@ -115,7 +113,7 @@ fun LoginScreen(
                 }
             }
 
-            // Signup button
+            // 회원가입 버튼
             TextButton(
                 onClick = onNavigateToSignup,
                 enabled = loginState !is Resource.Loading
@@ -125,7 +123,7 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Skip login button
+            // 로그인 건너뛰기 버튼
             OutlinedButton(
                 onClick = onSkipLogin,
                 modifier = Modifier.fillMaxWidth(),

@@ -5,19 +5,15 @@ import com.example.gymroutine.data.model.Gym
 import com.example.gymroutine.data.remote.dto.KakaoPlace
 import javax.inject.Inject
 
-/**
- * Data source for Kakao Local API
- */
+// Data source for Kakao Local API
 class KakaoLocalDataSource @Inject constructor(
     private val kakaoLocalApi: KakaoLocalApi
 ) {
 
-    /**
-     * Search gyms near current location
-     * @param latitude Current latitude
-     * @param longitude Current longitude
-     * @param radius Search radius in meters (default: 5000m = 5km)
-     */
+// Search gyms near current location
+// @param latitude Current latitude
+// @param longitude Current longitude
+// @param radius Search radius in meters (default: 5000m = 5km)
     suspend fun searchNearbyGyms(
         latitude: Double,
         longitude: Double,
@@ -36,12 +32,10 @@ class KakaoLocalDataSource @Inject constructor(
         return response.documents.map { it.toGym() }
     }
 
-    /**
-     * Search gyms by keyword
-     * @param keyword Search keyword (e.g., "헬스장", "피트니스", "짐")
-     * @param latitude Optional current latitude for distance sorting
-     * @param longitude Optional current longitude for distance sorting
-     */
+// Search gyms by keyword
+// @param keyword Search keyword (e.g., "헬스장", "피트니스", "짐")
+// @param latitude Optional current latitude for distance sorting
+// @param longitude Optional current longitude for distance sorting
     suspend fun searchGymsByKeyword(
         keyword: String,
         latitude: Double? = null,
@@ -59,9 +53,7 @@ class KakaoLocalDataSource @Inject constructor(
         return response.documents.map { it.toGym() }
     }
 
-    /**
-     * Convert KakaoPlace to Gym model
-     */
+// Convert KakaoPlace to Gym model
     private fun KakaoPlace.toGym(): Gym {
         return Gym(
             placeId = id,

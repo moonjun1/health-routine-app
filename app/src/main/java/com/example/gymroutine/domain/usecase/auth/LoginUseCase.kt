@@ -5,15 +5,13 @@ import com.example.gymroutine.domain.repository.AuthRepository
 import com.example.gymroutine.util.Constants
 import javax.inject.Inject
 
-/**
- * Use case for user login
- */
+// 사용자 로그인 유스케이스
 class LoginUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
     suspend operator fun invoke(email: String, password: String): Result<User> {
         return try {
-            // Validate input
+            // 입력 유효성 검증
             if (email.isBlank()) {
                 return Result.failure(Exception("이메일을 입력해주세요"))
             }
@@ -26,7 +24,7 @@ class LoginUseCase @Inject constructor(
                 return Result.failure(Exception(Constants.ERROR_WEAK_PASSWORD))
             }
 
-            // Perform login
+            // 로그인 수행
             val user = authRepository.signIn(email, password)
             Result.success(user)
         } catch (e: Exception) {

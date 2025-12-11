@@ -4,9 +4,7 @@ import com.example.gymroutine.data.model.Gym
 import com.example.gymroutine.domain.repository.GymRepository
 import javax.inject.Inject
 
-/**
- * Use case for registering new gym
- */
+// Use case for registering new gym
 class RegisterGymUseCase @Inject constructor(
     private val gymRepository: GymRepository
 ) {

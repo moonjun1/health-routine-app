@@ -17,9 +17,7 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
-/**
- * ViewModel for routine creation with exercise selection
- */
+// 운동 선택 기능이 있는 루틴 생성 뷰모델
 @HiltViewModel
 class RoutineCreateViewModel @Inject constructor(
     private val routineRepository: RoutineRepository,
@@ -49,48 +47,38 @@ class RoutineCreateViewModel @Inject constructor(
         loadExercises()
     }
 
-    /**
-     * Load all exercises
-     */
+    // 모든 운동 로드
     private fun loadExercises() {
         viewModelScope.launch {
             try {
                 val exercises = exerciseRepository.getAllExercises()
                 _allExercises.value = exercises
             } catch (e: Exception) {
-                // Handle error silently - exercises will be empty
+                // 오류를 조용히 처리 - 운동 목록은 비어있음
             }
         }
     }
 
-    /**
-     * Update routine name
-     */
+    // 루틴 이름 업데이트
     fun updateRoutineName(name: String) {
         _routineName.value = name
     }
 
-    /**
-     * Update description
-     */
+    // 설명 업데이트
     fun updateDescription(desc: String) {
         _description.value = desc
     }
 
-    /**
-     * Update category
-     */
+    // 카테고리 업데이트
     fun updateCategory(cat: String) {
         _category.value = cat
     }
 
-    /**
-     * Add exercise to routine
-     */
+    // 루틴에 운동 추가
     fun addExercise(exercise: Exercise) {
         val currentList = _selectedExercises.value.toMutableList()
 
-        // Check if already added
+        // 이미 추가되었는지 확인
         if (currentList.any { it.exercise.id == exercise.id }) {
             return
         }
@@ -108,9 +96,7 @@ class RoutineCreateViewModel @Inject constructor(
         _selectedExercises.value = currentList
     }
 
-    /**
-     * Remove exercise from routine
-     */
+    // 루틴에서 운동 제거
     fun removeExercise(exerciseId: String) {
         val currentList = _selectedExercises.value
             .filter { it.exercise.id != exerciseId }
@@ -120,9 +106,7 @@ class RoutineCreateViewModel @Inject constructor(
         _selectedExercises.value = currentList
     }
 
-    /**
-     * Update exercise settings
-     */
+    // 운동 설정 업데이트
     fun updateExerciseSettings(
         exerciseId: String,
         sets: Int? = null,
@@ -145,9 +129,7 @@ class RoutineCreateViewModel @Inject constructor(
         _selectedExercises.value = currentList
     }
 
-    /**
-     * Move exercise up in order
-     */
+    // 운동 순서를 위로 이동
     fun moveExerciseUp(exerciseId: String) {
         val currentList = _selectedExercises.value.toMutableList()
         val index = currentList.indexOfFirst { it.exercise.id == exerciseId }
@@ -160,9 +142,7 @@ class RoutineCreateViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Move exercise down in order
-     */
+    // 운동 순서를 아래로 이동
     fun moveExerciseDown(exerciseId: String) {
         val currentList = _selectedExercises.value.toMutableList()
         val index = currentList.indexOfFirst { it.exercise.id == exerciseId }
@@ -175,9 +155,7 @@ class RoutineCreateViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Create routine
-     */
+    // 루틴 생성
     fun createRoutine() {
         viewModelScope.launch {
             _createState.value = Resource.Loading
@@ -216,25 +194,19 @@ class RoutineCreateViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Reset create state
-     */
+    // 생성 상태 초기화
     fun resetCreateState() {
         _createState.value = Resource.Idle
     }
 
-    /**
-     * Validate if routine can be created
-     */
+    // 루틴을 생성할 수 있는지 검증
     fun canCreateRoutine(): Boolean {
         return _routineName.value.trim().isNotEmpty() &&
                _selectedExercises.value.isNotEmpty()
     }
 }
 
-/**
- * Data class for selected exercise with settings
- */
+// 설정이 포함된 선택된 운동의 데이터 클래스
 data class SelectedExercise(
     val exercise: Exercise,
     val sets: Int,

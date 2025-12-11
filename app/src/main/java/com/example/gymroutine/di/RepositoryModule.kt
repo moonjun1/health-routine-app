@@ -24,9 +24,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-/**
- * Hilt module for repository dependencies
- */
+// 저장소 의존성 주입 모듈
 @Module
 @InstallIn(SingletonComponent::class)
 object RepositoryModule {

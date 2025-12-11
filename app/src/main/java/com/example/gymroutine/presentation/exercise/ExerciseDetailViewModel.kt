@@ -10,9 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/**
- * ViewModel for exercise detail screen
- */
+// 운동 상세 화면 뷰모델
 @HiltViewModel
 class ExerciseDetailViewModel @Inject constructor(
     private val exerciseRepository: ExerciseRepository
@@ -21,9 +19,7 @@ class ExerciseDetailViewModel @Inject constructor(
     private val _equipmentName = MutableStateFlow("")
     val equipmentName: StateFlow<String> = _equipmentName.asStateFlow()
 
-    /**
-     * Load equipment name by id
-     */
+    // ID로 기구 이름 로드
     fun loadEquipmentName(equipmentId: String) {
         viewModelScope.launch {
             try {

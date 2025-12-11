@@ -2,9 +2,7 @@ package com.example.gymroutine.domain.repository
 
 import com.example.gymroutine.data.model.User
 
-/**
- * User repository interface
- */
+// User repository interface
 interface UserRepository {
     suspend fun createUser(user: User)
     suspend fun getUser(userId: String): User?

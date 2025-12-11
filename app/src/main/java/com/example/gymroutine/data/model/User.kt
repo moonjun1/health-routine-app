@@ -1,9 +1,7 @@
 package com.example.gymroutine.data.model
 
-/**
- * User data model
- * Firestore collection: users/{userId}
- */
+// User data model
+// Firestore collection: users/{userId}
 data class User(
     val id: String = "",
     val email: String = "",

@@ -2,9 +2,7 @@ package com.example.gymroutine.data.model.openai
 
 import com.google.gson.annotations.SerializedName
 
-/**
- * OpenAI API Request models
- */
+// OpenAI API Request models
 data class OpenAIRequest(
     @SerializedName("model")
     val model: String = "gpt-4o-mini",

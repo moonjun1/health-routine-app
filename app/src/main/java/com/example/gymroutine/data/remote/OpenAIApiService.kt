@@ -6,9 +6,7 @@ import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
 
-/**
- * OpenAI API Service interface
- */
+// OpenAI API Service interface
 interface OpenAIApiService {
     @POST("v1/chat/completions")
     suspend fun createChatCompletion(

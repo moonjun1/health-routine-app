@@ -12,9 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/**
- * ViewModel for Signup screen
- */
+// 회원가입 화면 뷰모델
 @HiltViewModel
 class SignupViewModel @Inject constructor(
     private val signupUseCase: SignupUseCase

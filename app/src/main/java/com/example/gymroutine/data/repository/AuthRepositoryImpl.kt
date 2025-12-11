@@ -6,9 +6,7 @@ import com.example.gymroutine.data.remote.FirestoreDataSource
 import com.example.gymroutine.domain.repository.AuthRepository
 import javax.inject.Inject
 
-/**
- * Authentication repository implementation
- */
+// Authentication repository implementation
 class AuthRepositoryImpl @Inject constructor(
     private val authDataSource: FirebaseAuthDataSource,
     private val firestoreDataSource: FirestoreDataSource
