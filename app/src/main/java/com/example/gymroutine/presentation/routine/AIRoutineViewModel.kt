@@ -1,5 +1,6 @@
 package com.example.gymroutine.presentation.routine
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gymroutine.data.model.AIRoutineRequest
@@ -30,6 +31,10 @@ class AIRoutineViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val gymRepository: GymRepository
 ) : ViewModel() {
+
+    companion object {
+        private const val TAG = "AIRoutineViewModel"
+    }
 
     // User inputs
     private val _goal = MutableStateFlow("")
@@ -70,11 +75,29 @@ class AIRoutineViewModel @Inject constructor(
 
     private fun loadUserGyms() {
         viewModelScope.launch {
-            val userId = authRepository.getCurrentUserId() ?: return@launch
-            val gyms = gymRepository.getUserGyms(userId)
+            val userId = authRepository.getCurrentUserId()
+
+            // Load gyms regardless of login status
+            // Repository will handle local/Firebase automatically
+            if (userId != null) {
+                Log.d(TAG, "loadUserGyms: Loading gyms for user $userId (Firebase)")
+            } else {
+                Log.d(TAG, "loadUserGyms: Loading gyms from local storage (not logged in)")
+            }
+
+            val gyms = gymRepository.getUserGyms(userId ?: "")
+            Log.d(TAG, "loadUserGyms: Found ${gyms.size} gyms")
+
+            gyms.forEachIndexed { index, gym ->
+                Log.d(TAG, "  Gym $index: ${gym.name} (${gym.equipments.size} equipments)")
+            }
+
             _userGyms.value = gyms
             if (gyms.isNotEmpty() && _selectedGym.value == null) {
                 _selectedGym.value = gyms.first()
+                Log.d(TAG, "loadUserGyms: Auto-selected first gym: ${gyms.first().name}")
+            } else if (gyms.isEmpty()) {
+                Log.w(TAG, "loadUserGyms: No gyms found")
             }
         }
     }
@@ -87,10 +110,12 @@ class AIRoutineViewModel @Inject constructor(
      * Update user inputs
      */
     fun updateGoal(value: String) {
+        Log.d(TAG, "updateGoal: $value")
         _goal.value = value
     }
 
     fun updateExperienceLevel(value: String) {
+        Log.d(TAG, "updateExperienceLevel: $value")
         _experienceLevel.value = value
     }
 
@@ -106,8 +131,10 @@ class AIRoutineViewModel @Inject constructor(
         val current = _selectedCategories.value.toMutableList()
         if (current.contains(category)) {
             current.remove(category)
+            Log.d(TAG, "toggleCategory: Removed $category, current: $current")
         } else {
             current.add(category)
+            Log.d(TAG, "toggleCategory: Added $category, current: $current")
         }
         _selectedCategories.value = current
     }
@@ -218,8 +245,14 @@ class AIRoutineViewModel @Inject constructor(
      * Validate if can generate routine
      */
     fun canGenerateRoutine(): Boolean {
-        return _goal.value.isNotEmpty() &&
-               _selectedCategories.value.isNotEmpty() &&
-               _selectedGym.value != null
+        val goalValid = _goal.value.isNotEmpty()
+        val categoriesValid = _selectedCategories.value.isNotEmpty()
+        val gymValid = _selectedGym.value != null
+
+        Log.d(TAG, "canGenerateRoutine: goal=$goalValid (${_goal.value}), " +
+                   "categories=$categoriesValid (${_selectedCategories.value.size}), " +
+                   "gym=$gymValid (${_selectedGym.value?.name})")
+
+        return goalValid && categoriesValid && gymValid
     }
 }

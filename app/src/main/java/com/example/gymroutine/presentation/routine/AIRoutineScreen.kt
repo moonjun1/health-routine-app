@@ -58,6 +58,13 @@ fun AIRoutineScreen(
         }
     }
 
+    // Debug: Log form validation state changes
+    LaunchedEffect(goal, selectedCategories.size, selectedGym) {
+        val isValid = goal.isNotEmpty() && selectedCategories.isNotEmpty() && selectedGym != null
+        android.util.Log.d("AIRoutineScreen",
+            "Form validation: valid=$isValid, goal='$goal', categories=${selectedCategories.size}, gym=${selectedGym?.name}")
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -208,10 +215,15 @@ fun AIRoutineScreen(
 
             // Generate button
             item {
+                // Calculate enabled state from collected states
+                val isFormValid = goal.isNotEmpty() &&
+                                 selectedCategories.isNotEmpty() &&
+                                 selectedGym != null
+
                 Button(
                     onClick = { viewModel.generateRoutine() },
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = viewModel.canGenerateRoutine() && generationState !is Resource.Loading
+                    enabled = isFormValid && generationState !is Resource.Loading
                 ) {
                     if (generationState is Resource.Loading) {
                         CircularProgressIndicator(
