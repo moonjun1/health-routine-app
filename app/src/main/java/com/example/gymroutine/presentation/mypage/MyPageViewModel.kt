@@ -15,8 +15,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * MyPage ViewModel
- * Handles user profile, settings, and logout
+ * 마이페이지 ViewModel
+ * 사용자 프로필, 설정 및 로그아웃 처리
  */
 @HiltViewModel
 class MyPageViewModel @Inject constructor(

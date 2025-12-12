@@ -57,7 +57,7 @@ class ChangePasswordViewModel @Inject constructor(
                 val new = _newPassword.value
                 val confirm = _confirmPassword.value
 
-                // Validation
+                // 유효성 검사
                 if (current.isEmpty() || new.isEmpty() || confirm.isEmpty()) {
                     _changePasswordState.value = Resource.Error("모든 필드를 입력해주세요")
                     return@launch
@@ -78,7 +78,7 @@ class ChangePasswordViewModel @Inject constructor(
                     return@launch
                 }
 
-                // Get current user
+                // 현재 사용자 가져오기
                 val firebaseUser = FirebaseAuth.getInstance().currentUser
                 if (firebaseUser == null) {
                     _changePasswordState.value = Resource.Error("로그인이 필요합니다")
@@ -91,17 +91,17 @@ class ChangePasswordViewModel @Inject constructor(
                     return@launch
                 }
 
-                // Re-authenticate user with current password
+                // 현재 비밀번호로 사용자 재인증
                 val credential = EmailAuthProvider.getCredential(email, current)
                 firebaseUser.reauthenticate(credential).await()
 
-                // Update password
+                // 비밀번호 업데이트
                 firebaseUser.updatePassword(new).await()
 
                 Log.d(TAG, "Password changed successfully")
                 _changePasswordState.value = Resource.Success(Unit)
 
-                // Clear fields
+                // 필드 초기화
                 _currentPassword.value = ""
                 _newPassword.value = ""
                 _confirmPassword.value = ""

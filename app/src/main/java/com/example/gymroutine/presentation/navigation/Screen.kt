@@ -1,14 +1,14 @@
 package com.example.gymroutine.presentation.navigation
 
 /**
- * Navigation routes for Compose Navigation
+ * Compose Navigation을 위한 네비게이션 라우트
  */
 sealed class Screen(val route: String) {
-    // Auth screens
+    // 인증 화면
     object Login : Screen("login")
     object Signup : Screen("signup")
 
-    // Main screens
+    // 메인 화면
     object Home : Screen("home")
     object GymSearch : Screen("gym_search")
     object GymRegister : Screen("gym_register")

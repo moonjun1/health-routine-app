@@ -256,7 +256,7 @@ fun AIRoutineScreen(
 }
 
 /**
- * Gym selection section
+ * 헬스장 선택 섹션
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -403,7 +403,7 @@ fun GymSelectionSection(
 }
 
 /**
- * Goal selection chips
+ * 목표 선택 칩
  */
 @Composable
 fun GoalSelectionChips(
@@ -426,7 +426,7 @@ fun GoalSelectionChips(
 }
 
 /**
- * Experience level chips
+ * 경력 수준 칩
  */
 @Composable
 fun ExperienceLevelChips(
@@ -449,7 +449,7 @@ fun ExperienceLevelChips(
 }
 
 /**
- * Category selection chips
+ * 카테고리 선택 칩
  */
 @Composable
 fun CategorySelectionChips(
@@ -475,7 +475,7 @@ fun CategorySelectionChips(
 }
 
 /**
- * AI routine result dialog
+ * AI 루틴 결과 다이얼로그
  */
 @Composable
 fun AIRoutineResultDialog(

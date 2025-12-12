@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * Routine list screen
+ * 루틴 목록 화면
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,7 +37,7 @@ fun RoutineListScreen(
     var showQuickRecordDialog by remember { mutableStateOf(false) }
     var routineToRecord by remember { mutableStateOf<Routine?>(null) }
 
-    // Handle delete state
+    // 삭제 상태 처리
     LaunchedEffect(deleteState) {
         when (deleteState) {
             is Resource.Success -> {
@@ -207,7 +207,7 @@ fun RoutineListScreen(
         }
     }
 
-    // Delete confirmation dialog
+    // 삭제 확인 다이얼로그
     if (showDeleteDialog && routineToDelete != null) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
@@ -232,7 +232,7 @@ fun RoutineListScreen(
         )
     }
 
-    // Quick record dialog
+    // 빠른 기록 다이얼로그
     if (showQuickRecordDialog && routineToRecord != null) {
         QuickRecordDialog(
             routineName = routineToRecord!!.name,

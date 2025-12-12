@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * Quick workout record dialog for routine list
+ * 루틴 목록을 위한 빠른 운동 기록 다이얼로그
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,7 +52,7 @@ fun QuickRecordDialog(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Date selection
+                // 날짜 선택
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
                         text = "날짜 *",
@@ -85,7 +85,7 @@ fun QuickRecordDialog(
                     }
                 }
 
-                // Duration input
+                // 운동 시간 입력
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
                         text = "운동 시간 (분)",
@@ -103,7 +103,7 @@ fun QuickRecordDialog(
                     )
                 }
 
-                // Notes input
+                // 메모 입력
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
                         text = "메모 (선택사항)",
@@ -146,7 +146,7 @@ fun QuickRecordDialog(
         }
     )
 
-    // Date picker dialog
+    // 날짜 선택 다이얼로그
     if (showDatePicker) {
         val datePickerState = rememberDatePickerState(
             initialSelectedDateMillis = selectedDate

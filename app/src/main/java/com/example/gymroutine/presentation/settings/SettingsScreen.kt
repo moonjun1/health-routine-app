@@ -14,7 +14,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gymroutine.util.Resource
 
 /**
- * Settings screen
+ * 설정 화면
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,7 +30,7 @@ fun SettingsScreen(
 
     var showLogoutDialog by remember { mutableStateOf(false) }
 
-    // Handle logout success
+    // 로그아웃 성공 처리
     LaunchedEffect(logoutState) {
         if (logoutState is Resource.Success) {
             onNavigateToLogin()
@@ -52,7 +52,7 @@ fun SettingsScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Account section
+            // 계정 섹션
             item {
                 Text(
                     text = "계정",
@@ -141,7 +141,7 @@ fun SettingsScreen(
                 }
             }
 
-            // Gym section
+            // 헬스장 섹션
             item {
                 Text(
                     text = "헬스장",
@@ -189,7 +189,7 @@ fun SettingsScreen(
                 }
             }
 
-            // App info section
+            // 앱 정보 섹션
             item {
                 Text(
                     text = "앱 정보",
@@ -225,7 +225,7 @@ fun SettingsScreen(
         }
     }
 
-    // Logout confirmation dialog
+    // 로그아웃 확인 다이얼로그
     if (showLogoutDialog) {
         AlertDialog(
             onDismissRequest = { showLogoutDialog = false },

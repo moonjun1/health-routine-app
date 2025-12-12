@@ -36,7 +36,7 @@ import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 
 /**
- * Main navigation graph for the app
+ * 앱의 메인 네비게이션 그래프
  */
 @Composable
 fun NavGraph(
@@ -49,7 +49,7 @@ fun NavGraph(
         startDestination = startDestination,
         modifier = modifier
     ) {
-        // Auth screens
+        // 인증 화면
         composable(Screen.Login.route) {
             LoginScreen(
                 onLoginSuccess = {
@@ -81,7 +81,7 @@ fun NavGraph(
             )
         }
 
-        // Main screens
+        // 메인 화면
         composable(Screen.Home.route) {
             HomeScreen(
                 onNavigateToGymSearch = {
@@ -103,7 +103,7 @@ fun NavGraph(
             )
         }
 
-        // Gym screens
+        // 헬스장 화면
         composable(Screen.GymSearch.route) {
             GymSearchScreen(
                 onNavigateBack = {
@@ -150,7 +150,7 @@ fun NavGraph(
             )
         }
 
-        // Exercise screens
+        // 운동 화면
         composable(Screen.ExerciseList.route) {
             ExerciseListScreen(
                 onNavigateBack = {
@@ -192,7 +192,7 @@ fun NavGraph(
             )
         }
 
-        // Routine screens
+        // 루틴 화면
         composable(Screen.RoutineList.route) {
             RoutineListScreen(
                 onNavigateBack = {
@@ -305,7 +305,7 @@ fun NavGraph(
             )
         }
 
-        // Settings screen
+        // 설정 화면
         composable(Screen.Settings.route) {
             SettingsScreen(
                 onNavigateToGymSearch = {
@@ -319,7 +319,7 @@ fun NavGraph(
             )
         }
 
-        // MyPage screen
+        // 마이페이지 화면
         composable(Screen.MyPage.route) {
             com.example.gymroutine.presentation.mypage.MyPageScreen(
                 onNavigateToLogin = {
@@ -339,7 +339,7 @@ fun NavGraph(
             )
         }
 
-        // Change Password screen
+        // 비밀번호 변경 화면
         composable(Screen.ChangePassword.route) {
             com.example.gymroutine.presentation.mypage.ChangePasswordScreen(
                 onNavigateBack = {
@@ -348,7 +348,7 @@ fun NavGraph(
             )
         }
 
-        // Calendar screen
+        // 캘린더 화면
         composable(Screen.Calendar.route) {
             CalendarScreen(
                 onNavigateBack = {

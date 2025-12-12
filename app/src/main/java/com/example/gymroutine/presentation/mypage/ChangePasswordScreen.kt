@@ -36,7 +36,7 @@ fun ChangePasswordScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    // Handle state changes
+    // 상태 변경 처리
     LaunchedEffect(changePasswordState) {
         when (changePasswordState) {
             is Resource.Success -> {
@@ -81,7 +81,7 @@ fun ChangePasswordScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Instructions
+            // 안내 사항
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(
@@ -104,7 +104,7 @@ fun ChangePasswordScreen(
                 }
             }
 
-            // Current password
+            // 현재 비밀번호
             OutlinedTextField(
                 value = currentPassword,
                 onValueChange = { viewModel.updateCurrentPassword(it) },
@@ -125,7 +125,7 @@ fun ChangePasswordScreen(
 
             HorizontalDivider()
 
-            // New password
+            // 새 비밀번호
             OutlinedTextField(
                 value = newPassword,
                 onValueChange = { viewModel.updateNewPassword(it) },
@@ -144,7 +144,7 @@ fun ChangePasswordScreen(
                 }
             )
 
-            // Confirm password
+            // 비밀번호 확인
             OutlinedTextField(
                 value = confirmPassword,
                 onValueChange = { viewModel.updateConfirmPassword(it) },
@@ -171,7 +171,7 @@ fun ChangePasswordScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Change password button
+            // 비밀번호 변경 버튼
             Button(
                 onClick = { viewModel.changePassword() },
                 modifier = Modifier.fillMaxWidth(),
@@ -184,7 +184,7 @@ fun ChangePasswordScreen(
             }
         }
 
-        // Loading indicator
+        // 로딩 표시
         if (changePasswordState is Resource.Loading) {
             Box(
                 modifier = Modifier.fillMaxSize(),

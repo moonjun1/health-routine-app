@@ -17,7 +17,7 @@ import java.util.UUID
 import javax.inject.Inject
 
 /**
- * ViewModel for routine list screen
+ * 루틴 목록 화면을 위한 ViewModel
  */
 @HiltViewModel
 class RoutineListViewModel @Inject constructor(
@@ -37,13 +37,13 @@ class RoutineListViewModel @Inject constructor(
     }
 
     /**
-     * Load user's routines
+     * 사용자의 루틴 로드
      */
     fun loadRoutines() {
         viewModelScope.launch {
             _routinesState.value = Resource.Loading
             try {
-                // Get userId (empty string if not logged in)
+                // userId 가져오기 (로그인하지 않은 경우 빈 문자열)
                 val userId = authRepository.getCurrentUserId() ?: ""
                 val routines = routineRepository.getUserRoutines(userId)
                 _routinesState.value = Resource.Success(routines.sortedByDescending { it.updatedAt })
@@ -54,17 +54,17 @@ class RoutineListViewModel @Inject constructor(
     }
 
     /**
-     * Delete routine
+     * 루틴 삭제
      */
     fun deleteRoutine(routineId: String) {
         viewModelScope.launch {
             _deleteState.value = Resource.Loading
             try {
-                // Get userId (empty string if not logged in)
+                // userId 가져오기 (로그인하지 않은 경우 빈 문자열)
                 val userId = authRepository.getCurrentUserId() ?: ""
                 routineRepository.deleteRoutine(userId, routineId)
                 _deleteState.value = Resource.Success(Unit)
-                // Reload routines after deletion
+                // 삭제 후 루틴 다시 로드
                 loadRoutines()
             } catch (e: Exception) {
                 _deleteState.value = Resource.Error(e.message ?: "루틴을 삭제할 수 없습니다")
@@ -73,14 +73,14 @@ class RoutineListViewModel @Inject constructor(
     }
 
     /**
-     * Reset delete state
+     * 삭제 상태 초기화
      */
     fun resetDeleteState() {
         _deleteState.value = Resource.Idle
     }
 
     /**
-     * Add a new workout record for a routine
+     * 루틴에 대한 새로운 운동 기록 추가
      */
     fun addWorkoutRecord(
         routineId: String,
@@ -106,7 +106,7 @@ class RoutineListViewModel @Inject constructor(
 
                 workoutRecordRepository.createWorkoutRecord(record)
             } catch (e: Exception) {
-                // Handle error silently for now
+                // 현재는 오류를 조용히 처리
             }
         }
     }

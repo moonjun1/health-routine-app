@@ -18,8 +18,8 @@ import com.example.gymroutine.util.Resource
 import kotlinx.coroutines.launch
 
 /**
- * MyPage Screen
- * Shows user profile and settings for both logged-in and guest users
+ * 마이페이지 화면
+ * 로그인한 사용자와 게스트 사용자 모두의 프로필과 설정을 표시
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,7 +38,7 @@ fun MyPageScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    // Handle logout success
+    // 로그아웃 성공 처리
     LaunchedEffect(logoutState) {
         if (logoutState is Resource.Success) {
             onLogoutSuccess()
@@ -65,7 +65,7 @@ fun MyPageScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Profile section
+            // 프로필 섹션
             item {
                 if (isLoggedIn) {
                     LoggedInProfileCard(
@@ -79,14 +79,14 @@ fun MyPageScreen(
                 }
             }
 
-            // Divider
+            // 구분선
             item {
                 HorizontalDivider()
             }
 
-            // Menu items
+            // 메뉴 항목
             if (isLoggedIn) {
-                // Logged-in user menu
+                // 로그인한 사용자 메뉴
                 item {
                     Text(
                         text = "계정 관리",
@@ -112,7 +112,7 @@ fun MyPageScreen(
                     )
                 }
             } else {
-                // Guest user menu
+                // 게스트 사용자 메뉴
                 item {
                     Text(
                         text = "게스트 모드",
@@ -148,7 +148,7 @@ fun MyPageScreen(
                 HorizontalDivider()
             }
 
-            // App info section
+            // 앱 정보 섹션
             item {
                 Text(
                     text = "앱 정보",
@@ -176,7 +176,7 @@ fun MyPageScreen(
         }
     }
 
-    // Logout confirmation dialog
+    // 로그아웃 확인 다이얼로그
     if (showLogoutDialog) {
         AlertDialog(
             onDismissRequest = { showLogoutDialog = false },
@@ -207,7 +207,7 @@ fun MyPageScreen(
         )
     }
 
-    // Loading indicator
+    // 로딩 표시
     if (logoutState is Resource.Loading) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -233,7 +233,7 @@ fun LoggedInProfileCard(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Profile image placeholder
+            // 프로필 이미지 자리 표시자
             Box(
                 modifier = Modifier
                     .size(64.dp)

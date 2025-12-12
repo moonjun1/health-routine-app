@@ -7,7 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 /**
- * ViewModel for routine detail screen
+ * 루틴 상세 화면을 위한 ViewModel
  */
 @HiltViewModel
 class RoutineDetailViewModel @Inject constructor(
@@ -15,7 +15,7 @@ class RoutineDetailViewModel @Inject constructor(
 ) : ViewModel() {
 
     /**
-     * Get exercise by id
+     * ID로 운동 가져오기
      */
     suspend fun getExerciseById(exerciseId: String): Exercise? {
         return try {

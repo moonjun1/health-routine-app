@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * Settings screen ViewModel
+ * 설정 화면 ViewModel
  */
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
@@ -49,7 +49,7 @@ class SettingsViewModel @Inject constructor(
                 _userEmail.value = user?.email ?: ""
             }
 
-            // Load gym for both logged-in and guest users
+            // 로그인한 사용자와 게스트 사용자 모두를 위한 헬스장 로드
             try {
                 val gyms = gymRepository.getUserGyms(userId ?: "")
                 _gymName.value = gyms.firstOrNull()?.name ?: ""

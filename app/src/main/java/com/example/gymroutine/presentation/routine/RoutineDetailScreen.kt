@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.example.gymroutine.data.model.Routine
 
 /**
- * Routine detail screen
+ * 루틴 상세 화면
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,7 +59,7 @@ fun RoutineDetailScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Description card
+            // 설명 카드
             if (routine.description.isNotEmpty()) {
                 item {
                     Card(modifier = Modifier.fillMaxWidth()) {
@@ -78,7 +78,7 @@ fun RoutineDetailScreen(
                 }
             }
 
-            // Exercise list
+            // 운동 목록
             item {
                 Text(
                     "운동 목록 (${routine.exercises.size}개)",
@@ -144,7 +144,7 @@ fun RoutineDetailScreen(
             }
         }
 
-        // Quick record dialog
+        // 빠른 기록 다이얼로그
         if (showQuickRecordDialog) {
             QuickRecordDialog(
                 routineName = routine.name,

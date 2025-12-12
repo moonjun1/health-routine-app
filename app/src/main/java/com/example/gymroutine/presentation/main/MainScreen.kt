@@ -12,7 +12,7 @@ import com.example.gymroutine.presentation.navigation.NavGraph
 import com.example.gymroutine.presentation.navigation.Screen
 
 /**
- * Main screen with bottom navigation
+ * 하단 네비게이션이 있는 메인 화면
  */
 @Composable
 fun MainScreen(
@@ -22,7 +22,7 @@ fun MainScreen(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    // Bottom navigation should only be visible on main screens
+    // 하단 네비게이션은 메인 화면에서만 표시되어야 함
     val showBottomBar = currentRoute in listOf(
         Screen.Home.route,
         Screen.ExerciseList.route,
@@ -70,7 +70,7 @@ fun MainScreen(
 }
 
 /**
- * Bottom navigation items
+ * 하단 네비게이션 항목
  */
 enum class BottomNavItem(
     val route: String,

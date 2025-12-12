@@ -22,7 +22,7 @@ import java.util.UUID
 import javax.inject.Inject
 
 /**
- * ViewModel for AI-powered routine generation
+ * AI 기반 루틴 생성을 위한 ViewModel
  */
 @HiltViewModel
 class AIRoutineViewModel @Inject constructor(
@@ -36,7 +36,7 @@ class AIRoutineViewModel @Inject constructor(
         private const val TAG = "AIRoutineViewModel"
     }
 
-    // User inputs
+    // 사용자 입력
     private val _goal = MutableStateFlow("")
     val goal: StateFlow<String> = _goal.asStateFlow()
 
@@ -55,14 +55,14 @@ class AIRoutineViewModel @Inject constructor(
     private val _additionalInfo = MutableStateFlow("")
     val additionalInfo: StateFlow<String> = _additionalInfo.asStateFlow()
 
-    // User's gyms
+    // 사용자의 헬스장
     private val _userGyms = MutableStateFlow<List<Gym>>(emptyList())
     val userGyms: StateFlow<List<Gym>> = _userGyms.asStateFlow()
 
     private val _selectedGym = MutableStateFlow<Gym?>(null)
     val selectedGym: StateFlow<Gym?> = _selectedGym.asStateFlow()
 
-    // Generation states
+    // 생성 상태
     private val _generationState = MutableStateFlow<Resource<AIRoutineResponse>>(Resource.Idle)
     val generationState: StateFlow<Resource<AIRoutineResponse>> = _generationState.asStateFlow()
 
@@ -77,8 +77,8 @@ class AIRoutineViewModel @Inject constructor(
         viewModelScope.launch {
             val userId = authRepository.getCurrentUserId()
 
-            // Load gyms regardless of login status
-            // Repository will handle local/Firebase automatically
+            // 로그인 상태와 관계없이 헬스장 로드
+            // Repository가 자동으로 로컬/Firebase를 처리함
             if (userId != null) {
                 Log.d(TAG, "loadUserGyms: Loading gyms for user $userId (Firebase)")
             } else {
@@ -107,7 +107,7 @@ class AIRoutineViewModel @Inject constructor(
     }
 
     /**
-     * Update user inputs
+     * 사용자 입력 업데이트
      */
     fun updateGoal(value: String) {
         Log.d(TAG, "updateGoal: $value")
@@ -144,14 +144,14 @@ class AIRoutineViewModel @Inject constructor(
     }
 
     /**
-     * Generate routine using GPT
+     * GPT를 사용하여 루틴 생성
      */
     fun generateRoutine() {
         viewModelScope.launch {
             _generationState.value = Resource.Loading
 
             try {
-                // Check selected gym
+                // 선택된 헬스장 확인
                 val selectedGym = _selectedGym.value
                 if (selectedGym == null) {
                     _generationState.value = Resource.Error(
@@ -173,7 +173,7 @@ class AIRoutineViewModel @Inject constructor(
                     workoutsPerWeek = _workoutsPerWeek.value,
                     workoutDuration = _workoutDuration.value,
                     preferredCategories = _selectedCategories.value,
-                    equipment = selectedGym.equipments, // Use selected gym's equipment
+                    equipment = selectedGym.equipments, // 선택된 헬스장의 기구 사용
                     additionalInfo = _additionalInfo.value
                 )
 
@@ -188,7 +188,7 @@ class AIRoutineViewModel @Inject constructor(
     }
 
     /**
-     * Save generated routine
+     * 생성된 루틴 저장
      */
     fun saveGeneratedRoutine(aiResponse: AIRoutineResponse) {
         viewModelScope.launch {
@@ -231,7 +231,7 @@ class AIRoutineViewModel @Inject constructor(
     }
 
     /**
-     * Reset states
+     * 상태 초기화
      */
     fun resetGenerationState() {
         _generationState.value = Resource.Idle
@@ -242,7 +242,7 @@ class AIRoutineViewModel @Inject constructor(
     }
 
     /**
-     * Validate if can generate routine
+     * 루틴 생성 가능 여부 검증
      */
     fun canGenerateRoutine(): Boolean {
         val goalValid = _goal.value.isNotEmpty()
