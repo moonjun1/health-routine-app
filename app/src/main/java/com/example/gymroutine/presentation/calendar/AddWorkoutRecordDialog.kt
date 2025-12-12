@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * Dialog for adding a workout record
+ * 운동 기록 추가 다이얼로그
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,7 +55,7 @@ fun AddWorkoutRecordDialog(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Routine selection
+                // 루틴 선택
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
                         text = "루틴 선택 *",
@@ -89,7 +89,7 @@ fun AddWorkoutRecordDialog(
                     }
                 }
 
-                // Duration input
+                // 운동 시간 입력
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
                         text = "운동 시간 (분)",
@@ -107,7 +107,7 @@ fun AddWorkoutRecordDialog(
                     )
                 }
 
-                // Notes input
+                // 메모 입력
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
                         text = "메모 (선택사항)",
@@ -155,7 +155,7 @@ fun AddWorkoutRecordDialog(
         }
     )
 
-    // Routine selector dialog
+    // 루틴 선택 다이얼로그
     if (showRoutineSelector) {
         AlertDialog(
             onDismissRequest = { showRoutineSelector = false },

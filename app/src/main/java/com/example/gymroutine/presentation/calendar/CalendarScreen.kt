@@ -25,7 +25,7 @@ import com.example.gymroutine.util.Resource
 import java.util.Calendar
 
 /**
- * Calendar screen showing monthly workout records
+ * 월별 운동 기록을 표시하는 캘린더 화면
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,7 +75,7 @@ fun CalendarScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // Month navigation
+            // 월 네비게이션
             item {
                 MonthNavigationBar(
                     year = currentYear,
@@ -85,17 +85,17 @@ fun CalendarScreen(
                 )
             }
 
-            // Statistics card
+            // 통계 카드
             item {
                 WorkoutStatisticsCard(viewModel = viewModel)
             }
 
-            // Routine color legend
+            // 루틴 색상 범례
             item {
                 RoutineColorLegend(viewModel = viewModel)
             }
 
-            // Calendar grid
+            // 캘린더 그리드
             item {
                 CalendarGrid(
                     year = currentYear,
@@ -113,7 +113,7 @@ fun CalendarScreen(
                 HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
             }
 
-            // Selected date records
+            // 선택된 날짜의 기록
             if (selectedDay != null) {
                 item {
                     Text(
@@ -168,7 +168,7 @@ fun CalendarScreen(
         }
     }
 
-    // Add workout record dialog
+    // 운동 기록 추가 다이얼로그
     if (showAddDialog && selectedDay != null) {
         val calendar = Calendar.getInstance()
         calendar.set(currentYear, currentMonth - 1, selectedDay!!, 0, 0, 0)
@@ -189,13 +189,13 @@ fun CalendarScreen(
                     notes = notes
                 )
                 showAddDialog = false
-                // Refresh selected date records
+                // 선택된 날짜 기록 새로고침
                 viewModel.selectDate(currentYear, currentMonth, selectedDay!!)
             }
         )
     }
 
-    // Delete confirmation dialog
+    // 삭제 확인 다이얼로그
     if (recordToDelete != null) {
         AlertDialog(
             onDismissRequest = { recordToDelete = null },
@@ -259,7 +259,7 @@ fun CalendarGrid(
     onDayClick: (Int) -> Unit
 ) {
     Column(modifier = Modifier.padding(horizontal = 8.dp)) {
-        // Day of week headers
+        // 요일 헤더
         Row(modifier = Modifier.fillMaxWidth()) {
             val daysOfWeek = listOf("일", "월", "화", "수", "목", "금", "토")
             daysOfWeek.forEach { day ->
@@ -280,22 +280,22 @@ fun CalendarGrid(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Calendar days
+        // 캘린더 날짜들
         val calendar = Calendar.getInstance()
         calendar.set(year, month - 1, 1)
 
-        val firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1 // 0 = Sunday
+        val firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1 // 0 = 일요일
         val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
 
         val weeks = mutableListOf<List<Int?>>()
         var currentWeek = mutableListOf<Int?>()
 
-        // Add empty cells for days before the first day
+        // 첫날 이전의 빈 셀 추가
         repeat(firstDayOfWeek) {
             currentWeek.add(null)
         }
 
-        // Add actual days
+        // 실제 날짜 추가
         for (day in 1..daysInMonth) {
             currentWeek.add(day)
             if (currentWeek.size == 7) {
@@ -304,7 +304,7 @@ fun CalendarGrid(
             }
         }
 
-        // Add remaining empty cells
+        // 남은 빈 셀 추가
         if (currentWeek.isNotEmpty()) {
             while (currentWeek.size < 7) {
                 currentWeek.add(null)
@@ -312,7 +312,7 @@ fun CalendarGrid(
             weeks.add(currentWeek.toList())
         }
 
-        // Render weeks
+        // 주 렌더링
         weeks.forEach { week ->
             Row(
                 modifier = Modifier
@@ -410,13 +410,13 @@ fun RowScope.DayCell(
 }
 
 /**
- * Parse hex color string to Color
+ * 16진수 색상 문자열을 Color로 변환
  */
 private fun parseColor(colorHex: String): Color {
     return try {
         Color(android.graphics.Color.parseColor(colorHex))
     } catch (e: Exception) {
-        Color(0xFF2196F3) // Default blue color
+        Color(0xFF2196F3) // 기본 파란색
     }
 }
 
@@ -623,21 +623,21 @@ fun RoutineColorLegend(viewModel: CalendarViewModel) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            // Display routine colors in a flow layout
+            // 플로우 레이아웃으로 루틴 색상 표시
             routines.forEach { routine ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    // Color indicator
+                    // 색상 표시기
                     Surface(
                         modifier = Modifier.size(16.dp),
                         shape = MaterialTheme.shapes.small,
                         color = parseColor(routine.color)
                     ) {}
 
-                    // Routine name
+                    // 루틴 이름
                     Text(
                         text = routine.name,
                         style = MaterialTheme.typography.bodyMedium,
@@ -650,8 +650,8 @@ fun RoutineColorLegend(viewModel: CalendarViewModel) {
 }
 
 /**
- * Add Dialogs to CalendarScreen
- * These should be added inside CalendarScreen composable, after the Scaffold
+ * CalendarScreen에 다이얼로그 추가
+ * Scaffold 후에 CalendarScreen composable 내부에 추가되어야 함
  */
 private fun getSelectedDate(year: Int, month: Int, day: Int): Long {
     val calendar = Calendar.getInstance()

@@ -20,8 +20,8 @@ import java.util.*
 import javax.inject.Inject
 
 /**
- * Home screen ViewModel
- * Manages user info, gym info, and recent routines
+ * 홈 화면 ViewModel
+ * 사용자 정보, 헬스장 정보, 최근 루틴 관리
  */
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -54,7 +54,7 @@ class HomeViewModel @Inject constructor(
         val currentUser = authRepository.getCurrentUser()
         _isLoggedIn.value = currentUser != null
 
-        // Load gyms for both logged-in and guest users
+        // 로그인 사용자와 게스트 사용자 모두의 헬스장 로드
         loadUserGyms()
 
         if (currentUser != null) {
@@ -70,8 +70,8 @@ class HomeViewModel @Inject constructor(
 
             _userGymsState.value = Resource.Loading
             try {
-                // Load gyms regardless of login status
-                // Repository will handle local/Firebase automatically
+                // 로그인 상태와 관계없이 헬스장 로드
+                // Repository가 자동으로 로컬/Firebase 처리
                 val gyms = gymRepository.getUserGyms(userId ?: "")
                 android.util.Log.d("HomeViewModel", "loadUserGyms: Loaded ${gyms.size} gyms")
                 gyms.forEachIndexed { index, gym ->
@@ -101,7 +101,7 @@ class HomeViewModel @Inject constructor(
                 if (user != null) {
                     _userState.value = Resource.Success(user)
 
-                    // Load gym info if user has a gym
+                    // 사용자에게 헬스장이 있으면 헬스장 정보 로드
                     if (!user.gymId.isNullOrEmpty()) {
                         loadGymData(user.gymId)
                     }
@@ -137,14 +137,14 @@ class HomeViewModel @Inject constructor(
             _recentRoutinesState.value = Resource.Loading
             try {
                 val routines = if (userId != null) {
-                    // Logged in: Load from Firebase
+                    // 로그인 상태: Firebase에서 로드
                     routineRepository.getUserRoutines(userId)
                 } else {
-                    // Not logged in: Load from local storage
+                    // 비로그인 상태: 로컬 저장소에서 로드
                     routineRepository.getUserRoutines("")
                 }
 
-                // Get top 3 most recent routines
+                // 최근 3개 루틴 가져오기
                 val recentRoutines = routines
                     .sortedByDescending { it.updatedAt }
                     .take(3)
@@ -157,7 +157,7 @@ class HomeViewModel @Inject constructor(
     }
 
     /**
-     * Check if gym is currently open
+     * 헬스장이 현재 영업 중인지 확인
      */
     fun isGymOpen(gym: Gym): Boolean {
         val calendar = Calendar.getInstance()
@@ -179,7 +179,7 @@ class HomeViewModel @Inject constructor(
     }
 
     /**
-     * Get gym operating hours for today
+     * 오늘의 헬스장 운영 시간 조회
      */
     fun getTodayHours(gym: Gym): String {
         val calendar = Calendar.getInstance()

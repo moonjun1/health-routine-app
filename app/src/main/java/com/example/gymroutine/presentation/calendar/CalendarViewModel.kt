@@ -17,7 +17,7 @@ import java.util.UUID
 import javax.inject.Inject
 
 /**
- * ViewModel for calendar screen
+ * 캘린더 화면용 ViewModel
  */
 @HiltViewModel
 class CalendarViewModel @Inject constructor(
@@ -50,7 +50,7 @@ class CalendarViewModel @Inject constructor(
     }
 
     /**
-     * Load user's routines
+     * 사용자 루틴 로드
      */
     private fun loadRoutines() {
         viewModelScope.launch {
@@ -66,7 +66,7 @@ class CalendarViewModel @Inject constructor(
     }
 
     /**
-     * Load all workout records for statistics
+     * 통계용 모든 운동 기록 로드
      */
     private fun loadAllWorkoutRecords() {
         viewModelScope.launch {
@@ -81,7 +81,7 @@ class CalendarViewModel @Inject constructor(
     }
 
     /**
-     * Load workout records for current month
+     * 현재 월의 운동 기록 로드
      */
     fun loadWorkoutRecords() {
         viewModelScope.launch {
@@ -101,7 +101,7 @@ class CalendarViewModel @Inject constructor(
     }
 
     /**
-     * Navigate to previous month
+     * 이전 달로 이동
      */
     fun previousMonth() {
         if (_currentMonth.value == 1) {
@@ -114,7 +114,7 @@ class CalendarViewModel @Inject constructor(
     }
 
     /**
-     * Navigate to next month
+     * 다음 달로 이동
      */
     fun nextMonth() {
         if (_currentMonth.value == 12) {
@@ -127,7 +127,7 @@ class CalendarViewModel @Inject constructor(
     }
 
     /**
-     * Go to today
+     * 오늘로 이동
      */
     fun goToToday() {
         val calendar = Calendar.getInstance()
@@ -137,7 +137,7 @@ class CalendarViewModel @Inject constructor(
     }
 
     /**
-     * Select a specific date
+     * 특정 날짜 선택
      */
     fun selectDate(year: Int, month: Int, day: Int) {
         viewModelScope.launch {
@@ -159,7 +159,7 @@ class CalendarViewModel @Inject constructor(
     }
 
     /**
-     * Check if a specific date has workout records
+     * 특정 날짜에 운동 기록이 있는지 확인
      */
     fun hasWorkoutOnDate(year: Int, month: Int, day: Int): Boolean {
         val records = (_workoutRecordsState.value as? Resource.Success)?.data ?: return false
@@ -176,7 +176,7 @@ class CalendarViewModel @Inject constructor(
     }
 
     /**
-     * Get workout count for a specific date
+     * 특정 날짜의 운동 횟수 조회
      */
     fun getWorkoutCountOnDate(year: Int, month: Int, day: Int): Int {
         val records = (_workoutRecordsState.value as? Resource.Success)?.data ?: return 0
@@ -193,7 +193,7 @@ class CalendarViewModel @Inject constructor(
     }
 
     /**
-     * Get routine colors for a specific date
+     * 특정 날짜의 루틴 색상 조회
      */
     fun getRoutineColorsForDate(year: Int, month: Int, day: Int): List<String> {
         val records = (_workoutRecordsState.value as? Resource.Success)?.data ?: return emptyList()
@@ -209,17 +209,17 @@ class CalendarViewModel @Inject constructor(
             recordYear == year && recordMonth == month && recordDay == day
         }
 
-        // Get unique routine colors for this date
+        // 이 날짜의 고유한 루틴 색상 가져오기
         return recordsForDate
             .mapNotNull { record ->
                 routines.find { it.id == record.routineId }?.color
             }
             .distinct()
-            .take(3) // Limit to 3 colors for display
+            .take(3) // 표시를 위해 3개 색상으로 제한
     }
 
     /**
-     * Add a new workout record
+     * 새 운동 기록 추가
      */
     fun addWorkoutRecord(
         date: Long,
@@ -237,41 +237,41 @@ class CalendarViewModel @Inject constructor(
                     routineId = routineId,
                     routineName = routineName,
                     date = date,
-                    exercises = emptyList(), // Will be filled when workout execution is implemented
+                    exercises = emptyList(), // 운동 실행 기능 구현 시 채워짐
                     duration = duration,
                     notes = notes,
                     createdAt = System.currentTimeMillis()
                 )
 
                 workoutRecordRepository.createWorkoutRecord(record)
-                loadWorkoutRecords() // Reload to show the new record
-                loadAllWorkoutRecords() // Reload all records for statistics
+                loadWorkoutRecords() // 새 기록을 표시하기 위해 재로드
+                loadAllWorkoutRecords() // 통계를 위해 모든 기록 재로드
             } catch (e: Exception) {
-                // Handle error
+                // 오류 처리
             }
         }
     }
 
     /**
-     * Delete a workout record
+     * 운동 기록 삭제
      */
     fun deleteWorkoutRecord(recordId: String) {
         viewModelScope.launch {
             try {
                 val userId = authRepository.getCurrentUserId() ?: ""
                 workoutRecordRepository.deleteWorkoutRecord(userId, recordId)
-                loadWorkoutRecords() // Reload to remove the deleted record
-                loadAllWorkoutRecords() // Reload all records for statistics
-                // Also reload selected date records
+                loadWorkoutRecords() // 삭제된 기록을 제거하기 위해 재로드
+                loadAllWorkoutRecords() // 통계를 위해 모든 기록 재로드
+                // 선택된 날짜 기록도 재로드
                 _selectedDateRecords.value = _selectedDateRecords.value.filter { it.id != recordId }
             } catch (e: Exception) {
-                // Handle error
+                // 오류 처리
             }
         }
     }
 
     /**
-     * Get weekly workout count (current week)
+     * 주간 운동 횟수 조회 (현재 주)
      */
     fun getWeeklyWorkoutCount(): Int {
         val records = _allWorkoutRecords.value
@@ -279,7 +279,7 @@ class CalendarViewModel @Inject constructor(
 
         val calendar = Calendar.getInstance()
 
-        // Get start of current week (Sunday)
+        // 현재 주의 시작일 (일요일) 가져오기
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY)
         calendar.set(Calendar.HOUR_OF_DAY, 0)
         calendar.set(Calendar.MINUTE, 0)
@@ -287,7 +287,7 @@ class CalendarViewModel @Inject constructor(
         calendar.set(Calendar.MILLISECOND, 0)
         val weekStart = calendar.timeInMillis
 
-        // Get end of current week (Saturday)
+        // 현재 주의 종료일 (토요일) 가져오기
         calendar.add(Calendar.DAY_OF_WEEK, 6)
         calendar.set(Calendar.HOUR_OF_DAY, 23)
         calendar.set(Calendar.MINUTE, 59)
@@ -301,7 +301,7 @@ class CalendarViewModel @Inject constructor(
     }
 
     /**
-     * Get monthly workout count (current month)
+     * 월간 운동 횟수 조회 (현재 월)
      */
     fun getMonthlyWorkoutCount(): Int {
         val records = _allWorkoutRecords.value
@@ -321,7 +321,7 @@ class CalendarViewModel @Inject constructor(
     }
 
     /**
-     * Get consecutive workout days (current streak)
+     * 연속 운동 일수 조회 (현재 연속 기록)
      */
     fun getConsecutiveWorkoutDays(): Int {
         val records = _allWorkoutRecords.value
@@ -334,7 +334,7 @@ class CalendarViewModel @Inject constructor(
         today.set(Calendar.SECOND, 0)
         today.set(Calendar.MILLISECOND, 0)
 
-        // Get unique workout dates sorted in descending order
+        // 내림차순으로 정렬된 고유한 운동 날짜 가져오기
         val workoutDates = records
             .map { record ->
                 calendar.timeInMillis = record.date
@@ -349,25 +349,25 @@ class CalendarViewModel @Inject constructor(
 
         if (workoutDates.isEmpty()) return 0
 
-        // Check if there's a workout today or yesterday
+        // 오늘이나 어제 운동 기록이 있는지 확인
         val latestWorkout = workoutDates[0]
         val yesterday = today.timeInMillis - (24 * 60 * 60 * 1000)
 
         if (latestWorkout < yesterday) {
-            // Streak is broken if last workout was before yesterday
+            // 마지막 운동이 어제 이전이면 연속 기록이 끊김
             return 0
         }
 
-        // Count consecutive days
+        // 연속 일수 계산
         var streak = 0
         var currentDate = latestWorkout
 
         for (workoutDate in workoutDates) {
             if (workoutDate == currentDate) {
                 streak++
-                currentDate -= (24 * 60 * 60 * 1000) // Move to previous day
+                currentDate -= (24 * 60 * 60 * 1000) // 이전 날로 이동
             } else if (workoutDate < currentDate) {
-                // Gap found, stop counting
+                // 간격 발견, 카운트 중지
                 break
             }
         }

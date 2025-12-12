@@ -18,7 +18,7 @@ import com.example.gymroutine.data.model.Routine
 import com.example.gymroutine.util.Resource
 
 /**
- * Home screen with gym info and quick access
+ * 헬스장 정보와 빠른 접근이 가능한 홈 화면
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,7 +111,7 @@ fun HomeScreen(
                 }
             }
 
-            // Recent routines
+            // 최근 루틴
             item {
                 Text(
                     text = "최근 루틴",
@@ -181,7 +181,7 @@ fun HomeScreen(
                 else -> {}
             }
 
-            // Quick menu
+            // 빠른 메뉴
             item {
                 Text(
                     text = "빠른 메뉴",
@@ -392,7 +392,7 @@ fun GymInfoCard(
                 )
             }
 
-            // Equipment info
+            // 기구 정보
             if (gym.equipments.isNotEmpty()) {
                 Divider()
 
@@ -416,7 +416,7 @@ fun GymInfoCard(
                         )
                     }
 
-                    // Show first 5 equipment items
+                    // 처음 5개 기구 표시
                     val displayEquipments = gym.equipments.take(5)
                     Column(
                         modifier = Modifier.padding(start = 28.dp),
