@@ -62,9 +62,9 @@ class KakaoLocalDataSource @Inject constructor(
             latitude = latitude.toDoubleOrNull() ?: 0.0,
             longitude = longitude.toDoubleOrNull() ?: 0.0,
             phone = phone,
-            registeredBy = "", // Will be set during registration
-            hours = emptyMap(), // Will be filled by gym owner
-            equipments = emptyList(), // Will be filled by gym owner
+            registeredBy = "", // 등록 시 설정됨
+            hours = emptyMap(), // 헬스장 소유자가 입력
+            equipments = emptyList(), // 헬스장 소유자가 입력
             createdAt = System.currentTimeMillis()
         )
     }
