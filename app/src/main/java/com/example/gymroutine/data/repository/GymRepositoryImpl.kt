@@ -101,7 +101,7 @@ class GymRepositoryImpl @Inject constructor(
 
     override suspend fun getUserGym(userId: String): Gym? {
         return if (isLoggedIn()) {
-            Log.d(TAG, "getUserGym: 사용자 $userId의 Firebase에서 로드")
+            Log.d(TAG, "getUserGym: 사용자 ${userId}의 Firebase에서 로드")
             firestoreDataSource.getUserGym(userId)
         } else {
             Log.d(TAG, "getUserGym: 로컬 저장소에서 선택된 헬스장 로드")
@@ -111,7 +111,7 @@ class GymRepositoryImpl @Inject constructor(
 
     override suspend fun getUserGyms(userId: String): List<Gym> {
         return if (isLoggedIn()) {
-            Log.d(TAG, "getUserGyms: 사용자 $userId의 Firebase에서 로드")
+            Log.d(TAG, "getUserGyms: 사용자 ${userId}의 Firebase에서 로드")
             firestoreDataSource.getUserGyms(userId)
         } else {
             Log.d(TAG, "getUserGyms: 로컬 저장소에서 전체 로드")
